@@ -1,7 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { school, news, events, galleryAlbums, departments, admissionApplications } from '../data';
 import { Menu, X, MapPin, Phone, Mail, Clock, ChevronRight, ArrowRight, Calendar, Award, BookOpen, Users, GraduationCap, Sparkles, Star } from 'lucide-react';
+import { TextReveal } from '../components/motion/TextReveal';
+import { ParallaxImage } from '../components/motion/ParallaxImage';
+import { CountUp } from '../components/motion/CountUp';
+import { MagneticButton } from '../components/motion/MagneticButton';
+import { ScrollReveal, ScrollRevealChild } from '../components/motion/ScrollReveal';
+import { useReducedMotion } from '../lib/motion';
 
 // ============================================================================
 // NAVIGATION
@@ -188,60 +195,180 @@ function Footer() {
 }
 
 // ============================================================================
+// HERO SECTION
+// ============================================================================
+function HeroSection() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <section ref={ref} className="relative min-h-[90vh] flex items-center bg-gray-900">
+      {/* Parallax Background */}
+      <motion.div
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=80')] bg-cover bg-center opacity-30"
+        style={{ y: prefersReducedMotion ? 0 : backgroundY }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/70 to-gray-900/30" />
+      
+      <motion.div
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32"
+        style={{ y: prefersReducedMotion ? 0 : textY, opacity }}
+      >
+        <div className="max-w-2xl">
+          <motion.div
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <Sparkles size={14} className="text-[#E85D04]" />
+            <span className="text-xs font-medium text-white/90">Now accepting applications for 2026/2027</span>
+          </motion.div>
+          
+          <TextReveal
+            as="h1"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+            delay={0.4}
+            staggerDuration={0.1}
+          >
+            Where Every Child Discovers Their Best
+          </TextReveal>
+          
+          <motion.p
+            className="text-lg text-white/80 leading-relaxed mb-8 max-w-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
+            A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
+          </motion.p>
+          
+          <motion.div
+            className="flex flex-wrap gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.6 }}
+          >
+            <Link
+              to="/admissions"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors"
+            >
+              Apply for Admission
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+            >
+              Explore Our School
+            </Link>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 0.6 }}
+      >
+        <motion.div
+          className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-1 h-2 bg-white/60 rounded-full" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// ============================================================================
+// CTA SECTION
+// ============================================================================
+function CTASection() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <section ref={ref} className="relative py-20 lg:py-28 bg-gray-900 overflow-hidden">
+      {/* Zoom Background */}
+      <motion.div
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center opacity-10"
+        style={{ scale: prefersReducedMotion ? 1 : scale }}
+      />
+      <div className="absolute inset-0 bg-gray-900/80" />
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <TextReveal
+          as="h2"
+          className="text-3xl sm:text-4xl font-bold text-white mb-4"
+          delay={0.2}
+          staggerDuration={0.08}
+        >
+          Ready to give your child the best start?
+        </TextReveal>
+        <ScrollReveal direction="up" delay={0.4}>
+          <p className="text-lg text-gray-400 mb-8 max-w-lg mx-auto">
+            Join the Maple Grove family. Applications are now open for the 2026/2027 academic year.
+          </p>
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.6}>
+          <div className="flex flex-wrap justify-center gap-4">
+            <MagneticButton>
+              <Link to="/admissions" className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
+                Start Application <ArrowRight size={16} />
+              </Link>
+            </MagneticButton>
+            <MagneticButton>
+              <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                Book a School Visit
+              </Link>
+            </MagneticButton>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
 // HOME PAGE
 // ============================================================================
 function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-center bg-gray-900">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=80')] bg-cover bg-center opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/70 to-gray-900/30" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-              <Sparkles size={14} className="text-[#E85D04]" />
-              <span className="text-xs font-medium text-white/90">Now accepting applications for 2026/2027</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Where Every Child{' '}
-              <span className="text-[#E85D04]">Discovers</span>{' '}
-              Their Best
-            </h1>
-            <p className="text-lg text-white/80 leading-relaxed mb-8 max-w-lg">
-              A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                to="/admissions"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors"
-              >
-                Apply for Admission
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
-              >
-                Explore Our School
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Stats Bar */}
       <section className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: '320+', label: 'Students' },
-              { value: '18', label: 'Years of Excellence' },
-              { value: '95%', label: 'BECE Pass Rate' },
-              { value: '25:1', label: 'Max Class Size' },
+              { value: 320, suffix: '+', label: 'Students' },
+              { value: 18, suffix: '', label: 'Years of Excellence' },
+              { value: 95, suffix: '%', label: 'BECE Pass Rate' },
+              { value: 25, suffix: ':1', label: 'Max Class Size' },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.value}</div>
+                <div className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  <CountUp value={stat.value} suffix={stat.suffix} delay={i * 0.1} />
+                </div>
                 <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
               </div>
             ))}
@@ -254,11 +381,16 @@ function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-12">
             <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Why Parents Choose Us</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">
+            <TextReveal
+              as="h2"
+              className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3"
+              delay={0.2}
+              staggerDuration={0.08}
+            >
               An education that prepares children for the world ahead
-            </h2>
+            </TextReveal>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <ScrollReveal staggerChildren staggerDelay={0.15} className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: <BookOpen size={24} />,
@@ -276,15 +408,17 @@ function HomePage() {
                 description: 'Our students consistently achieve outstanding BECE results, with 95% obtaining Grade 1-3 in core subjects over the past three years.',
               },
             ].map((item, i) => (
-              <div key={i} className="p-8 bg-gray-50 rounded-2xl">
-                <div className="w-12 h-12 bg-[#E85D04]/10 rounded-xl flex items-center justify-center text-[#E85D04] mb-5">
-                  {item.icon}
+              <ScrollRevealChild key={i}>
+                <div className="p-8 bg-gray-50 rounded-2xl">
+                  <div className="w-12 h-12 bg-[#E85D04]/10 rounded-xl flex items-center justify-center text-[#E85D04] mb-5">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
-              </div>
+              </ScrollRevealChild>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -293,32 +427,39 @@ function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-12">
             <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Our Programmes</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">
+            <TextReveal
+              as="h2"
+              className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3"
+              delay={0.2}
+              staggerDuration={0.08}
+            >
               From first steps to BECE success
-            </h2>
+            </TextReveal>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {departments.map((dept, i) => (
-              <div key={dept.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <div className={`h-2 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#E85D04]/70' : 'bg-[#E85D04]/40'}`} />
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-4">
-                    {i === 0 ? <Star size={20} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={20} className="text-[#E85D04]" /> : <GraduationCap size={20} className="text-[#E85D04]" />}
-                    <h3 className="text-xl font-semibold text-gray-900">{dept.name}</h3>
+              <ScrollReveal key={dept.id} direction="up" delay={i * 0.15}>
+                <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className={`h-2 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#E85D04]/70' : 'bg-[#E85D04]/40'}`} />
+                  <div className="p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      {i === 0 ? <Star size={20} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={20} className="text-[#E85D04]" /> : <GraduationCap size={20} className="text-[#E85D04]" />}
+                      <h3 className="text-xl font-semibold text-gray-900">{dept.name}</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {dept.levels.join(', ')}
+                    </p>
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                      {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
+                      {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
+                      {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
+                    </p>
+                    <Link to="/academics" className="inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] mt-4 hover:gap-2 transition-all">
+                      Learn more <ChevronRight size={14} />
+                    </Link>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    {dept.levels.join(', ')}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
-                    {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
-                    {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
-                  </p>
-                  <Link to="/academics" className="inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] mt-4 hover:gap-2 transition-all">
-                    Learn more <ChevronRight size={14} />
-                  </Link>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -328,34 +469,61 @@ function HomePage() {
       <section className="py-20 lg:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">School Life</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3 mb-6">
-                More than academics. A complete education.
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                At Maple Grove, we believe education extends beyond the classroom. Our students participate in sports, cultural activities, community service, and creative arts that develop well-rounded individuals.
-              </p>
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {['Inter-house Sports', 'Debate Club', 'Cultural Dance', 'Science Club', 'Music & Arts', 'Community Service'].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#E85D04] rounded-full" />
-                    <span className="text-sm text-gray-700">{item}</span>
-                  </div>
-                ))}
+            <ScrollReveal direction="left">
+              <div>
+                <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">School Life</span>
+                <TextReveal
+                  as="h2"
+                  className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3 mb-6"
+                  delay={0.2}
+                  staggerDuration={0.08}
+                >
+                  More than academics. A complete education.
+                </TextReveal>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  At Maple Grove, we believe education extends beyond the classroom. Our students participate in sports, cultural activities, community service, and creative arts that develop well-rounded individuals.
+                </p>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  {['Inter-house Sports', 'Debate Club', 'Cultural Dance', 'Science Club', 'Music & Arts', 'Community Service'].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#E85D04] rounded-full" />
+                      <span className="text-sm text-gray-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/gallery" className="inline-flex items-center gap-2 px-5 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                  View Gallery <ArrowRight size={14} />
+                </Link>
               </div>
-              <Link to="/gallery" className="inline-flex items-center gap-2 px-5 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
-                View Gallery <ArrowRight size={14} />
-              </Link>
-            </div>
+            </ScrollReveal>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <div className="rounded-2xl overflow-hidden h-48 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80')" }} />
-                <div className="rounded-2xl overflow-hidden h-32 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80')" }} />
+                <ParallaxImage
+                  src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+                  alt="Students learning"
+                  className="rounded-2xl h-48"
+                  speed={0.3}
+                />
+                <ParallaxImage
+                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80"
+                  alt="Classroom"
+                  className="rounded-2xl h-32"
+                  speed={0.2}
+                />
               </div>
               <div className="space-y-4 pt-8">
-                <div className="rounded-2xl overflow-hidden h-32 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80')" }} />
-                <div className="rounded-2xl overflow-hidden h-48 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80')" }} />
+                <ParallaxImage
+                  src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80"
+                  alt="School activities"
+                  className="rounded-2xl h-32"
+                  speed={0.4}
+                />
+                <ParallaxImage
+                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
+                  alt="Students"
+                  className="rounded-2xl h-48"
+                  speed={0.25}
+                />
               </div>
             </div>
           </div>
@@ -366,82 +534,75 @@ function HomePage() {
       <section className="py-20 lg:py-28 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-12">
-            <div>
-              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Latest Updates</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">News & Events</h2>
-            </div>
-            <Link to="/news" className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] hover:gap-2 transition-all">
-              View all <ArrowRight size={14} />
-            </Link>
+            <ScrollReveal direction="up">
+              <div>
+                <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Latest Updates</span>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">News & Events</h2>
+              </div>
+            </ScrollReveal>
+            <MagneticButton className="hidden sm:inline-flex">
+              <Link to="/news" className="inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] hover:gap-2 transition-all">
+                View all <ArrowRight size={14} />
+              </Link>
+            </MagneticButton>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <ScrollReveal staggerChildren staggerDelay={0.15} className="grid md:grid-cols-3 gap-6">
             {news.slice(0, 3).map(item => (
-              <article key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <Calendar size={32} className="text-gray-400" />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-medium text-[#E85D04] bg-orange-50 px-2 py-1 rounded">{item.category}</span>
-                    <span className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              <ScrollRevealChild key={item.id}>
+                <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <Calendar size={32} className="text-gray-400" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{item.title}</h3>
-                  <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                </div>
-              </article>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-medium text-[#E85D04] bg-orange-50 px-2 py-1 rounded">{item.category}</span>
+                      <span className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{item.title}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
+                  </div>
+                </article>
+              </ScrollRevealChild>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Upcoming Events */}
       <section className="py-20 lg:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-12">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">What's Coming Up</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">Upcoming Events</h2>
-          </div>
-          <div className="space-y-4">
+          <ScrollReveal direction="up" className="max-w-2xl mb-12">
+            <div>
+              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">What's Coming Up</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">Upcoming Events</h2>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal staggerChildren staggerDelay={0.1} className="space-y-4">
             {events.slice(0, 4).map(event => (
-              <div key={event.id} className="flex items-center gap-6 p-5 bg-gray-50 rounded-xl hover:bg-orange-50/50 transition-colors">
-                <div className="w-14 h-14 bg-white rounded-xl flex flex-col items-center justify-center shadow-sm shrink-0">
-                  <span className="text-xs font-medium text-[#E85D04] uppercase">
-                    {new Date(event.date).toLocaleDateString('en', { month: 'short' })}
-                  </span>
-                  <span className="text-lg font-bold text-gray-900">
-                    {new Date(event.date).getDate()}
-                  </span>
+              <ScrollRevealChild key={event.id}>
+                <div className="flex items-center gap-6 p-5 bg-gray-50 rounded-xl hover:bg-orange-50/50 transition-colors">
+                  <div className="w-14 h-14 bg-white rounded-xl flex flex-col items-center justify-center shadow-sm shrink-0">
+                    <span className="text-xs font-medium text-[#E85D04] uppercase">
+                      {new Date(event.date).toLocaleDateString('en', { month: 'short' })}
+                    </span>
+                    <span className="text-lg font-bold text-gray-900">
+                      {new Date(event.date).getDate()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900">{event.title}</h4>
+                    <p className="text-sm text-gray-500 mt-0.5">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
+                  </div>
+                  <ChevronRight size={16} className="text-gray-400 shrink-0" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900">{event.title}</h4>
-                  <p className="text-sm text-gray-500 mt-0.5">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
-                </div>
-                <ChevronRight size={16} className="text-gray-400 shrink-0" />
-              </div>
+              </ScrollRevealChild>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 lg:py-28 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to give your child the best start?
-          </h2>
-          <p className="text-lg text-gray-400 mb-8 max-w-lg mx-auto">
-            Join the Maple Grove family. Applications are now open for the 2026/2027 academic year.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/admissions" className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
-              Start Application <ArrowRight size={16} />
-            </Link>
-            <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20">
-              Book a School Visit
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }
