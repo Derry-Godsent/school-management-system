@@ -1,12 +1,21 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { PublicLayout, HomePage, AboutPage, AcademicsPage, AdmissionsPage, GalleryPage, NewsPage, ContactPage } from './pages/public';
 import { AuthProvider, ParentLayout, ParentDashboard, ResultsPage, AttendancePage, FeesPage, TimetablePage, AnnouncementsPage, ReportCardPage } from './pages/parent';
 import { AdminAuthProvider, AdminLayout, AdminDashboard, StudentsPage, AdmissionsPage as AdminAdmissionsPage, AdminFeesPage, AdminResultsPage, AdminAttendancePage, CommunicationsPage } from './pages/admin';
 
-function App() {
+// ============================================================================
+// ANIMATED ROUTES
+// Wraps route output in AnimatePresence for page transitions.
+// Uses location.pathname as key for exit/enter animations.
+// ============================================================================
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         {/* Public Website */}
         <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
         <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
@@ -118,6 +127,14 @@ function App() {
           </AdminAuthProvider>
         } />
       </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }
