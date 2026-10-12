@@ -4,7 +4,10 @@ import { PublicLayout, HomePage, AboutPage, AcademicsPage, AdmissionsPage, Galle
 import { AuthProvider, ParentLayout, ParentDashboard, ResultsPage, AttendancePage, FeesPage, TimetablePage, AnnouncementsPage, ReportCardPage } from './pages/parent';
 import { AdminAuthProvider, AdminLayout, AdminDashboard, StudentsPage, AdmissionsPage as AdminAdmissionsPage, AdminFeesPage, AdminResultsPage, AdminAttendancePage, CommunicationsPage } from './pages/admin';
 import { CustomCursor } from './components/motion/CustomCursor';
+import { MouseSpotlightCSS } from './components/motion/MouseSpotlight';
 import { PageLoader } from './components/layout/PageLoader';
+import { ScrollToTop } from './components/layout/ScrollToTop';
+import { BackToTop } from './components/layout/BackToTop';
 
 // ============================================================================
 // ANIMATED ROUTES
@@ -138,6 +141,9 @@ function App() {
     <BrowserRouter>
       <PageLoader />
       <CustomCursor />
+      <MouseSpotlightCSS />
+      <ScrollToTop />
+      <BackToTop />
       <AnimatedRoutes />
     </BrowserRouter>
   );

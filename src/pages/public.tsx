@@ -19,8 +19,17 @@ import { useReducedMotion } from '../lib/motion';
 // ============================================================================
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -32,8 +41,10 @@ function Navigation() {
     { path: '/contact', label: 'Contact' },
   ];
 
+  const showSolid = !isHome || scrolled;
+
   return (
-    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isHome ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm'}`}>
+    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${showSolid ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -41,9 +52,9 @@ function Navigation() {
             <div className="w-10 h-10 bg-[#E85D04] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="text-white font-bold text-sm">MG</span>
             </div>
-            <div className={`hidden sm:block ${isHome ? 'text-white' : 'text-gray-900'}`}>
+            <div className={`hidden sm:block ${showSolid ? 'text-gray-900' : 'text-white'}`}>
               <div className="font-semibold text-sm leading-tight">Maple Grove</div>
-              <div className={`text-xs ${isHome ? 'opacity-70' : 'opacity-50'}`}>International School</div>
+              <div className={`text-xs ${showSolid ? 'opacity-50' : 'opacity-70'}`}>International School</div>
             </div>
           </Link>
 
@@ -56,7 +67,7 @@ function Navigation() {
                 className={`text-sm font-medium transition-all hover:text-[#E85D04] line-draw ${
                   location.pathname === link.path
                     ? 'text-[#E85D04] active'
-                    : isHome ? 'text-white/90 hover:text-white' : 'text-gray-700'
+                    : showSolid ? 'text-gray-700' : 'text-white/90 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -74,7 +85,7 @@ function Navigation() {
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`lg:hidden p-2 rounded-lg ${isHome ? 'text-white' : 'text-gray-900'}`}
+              className={`lg:hidden p-2 rounded-lg ${showSolid ? 'text-gray-900' : 'text-white'}`}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -262,9 +273,9 @@ function HeroSection() {
         </div>
       )}
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60 z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-[1]" />
+      {/* Gradient overlays - warm school theme */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a]/60 via-[#1a1a1a]/30 to-[#1a1a1a]/70 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#E85D04]/10 via-transparent to-[#E85D04]/10 z-[1]" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -361,7 +372,7 @@ function CTASection() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section ref={ref} className="relative py-24 sm:py-40 overflow-hidden bg-gray-900">
+    <section ref={ref} className="relative py-24 sm:py-40 overflow-hidden bg-gradient-to-br from-[#2a1810] via-[#1a1a1a] to-[#2a1810]">
       {/* Animated background */}
       <motion.div
         className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center"
@@ -370,7 +381,7 @@ function CTASection() {
           opacity: prefersReducedMotion ? 0.3 : opacity,
         }}
       />
-      <div className="absolute inset-0 bg-gray-900/80" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#2a1810]/85 via-[#1a1a1a]/80 to-[#2a1810]/85" />
 
       {/* Gradient orbs */}
       <div className="absolute inset-0 overflow-hidden">
@@ -619,32 +630,32 @@ function HomePage() {
             <div className="grid grid-cols-2 gap-4">
               <ScrollReveal delay={0.2}>
                 <ParallaxImage
-                  src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
-                  alt="Students learning"
+                  src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80"
+                  alt="Students learning in classroom"
                   className="rounded-3xl h-64"
                   speed={0.4}
                 />
               </ScrollReveal>
               <ScrollReveal delay={0.4}>
                 <ParallaxImage
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80"
-                  alt="Classroom"
+                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
+                  alt="African school children"
                   className="rounded-3xl h-48 mt-12"
                   speed={0.3}
                 />
               </ScrollReveal>
               <ScrollReveal delay={0.3}>
                 <ParallaxImage
-                  src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80"
-                  alt="School activities"
+                  src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+                  alt="Students studying together"
                   className="rounded-3xl h-48"
                   speed={0.5}
                 />
               </ScrollReveal>
               <ScrollReveal delay={0.5}>
                 <ParallaxImage
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
-                  alt="Students"
+                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80"
+                  alt="School library"
                   className="rounded-3xl h-64 mt-8"
                   speed={0.35}
                 />
@@ -1134,11 +1145,11 @@ function GalleryPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryAlbums.map((album, i) => {
               const images = [
-                'https://images.unsplash.com/photo-1594608661623-aa0bd3a69d98?w=600&q=80',
-                'https://images.unsplash.com/photo-1567168544230-b15b2e8e8b64?w=600&q=80',
-                'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&q=80',
-                'https://images.unsplash.com/photo-1461896836934-bd45ba8fcfbb?w=600&q=80',
-                'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80',
+                'https://images.unsplash.com/photo-1544717305-2782549b6386?w=600&q=80', // Cultural festival - African dance
+                'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80', // Quiz/academics - students studying
+                'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&q=80', // Science lab - laboratory equipment
+                'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&q=80', // Sports - children playing
+                'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80', // Graduation - students in caps
               ];
               return (
               <div key={album.id} className="group cursor-pointer">
