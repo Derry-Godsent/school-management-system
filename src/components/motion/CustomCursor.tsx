@@ -14,9 +14,9 @@ export function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    const isMobileWidth = window.matchMedia('(max-width: 768px)').matches;
-    setIsTouch(isTouchDevice || isMobileWidth);
+    // Only disable on pure touch devices without fine pointer (mouse/trackpad)
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    setIsTouch(!hasFinePointer);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const moveCursor = (e: MouseEvent) => {

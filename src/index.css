@@ -232,22 +232,15 @@ body {
 }
 
 @media (pointer: coarse) {
+  /* Keep noise overlay for premium feel, but optimize performance */
   .noise::after {
-    display: none;
+    animation: none; /* Disable animation on touch devices for performance */
   }
   
   /* Improve touch targets on mobile */
   a, button, [role="button"] {
     min-height: 44px;
     min-width: 44px;
-  }
-  
-  /* Disable hover effects that don't work on touch */
-  .group:hover .group-hover\:translate-x-2,
-  .group:hover .group-hover\:translate-x-1,
-  .group:hover .group-hover\:gap-4,
-  .group:hover .group-hover\:bg-\[\.E85D04\]\/10 {
-    transform: none !important;
   }
 }
 

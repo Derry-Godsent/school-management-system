@@ -99,24 +99,33 @@ function AnimatedSphere() {
 }
 
 export function Hero3DScene() {
+  // Detect mobile for performance optimization
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const particleCount = isMobile ? 150 : 300;
+
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 60 }}
       style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ 
+        antialias: !isMobile, // Disable antialiasing on mobile for performance
+        alpha: true,
+        powerPreference: 'high-performance'
+      }}
+      dpr={isMobile ? [1, 1.5] : [1, 2]} // Lower pixel ratio on mobile
     >
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <pointLight position={[-5, -5, -5]} intensity={0.5} color="#E85D04" />
-      
+
       <AnimatedSphere />
-      
+
       <FloatingGeometry position={[-3, 2, -2]} color="#FF8C42" speed={0.8} scale={0.5} />
       <FloatingGeometry position={[3, -1, -3]} color="#DC4A03" speed={1.2} scale={0.4} />
       <FloatingGeometry position={[-2, -2, -1]} color="#FFB366" speed={0.6} scale={0.3} />
       <FloatingGeometry position={[2.5, 2.5, -2]} color="#E85D04" speed={1} scale={0.35} />
-      
-      <Particles count={300} />
+
+      <Particles count={particleCount} />
     </Canvas>
   );
 }

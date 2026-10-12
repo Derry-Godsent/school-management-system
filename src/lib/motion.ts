@@ -33,7 +33,10 @@ export function useIsTouchDevice(): boolean {
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
-    setIsTouch(window.matchMedia('(pointer: coarse)').matches);
+    // Only consider it touch if there's NO fine pointer (mouse/trackpad)
+    // This allows tablets with trackpads to still have hover effects
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    setIsTouch(!hasFinePointer);
   }, []);
 
   return isTouch;

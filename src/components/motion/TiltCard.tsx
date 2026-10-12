@@ -10,7 +10,6 @@ interface TiltCardProps {
 export function TiltCard({ children, className = '', intensity = 15 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -24,14 +23,8 @@ export function TiltCard({ children, className = '', intensity = 15 }: TiltCardP
     damping: 30,
   });
 
-  useEffect(() => {
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    const isMobileWidth = window.matchMedia('(max-width: 768px)').matches;
-    setIsTouch(isTouchDevice || isMobileWidth);
-  }, []);
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current || isTouch) return;
+    if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -48,11 +41,6 @@ export function TiltCard({ children, className = '', intensity = 15 }: TiltCardP
     x.set(0);
     y.set(0);
   };
-
-  // On touch devices, just render the children without tilt effect
-  if (isTouch) {
-    return <div className={className}>{children}</div>;
-  }
 
   return (
     <motion.div

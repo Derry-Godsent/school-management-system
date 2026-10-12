@@ -247,29 +247,19 @@ function Footer() {
 function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const [loaded, setLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     setTimeout(() => setLoaded(true), 100);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* 3D Background Scene - disabled on mobile for performance */}
-      {!prefersReducedMotion && !isMobile && (
+      {/* 3D Background Scene - always enabled */}
+      {!prefersReducedMotion && (
         <div className="absolute inset-0 z-0">
           <Hero3DScene />
         </div>
-      )}
-      
-      {/* Mobile fallback background */}
-      {isMobile && (
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-orange-500/20 via-black to-orange-900/20" />
       )}
 
       {/* Gradient overlays */}
@@ -536,7 +526,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Programmes - Horizontal Scroll (Desktop) / Vertical Cards (Mobile) */}
+      {/* Programmes - Horizontal Scroll */}
       <section className="py-20 sm:py-32 bg-black relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
           <ScrollReveal className="text-center">
@@ -548,81 +538,46 @@ function HomePage() {
           </ScrollReveal>
         </div>
 
-        {/* Desktop: Horizontal Scroll */}
-        <div className="hidden md:block">
-          <HorizontalScroll>
-            {departments.map((dept, i) => (
-              <div key={dept.id} className="flex-shrink-0 w-[60vw] lg:w-[40vw]">
-                <TiltCard intensity={5}>
-                  <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
-                    <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
-                    <div className="p-8 lg:p-12 h-full flex flex-col justify-between preserve-3d">
-                      <div>
-                        <div className="flex items-center gap-4 mb-8">
-                          {i === 0 ? <Star size={40} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="text-[#E85D04]" /> : <GraduationCap size={40} className="text-[#E85D04]" />}
-                          <span className="text-6xl lg:text-8xl font-bold text-white/10">0{i + 1}</span>
-                        </div>
-                        <h3 className="text-3xl lg:text-5xl font-bold text-white mb-6">{dept.name}</h3>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {dept.levels.map(level => (
-                            <span key={level} className="px-4 py-2 glass rounded-full text-sm text-white/80">
-                              {level}
-                            </span>
-                          ))}
-                        </div>
+        <HorizontalScroll>
+          {departments.map((dept, i) => (
+            <div key={dept.id} className="flex-shrink-0 w-[85vw] sm:w-[60vw] lg:w-[40vw]">
+              <TiltCard intensity={5}>
+                <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
+                  <div className="p-6 sm:p-8 lg:p-12 h-full flex flex-col justify-between preserve-3d">
+                    <div>
+                      <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                        {i === 0 ? <Star size={32} className="sm:hidden text-[#E85D04]" /> : i === 1 ? <BookOpen size={32} className="sm:hidden text-[#E85D04]" /> : <GraduationCap size={32} className="sm:hidden text-[#E85D04]" />}
+                        {i === 0 ? <Star size={40} className="hidden sm:block text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="hidden sm:block text-[#E85D04]" /> : <GraduationCap size={40} className="hidden sm:block text-[#E85D04]" />}
+                        <span className="text-5xl sm:text-6xl lg:text-8xl font-bold text-white/10">0{i + 1}</span>
                       </div>
-                      <div>
-                        <p className="text-base lg:text-lg text-white/60 leading-relaxed mb-8">
-                          {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
-                          {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
-                          {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
-                        </p>
-                        <Link to="/academics" className="inline-flex items-center gap-3 text-[#E85D04] font-medium group-hover:gap-4 transition-all">
-                          <span>Learn more</span>
-                          <ArrowRight size={20} />
-                        </Link>
+                      <h3 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">{dept.name}</h3>
+                      <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                        {dept.levels.map(level => (
+                          <span key={level} className="px-3 sm:px-4 py-1.5 sm:py-2 glass rounded-full text-xs sm:text-sm text-white/80">
+                            {level}
+                          </span>
+                        ))}
                       </div>
                     </div>
+                    <div>
+                      <p className="text-sm sm:text-base lg:text-lg text-white/60 leading-relaxed mb-6 sm:mb-8">
+                        {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
+                        {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
+                        {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
+                      </p>
+                      <Link to="/academics" className="inline-flex items-center gap-2 sm:gap-3 text-[#E85D04] font-medium group-hover:gap-4 transition-all">
+                        <span>Learn more</span>
+                        <ArrowRight size={18} className="sm:hidden" />
+                        <ArrowRight size={20} className="hidden sm:block" />
+                      </Link>
+                    </div>
                   </div>
-                </TiltCard>
-              </div>
-            ))}
-          </HorizontalScroll>
-        </div>
-
-        {/* Mobile: Vertical Cards */}
-        <div className="md:hidden space-y-6 px-4">
-          {departments.map((dept, i) => (
-            <ScrollReveal key={dept.id} delay={i * 0.1}>
-              <div className="group relative glass rounded-2xl overflow-hidden">
-                <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    {i === 0 ? <Star size={28} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={28} className="text-[#E85D04]" /> : <GraduationCap size={28} className="text-[#E85D04]" />}
-                    <span className="text-4xl font-bold text-white/10">0{i + 1}</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{dept.name}</h3>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {dept.levels.map(level => (
-                      <span key={level} className="px-3 py-1 glass rounded-full text-xs text-white/80">
-                        {level}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-sm text-white/60 leading-relaxed mb-6">
-                    {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
-                    {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
-                    {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
-                  </p>
-                  <Link to="/academics" className="inline-flex items-center gap-2 text-[#E85D04] text-sm font-medium">
-                    <span>Learn more</span>
-                    <ArrowRight size={16} />
-                  </Link>
                 </div>
-              </div>
-            </ScrollReveal>
+              </TiltCard>
+            </div>
           ))}
-        </div>
+        </HorizontalScroll>
       </section>
 
       {/* School Life - Immersive Grid */}
