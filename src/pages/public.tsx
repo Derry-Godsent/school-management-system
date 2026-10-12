@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { school, news, events, galleryAlbums, departments, admissionApplications } from '../data';
 import { Menu, X, MapPin, Phone, Mail, Clock, ChevronRight, ArrowRight, Calendar, Award, BookOpen, Users, GraduationCap, Sparkles, Star } from 'lucide-react';
 import { TextReveal } from '../components/motion/TextReveal';
@@ -8,6 +8,10 @@ import { ParallaxImage } from '../components/motion/ParallaxImage';
 import { CountUp } from '../components/motion/CountUp';
 import { MagneticButton } from '../components/motion/MagneticButton';
 import { ScrollReveal, ScrollRevealChild } from '../components/motion/ScrollReveal';
+import { TiltCard } from '../components/motion/TiltCard';
+import { HorizontalScroll } from '../components/motion/HorizontalScroll';
+import { CharReveal, TextScramble } from '../components/motion/TextScramble';
+import { Hero3DScene } from '../components/three/HeroScene';
 import { useReducedMotion } from '../lib/motion';
 
 // ============================================================================
@@ -29,17 +33,17 @@ function Navigation() {
   ];
 
   return (
-    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHome ? 'bg-transparent' : 'bg-white shadow-sm'}`}>
+    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isHome ? 'bg-transparent' : 'glass-dark'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#E85D04] rounded-lg flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-[#E85D04] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="text-white font-bold text-sm">MG</span>
             </div>
-            <div className={`hidden sm:block ${isHome ? 'text-white' : 'text-gray-900'}`}>
+            <div className="hidden sm:block text-white">
               <div className="font-semibold text-sm leading-tight">Maple Grove</div>
-              <div className="text-xs opacity-70">International School</div>
+              <div className="text-xs opacity-50">International School</div>
             </div>
           </Link>
 
@@ -49,10 +53,10 @@ function Navigation() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-[#E85D04] ${
+                className={`text-sm font-medium transition-all hover:text-[#E85D04] line-draw ${
                   location.pathname === link.path
-                    ? 'text-[#E85D04]'
-                    : isHome ? 'text-white/90 hover:text-white' : 'text-gray-700'
+                    ? 'text-[#E85D04] active'
+                    : 'text-white/70 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -64,13 +68,13 @@ function Navigation() {
           <div className="flex items-center gap-4">
             <Link
               to="/admissions"
-              className="hidden sm:inline-flex items-center px-5 py-2.5 bg-[#E85D04] text-white text-sm font-medium rounded-lg hover:bg-[#DC4A03] transition-colors"
+              className="hidden sm:inline-flex items-center px-6 py-2.5 bg-[#E85D04] text-white text-sm font-medium rounded-full hover:bg-[#DC4A03] transition-colors glow-orange"
             >
               Apply Now
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`lg:hidden p-2 rounded-lg ${isHome ? 'text-white' : 'text-gray-900'}`}
+              className="lg:hidden p-2 rounded-lg text-white"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -79,33 +83,40 @@ function Navigation() {
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="lg:hidden bg-white border-t shadow-lg animate-fade-in">
-          <div className="px-4 py-4 space-y-1">
-            {navLinks.map(link => (
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="lg:hidden glass-dark border-t border-white/10"
+          >
+            <div className="px-4 py-4 space-y-1">
+              {navLinks.map(link => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                    location.pathname === link.path
+                      ? 'bg-[#E85D04]/10 text-[#E85D04]'
+                      : 'text-white/70 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
               <Link
-                key={link.path}
-                to={link.path}
+                to="/admissions"
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? 'bg-orange-50 text-[#E85D04]'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
+                className="block px-4 py-3 mt-3 bg-[#E85D04] text-white text-sm font-medium rounded-xl text-center"
               >
-                {link.label}
+                Apply Now
               </Link>
-            ))}
-            <Link
-              to="/admissions"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 mt-3 bg-[#E85D04] text-white text-sm font-medium rounded-lg text-center"
-            >
-              Apply Now
-            </Link>
-          </div>
-        </div>
-      )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
@@ -115,32 +126,32 @@ function Navigation() {
 // ============================================================================
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="bg-black border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-[#E85D04] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MG</span>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-[#E85D04] rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold">MG</span>
               </div>
               <div>
-                <div className="font-semibold text-sm">Maple Grove</div>
-                <div className="text-xs text-gray-400">International School</div>
+                <div className="font-semibold text-white">Maple Grove</div>
+                <div className="text-xs text-white/40">International School</div>
               </div>
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed">
+            <p className="text-sm text-white/40 leading-relaxed">
               {school.motto}. Providing quality education from Early Years through JHS with a blended Ghanaian and Cambridge curriculum.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Quick Links</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-semibold text-white text-sm mb-6 uppercase tracking-widest">Quick Links</h4>
+            <ul className="space-y-3">
               {['About', 'Academics', 'Admissions', 'Gallery', 'News'].map(item => (
                 <li key={item}>
-                  <Link to={`/${item.toLowerCase()}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${item.toLowerCase()}`} className="text-sm text-white/40 hover:text-[#E85D04] transition-colors line-draw">
                     {item}
                   </Link>
                 </li>
@@ -150,11 +161,11 @@ function Footer() {
 
           {/* Programmes */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Programmes</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-semibold text-white text-sm mb-6 uppercase tracking-widest">Programmes</h4>
+            <ul className="space-y-3">
               {['Early Years (KG 1 - KG 2)', 'Primary (P1 - P6)', 'Junior High School', 'Cambridge Enrichment Stream'].map(item => (
                 <li key={item}>
-                  <span className="text-sm text-gray-400">{item}</span>
+                  <span className="text-sm text-white/40">{item}</span>
                 </li>
               ))}
             </ul>
@@ -162,31 +173,30 @@ function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Contact</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <MapPin size={14} className="text-[#E85D04] mt-0.5 shrink-0" />
-                <span className="text-sm text-gray-400">{school.address}</span>
+            <h4 className="font-semibold text-white text-sm mb-6 uppercase tracking-widest">Contact</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <MapPin size={16} className="text-[#E85D04] mt-0.5 shrink-0" />
+                <span className="text-sm text-white/40">{school.address}</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone size={14} className="text-[#E85D04] shrink-0" />
-                <span className="text-sm text-gray-400">{school.phone}</span>
+              <li className="flex items-center gap-3">
+                <Phone size={16} className="text-[#E85D04] shrink-0" />
+                <span className="text-sm text-white/40">{school.phone}</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail size={14} className="text-[#E85D04] shrink-0" />
-                <span className="text-sm text-gray-400">{school.email}</span>
+              <li className="flex items-center gap-3">
+                <Mail size={16} className="text-[#E85D04] shrink-0" />
+                <span className="text-sm text-white/40">{school.email}</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">&copy; 2026 {school.name}. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link to="/parent" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Parent Portal</Link>
-            <span className="text-gray-700">|</span>
-            <Link to="/admin" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">School Admin</Link>
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/30">&copy; 2026 {school.name}. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <Link to="/parent" className="text-xs text-white/30 hover:text-[#E85D04] transition-colors">Parent Portal</Link>
+            <Link to="/admin" className="text-xs text-white/30 hover:text-[#E85D04] transition-colors">School Admin</Link>
           </div>
         </div>
       </div>
@@ -195,105 +205,112 @@ function Footer() {
 }
 
 // ============================================================================
-// HERO SECTION
+// HERO SECTION - IMMERSIVE 3D
 // ============================================================================
 function HeroSection() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const [loaded, setLoaded] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
+  useEffect(() => {
+    setTimeout(() => setLoaded(true), 100);
+  }, []);
+
   return (
-    <section ref={ref} className="relative min-h-[90vh] flex items-center bg-gray-900">
-      {/* Parallax Background */}
-      <motion.div
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=80')] bg-cover bg-center opacity-30"
-        style={{ y: prefersReducedMotion ? 0 : backgroundY }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/70 to-gray-900/30" />
-      
-      <motion.div
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32"
-        style={{ y: prefersReducedMotion ? 0 : textY, opacity }}
-      >
-        <div className="max-w-2xl">
-          <motion.div
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <Sparkles size={14} className="text-[#E85D04]" />
-            <span className="text-xs font-medium text-white/90">Now accepting applications for 2026/2027</span>
-          </motion.div>
-          
-          <TextReveal
-            as="h1"
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
-            delay={0.4}
-            staggerDuration={0.1}
-          >
-            Where Every Child Discovers Their Best
-          </TextReveal>
-          
-          <motion.p
-            className="text-lg text-white/80 leading-relaxed mb-8 max-w-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-          >
-            A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
-          </motion.p>
-          
-          <motion.div
-            className="flex flex-wrap gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.6 }}
-          >
+    <section ref={ref} className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+      {/* 3D Background Scene */}
+      {!prefersReducedMotion && (
+        <div className="absolute inset-0 z-0">
+          <Hero3DScene />
+        </div>
+      )}
+
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-[1]" />
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={loaded ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+          className="mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full mb-8">
+            <div className="w-2 h-2 bg-[#E85D04] rounded-full animate-pulse" />
+            <span className="text-xs font-medium text-white/80 tracking-widest uppercase">Now Enrolling 2026/2027</span>
+          </div>
+        </motion.div>
+
+        <h1 className="text-5xl sm:text-7xl lg:text-9xl font-bold text-white leading-[0.9] mb-8 tracking-tight">
+          <CharReveal text="WHERE" className="block" delay={200} />
+          <CharReveal text="EVERY" className="block" delay={400} />
+          <span className="block gradient-text">
+            <CharReveal text="CHILD" className="block" delay={600} />
+          </span>
+          <CharReveal text="DISCOVERS" className="block text-stroke" delay={800} />
+          <CharReveal text="THEIR BEST" className="block" delay={1000} />
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={loaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
+        >
+          A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={loaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="flex flex-wrap justify-center gap-4"
+        >
+          <MagneticButton>
             <Link
               to="/admissions"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 bg-[#E85D04] text-white font-medium rounded-full overflow-hidden glow-orange"
             >
-              Apply for Admission
-              <ArrowRight size={16} />
+              <span className="relative z-10">Apply for Admission</span>
+              <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Link>
+          </MagneticButton>
+          <MagneticButton>
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+              className="inline-flex items-center gap-3 px-8 py-4 glass text-white font-medium rounded-full hover:bg-white/10 transition-colors"
             >
               Explore Our School
             </Link>
-          </motion.div>
-        </div>
-      </motion.div>
+          </MagneticButton>
+        </motion.div>
+      </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
+        transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
-        <motion.div
-          className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <div className="w-1 h-2 bg-white/60 rounded-full" />
-        </motion.div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs text-white/40 tracking-widest uppercase">Scroll</span>
+          <motion.div
+            className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent"
+            animate={{ scaleY: [0, 1, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
       </motion.div>
     </section>
   );
 }
 
 // ============================================================================
-// CTA SECTION
+// CTA SECTION - DRAMATIC FINALE
 // ============================================================================
 function CTASection() {
   const ref = useRef<HTMLElement>(null);
@@ -301,41 +318,74 @@ function CTASection() {
     target: ref,
     offset: ['start end', 'end start'],
   });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.6, 0.3]);
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-28 bg-gray-900 overflow-hidden">
-      {/* Zoom Background */}
+    <section ref={ref} className="relative py-40 overflow-hidden">
+      {/* Animated background */}
       <motion.div
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center opacity-10"
-        style={{ scale: prefersReducedMotion ? 1 : scale }}
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center"
+        style={{
+          scale: prefersReducedMotion ? 1 : scale,
+          opacity: prefersReducedMotion ? 0.3 : opacity,
+        }}
       />
-      <div className="absolute inset-0 bg-gray-900/80" />
+      <div className="absolute inset-0 bg-black/70" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <TextReveal
-          as="h2"
-          className="text-3xl sm:text-4xl font-bold text-white mb-4"
-          delay={0.2}
-          staggerDuration={0.08}
-        >
-          Ready to give your child the best start?
-        </TextReveal>
-        <ScrollReveal direction="up" delay={0.4}>
-          <p className="text-lg text-gray-400 mb-8 max-w-lg mx-auto">
+      {/* Gradient orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#E85D04] rounded-full blur-[150px] opacity-20"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF8C42] rounded-full blur-[150px] opacity-20"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <ScrollReveal>
+          <h2 className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight">
+            Ready to Give<br />
+            <span className="gradient-text">Your Child</span><br />
+            <span className="text-stroke">The Best Start?</span>
+          </h2>
+        </ScrollReveal>
+        
+        <ScrollReveal delay={0.3}>
+          <p className="text-xl text-white/60 mb-12 max-w-2xl mx-auto">
             Join the Maple Grove family. Applications are now open for the 2026/2027 academic year.
           </p>
         </ScrollReveal>
-        <ScrollReveal direction="up" delay={0.6}>
-          <div className="flex flex-wrap justify-center gap-4">
+
+        <ScrollReveal delay={0.5}>
+          <div className="flex flex-wrap justify-center gap-6">
             <MagneticButton>
-              <Link to="/admissions" className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
-                Start Application <ArrowRight size={16} />
+              <Link
+                to="/admissions"
+                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-[#E85D04] text-white text-lg font-medium rounded-full overflow-hidden glow-orange"
+              >
+                <span className="relative z-10">Start Application</span>
+                <ArrowRight size={20} className="relative z-10 group-hover:translate-x-2 transition-transform" />
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </Link>
             </MagneticButton>
             <MagneticButton>
-              <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-3 px-10 py-5 glass text-white text-lg font-medium rounded-full hover:bg-white/10 transition-colors"
+              >
                 Book a School Visit
               </Link>
             </MagneticButton>
@@ -347,257 +397,298 @@ function CTASection() {
 }
 
 // ============================================================================
-// HOME PAGE
+// HOME PAGE - IMMERSIVE EXPERIENCE
 // ============================================================================
 function HomePage() {
   return (
-    <div>
+    <div className="bg-black noise">
       {/* Hero */}
       <HeroSection />
 
-      {/* Stats Bar */}
-      <section className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: 320, suffix: '+', label: 'Students' },
-              { value: 18, suffix: '', label: 'Years of Excellence' },
-              { value: 95, suffix: '%', label: 'BECE Pass Rate' },
-              { value: 25, suffix: ':1', label: 'Max Class Size' },
-            ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  <CountUp value={stat.value} suffix={stat.suffix} delay={i * 0.1} />
-                </div>
-                <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+      {/* Marquee Stats */}
+      <section className="py-12 border-y border-white/10 overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex items-center gap-16 px-8">
+              <div className="flex items-center gap-4">
+                <span className="text-6xl font-bold gradient-text">320+</span>
+                <span className="text-white/40 text-sm uppercase tracking-widest">Students</span>
               </div>
-            ))}
-          </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="flex items-center gap-4">
+                <span className="text-6xl font-bold gradient-text">18</span>
+                <span className="text-white/40 text-sm uppercase tracking-widest">Years</span>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="flex items-center gap-4">
+                <span className="text-6xl font-bold gradient-text">95%</span>
+                <span className="text-white/40 text-sm uppercase tracking-widest">BECE Pass Rate</span>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="flex items-center gap-4">
+                <span className="text-6xl font-bold gradient-text">25:1</span>
+                <span className="text-white/40 text-sm uppercase tracking-widest">Class Size</span>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Why Maple Grove */}
-      <section className="py-20 lg:py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-12">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Why Parents Choose Us</span>
-            <TextReveal
-              as="h2"
-              className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3"
-              delay={0.2}
-              staggerDuration={0.08}
-            >
-              An education that prepares children for the world ahead
-            </TextReveal>
-          </div>
-          <ScrollReveal staggerChildren staggerDelay={0.15} className="grid md:grid-cols-3 gap-8">
+      {/* Why Maple Grove - 3D Tilt Cards */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#E85D04] rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FF8C42] rounded-full blur-[120px]" />
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center mb-20">
+            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Why Parents Choose Us</span>
+            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4 leading-tight">
+              Education That<br />
+              <span className="gradient-text">Prepares For Life</span>
+            </h2>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-3 gap-8 perspective-1000">
             {[
               {
-                icon: <BookOpen size={24} />,
+                icon: <BookOpen size={32} />,
                 title: 'Blended Curriculum',
                 description: 'We combine the rigour of the Ghanaian national curriculum with Cambridge international standards, giving students the best of both worlds.',
               },
               {
-                icon: <Users size={24} />,
+                icon: <Users size={32} />,
                 title: 'Small Class Sizes',
                 description: 'With a maximum of 25 students per class, every child receives personal attention and support from dedicated teachers.',
               },
               {
-                icon: <Award size={24} />,
+                icon: <Award size={32} />,
                 title: 'Proven Results',
                 description: 'Our students consistently achieve outstanding BECE results, with 95% obtaining Grade 1-3 in core subjects over the past three years.',
               },
             ].map((item, i) => (
-              <ScrollRevealChild key={i}>
-                <div className="p-8 bg-gray-50 rounded-2xl">
-                  <div className="w-12 h-12 bg-[#E85D04]/10 rounded-xl flex items-center justify-center text-[#E85D04] mb-5">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
-                </div>
-              </ScrollRevealChild>
-            ))}
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Programmes */}
-      <section className="py-20 lg:py-28 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-12">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Our Programmes</span>
-            <TextReveal
-              as="h2"
-              className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3"
-              delay={0.2}
-              staggerDuration={0.08}
-            >
-              From first steps to BECE success
-            </TextReveal>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {departments.map((dept, i) => (
-              <ScrollReveal key={dept.id} direction="up" delay={i * 0.15}>
-                <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className={`h-2 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#E85D04]/70' : 'bg-[#E85D04]/40'}`} />
-                  <div className="p-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      {i === 0 ? <Star size={20} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={20} className="text-[#E85D04]" /> : <GraduationCap size={20} className="text-[#E85D04]" />}
-                      <h3 className="text-xl font-semibold text-gray-900">{dept.name}</h3>
+              <ScrollReveal key={i} delay={i * 0.2}>
+                <TiltCard intensity={10}>
+                  <div className="group relative p-10 glass rounded-3xl h-full preserve-3d hover:border-[#E85D04]/30 transition-colors duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#E85D04]/0 to-[#E85D04]/0 group-hover:from-[#E85D04]/5 group-hover:to-transparent transition-all duration-500 rounded-3xl" />
+                    <div className="relative preserve-3d">
+                      <div className="w-16 h-16 bg-[#E85D04]/10 rounded-2xl flex items-center justify-center text-[#E85D04] mb-6 group-hover:bg-[#E85D04]/20 transition-colors">
+                        {item.icon}
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+                      <p className="text-white/60 leading-relaxed">{item.description}</p>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4">
-                      {dept.levels.join(', ')}
-                    </p>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
-                      {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
-                      {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
-                    </p>
-                    <Link to="/academics" className="inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] mt-4 hover:gap-2 transition-all">
-                      Learn more <ChevronRight size={14} />
-                    </Link>
                   </div>
-                </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* School Life Preview */}
-      <section className="py-20 lg:py-28 bg-white">
+      {/* Programmes - Horizontal Scroll */}
+      <section className="py-32 bg-black relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+          <ScrollReveal className="text-center">
+            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Our Programmes</span>
+            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">
+              From First Steps<br />
+              <span className="text-stroke-orange">To BECE Success</span>
+            </h2>
+          </ScrollReveal>
+        </div>
+
+        <HorizontalScroll>
+          {departments.map((dept, i) => (
+            <div key={dept.id} className="flex-shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw]">
+              <TiltCard intensity={5}>
+                <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
+                  <div className="p-12 h-full flex flex-col justify-between preserve-3d">
+                    <div>
+                      <div className="flex items-center gap-4 mb-8">
+                        {i === 0 ? <Star size={40} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="text-[#E85D04]" /> : <GraduationCap size={40} className="text-[#E85D04]" />}
+                        <span className="text-8xl font-bold text-white/10">0{i + 1}</span>
+                      </div>
+                      <h3 className="text-4xl sm:text-5xl font-bold text-white mb-6">{dept.name}</h3>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {dept.levels.map(level => (
+                          <span key={level} className="px-4 py-2 glass rounded-full text-sm text-white/80">
+                            {level}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-lg text-white/60 leading-relaxed mb-8">
+                        {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
+                        {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
+                        {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
+                      </p>
+                      <Link to="/academics" className="inline-flex items-center gap-3 text-[#E85D04] font-medium group-hover:gap-4 transition-all">
+                        <span>Learn more</span>
+                        <ArrowRight size={20} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </TiltCard>
+            </div>
+          ))}
+        </HorizontalScroll>
+      </section>
+
+      {/* School Life - Immersive Grid */}
+      <section className="py-32 bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <ScrollReveal className="text-center mb-20">
+            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">School Life</span>
+            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4 leading-tight">
+              More Than<br />
+              <span className="gradient-text">Academics</span>
+            </h2>
+          </ScrollReveal>
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal direction="left">
-              <div>
-                <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">School Life</span>
-                <TextReveal
-                  as="h2"
-                  className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3 mb-6"
-                  delay={0.2}
-                  staggerDuration={0.08}
-                >
-                  More than academics. A complete education.
-                </TextReveal>
-                <p className="text-gray-600 leading-relaxed mb-6">
+              <div className="space-y-8">
+                <p className="text-2xl text-white/80 leading-relaxed">
                   At Maple Grove, we believe education extends beyond the classroom. Our students participate in sports, cultural activities, community service, and creative arts that develop well-rounded individuals.
                 </p>
-                <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-2 gap-4">
                   {['Inter-house Sports', 'Debate Club', 'Cultural Dance', 'Science Club', 'Music & Arts', 'Community Service'].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 bg-[#E85D04] rounded-full" />
-                      <span className="text-sm text-gray-700">{item}</span>
-                    </div>
+                    <motion.div
+                      key={i}
+                      className="flex items-center gap-3 p-4 glass rounded-xl hover:border-[#E85D04]/30 transition-colors"
+                      whileHover={{ x: 10 }}
+                    >
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full" />
+                      <span className="text-white/80">{item}</span>
+                    </motion.div>
                   ))}
                 </div>
-                <Link to="/gallery" className="inline-flex items-center gap-2 px-5 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
-                  View Gallery <ArrowRight size={14} />
-                </Link>
+                <MagneticButton>
+                  <Link to="/gallery" className="inline-flex items-center gap-3 px-8 py-4 bg-[#E85D04] text-white font-medium rounded-full glow-orange hover:bg-[#DC4A03] transition-colors">
+                    View Gallery <ArrowRight size={18} />
+                  </Link>
+                </MagneticButton>
               </div>
             </ScrollReveal>
+
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
+              <ScrollReveal delay={0.2}>
                 <ParallaxImage
                   src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
                   alt="Students learning"
-                  className="rounded-2xl h-48"
-                  speed={0.3}
+                  className="rounded-3xl h-64"
+                  speed={0.4}
                 />
+              </ScrollReveal>
+              <ScrollReveal delay={0.4}>
                 <ParallaxImage
                   src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80"
                   alt="Classroom"
-                  className="rounded-2xl h-32"
-                  speed={0.2}
+                  className="rounded-3xl h-48 mt-12"
+                  speed={0.3}
                 />
-              </div>
-              <div className="space-y-4 pt-8">
+              </ScrollReveal>
+              <ScrollReveal delay={0.3}>
                 <ParallaxImage
                   src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80"
                   alt="School activities"
-                  className="rounded-2xl h-32"
-                  speed={0.4}
+                  className="rounded-3xl h-48"
+                  speed={0.5}
                 />
+              </ScrollReveal>
+              <ScrollReveal delay={0.5}>
                 <ParallaxImage
                   src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
                   alt="Students"
-                  className="rounded-2xl h-48"
-                  speed={0.25}
+                  className="rounded-3xl h-64 mt-8"
+                  speed={0.35}
                 />
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>
       </section>
 
-      {/* News Preview */}
-      <section className="py-20 lg:py-28 bg-gray-50">
+      {/* News - Immersive Cards */}
+      <section className="py-32 bg-gradient-to-b from-black to-gray-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-12">
-            <ScrollReveal direction="up">
-              <div>
-                <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">Latest Updates</span>
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">News & Events</h2>
-              </div>
+          <div className="flex items-end justify-between mb-16">
+            <ScrollReveal>
+              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Latest Updates</span>
+              <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">News &<br /><span className="gradient-text">Events</span></h2>
             </ScrollReveal>
             <MagneticButton className="hidden sm:inline-flex">
-              <Link to="/news" className="inline-flex items-center gap-1 text-sm font-medium text-[#E85D04] hover:gap-2 transition-all">
-                View all <ArrowRight size={14} />
+              <Link to="/news" className="inline-flex items-center gap-3 px-6 py-3 glass text-white rounded-full hover:bg-white/10 transition-colors">
+                View all <ArrowRight size={16} />
               </Link>
             </MagneticButton>
           </div>
-          <ScrollReveal staggerChildren staggerDelay={0.15} className="grid md:grid-cols-3 gap-6">
-            {news.slice(0, 3).map(item => (
-              <ScrollRevealChild key={item.id}>
-                <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <Calendar size={32} className="text-gray-400" />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-medium text-[#E85D04] bg-orange-50 px-2 py-1 rounded">{item.category}</span>
-                      <span className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {news.slice(0, 3).map((item, i) => (
+              <ScrollReveal key={item.id} delay={i * 0.2}>
+                <TiltCard intensity={8}>
+                  <article className="group relative glass rounded-3xl overflow-hidden h-full preserve-3d">
+                    <div className="h-56 bg-gradient-to-br from-[#E85D04]/20 to-[#FF8C42]/10 flex items-center justify-center relative overflow-hidden">
+                      <Calendar size={48} className="text-white/20" />
+                      <div className="absolute inset-0 bg-[#E85D04]/0 group-hover:bg-[#E85D04]/10 transition-colors duration-500" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{item.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                  </div>
-                </article>
-              </ScrollRevealChild>
+                    <div className="p-8 preserve-3d">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="px-3 py-1 bg-[#E85D04]/20 text-[#E85D04] text-xs font-medium rounded-full">{item.category}</span>
+                        <span className="text-xs text-white/40">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#E85D04] transition-colors">{item.title}</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">{item.excerpt}</p>
+                    </div>
+                  </article>
+                </TiltCard>
+              </ScrollReveal>
             ))}
-          </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* Upcoming Events */}
-      <section className="py-20 lg:py-28 bg-white">
+      {/* Events - Timeline Style */}
+      <section className="py-32 bg-black relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal direction="up" className="max-w-2xl mb-12">
-            <div>
-              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">What's Coming Up</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3">Upcoming Events</h2>
-            </div>
+          <ScrollReveal className="text-center mb-20">
+            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">What's Coming Up</span>
+            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">Upcoming<br /><span className="text-stroke">Events</span></h2>
           </ScrollReveal>
-          <ScrollReveal staggerChildren staggerDelay={0.1} className="space-y-4">
-            {events.slice(0, 4).map(event => (
-              <ScrollRevealChild key={event.id}>
-                <div className="flex items-center gap-6 p-5 bg-gray-50 rounded-xl hover:bg-orange-50/50 transition-colors">
-                  <div className="w-14 h-14 bg-white rounded-xl flex flex-col items-center justify-center shadow-sm shrink-0">
+
+          <div className="space-y-6">
+            {events.slice(0, 4).map((event, i) => (
+              <ScrollReveal key={event.id} direction="left" delay={i * 0.15}>
+                <motion.div
+                  className="group relative flex items-center gap-8 p-8 glass rounded-2xl hover:border-[#E85D04]/30 transition-all duration-500 cursor-pointer"
+                  whileHover={{ x: 20 }}
+                >
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#E85D04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-24 h-24 bg-[#E85D04]/10 rounded-2xl flex flex-col items-center justify-center shrink-0 group-hover:bg-[#E85D04]/20 transition-colors">
                     <span className="text-xs font-medium text-[#E85D04] uppercase">
                       {new Date(event.date).toLocaleDateString('en', { month: 'short' })}
                     </span>
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-3xl font-bold text-white">
                       {new Date(event.date).getDate()}
                     </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900">{event.title}</h4>
-                    <p className="text-sm text-gray-500 mt-0.5">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-white mb-2 group-hover:text-[#E85D04] transition-colors">{event.title}</h4>
+                    <p className="text-white/60">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
                   </div>
-                  <ChevronRight size={16} className="text-gray-400 shrink-0" />
-                </div>
-              </ScrollRevealChild>
+                  <ArrowRight size={24} className="text-white/20 group-hover:text-[#E85D04] group-hover:translate-x-2 transition-all" />
+                </motion.div>
+              </ScrollReveal>
             ))}
-          </ScrollReveal>
+          </div>
         </div>
       </section>
 

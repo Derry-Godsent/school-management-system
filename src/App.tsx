@@ -3,6 +3,8 @@ import { AnimatePresence } from 'framer-motion';
 import { PublicLayout, HomePage, AboutPage, AcademicsPage, AdmissionsPage, GalleryPage, NewsPage, ContactPage } from './pages/public';
 import { AuthProvider, ParentLayout, ParentDashboard, ResultsPage, AttendancePage, FeesPage, TimetablePage, AnnouncementsPage, ReportCardPage } from './pages/parent';
 import { AdminAuthProvider, AdminLayout, AdminDashboard, StudentsPage, AdmissionsPage as AdminAdmissionsPage, AdminFeesPage, AdminResultsPage, AdminAttendancePage, CommunicationsPage } from './pages/admin';
+import { CustomCursor } from './components/motion/CustomCursor';
+import { PageLoader } from './components/layout/PageLoader';
 
 // ============================================================================
 // ANIMATED ROUTES
@@ -134,6 +136,8 @@ function AnimatedRoutes() {
 function App() {
   return (
     <BrowserRouter>
+      <PageLoader />
+      <CustomCursor />
       <AnimatedRoutes />
     </BrowserRouter>
   );
