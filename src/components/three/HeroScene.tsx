@@ -91,8 +91,8 @@ function AnimatedSphere() {
         color="#E85D04"
         distort={0.5}
         speed={3}
-        roughness={0.1}
-        metalness={0.9}
+        roughness={0.15}
+        metalness={0.85}
       />
     </Sphere>
   );

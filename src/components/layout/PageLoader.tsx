@@ -24,7 +24,7 @@ export function PageLoader() {
     <AnimatePresence>
       {isLoading && (
         <motion.div
-          className="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center"
+          className="fixed inset-0 z-[10000] bg-[#FAFAF7] flex flex-col items-center justify-center"
           exit={{ opacity: 0, scale: 1.1 }}
           transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
         >
@@ -41,12 +41,12 @@ export function PageLoader() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-white text-center"
+            className="text-gray-900 text-center"
           >
             <div className="text-sm font-medium mb-4 tracking-widest uppercase">
               Maple Grove International
             </div>
-            <div className="w-48 h-0.5 bg-white/20 rounded-full overflow-hidden">
+            <div className="w-48 h-0.5 bg-gray-200 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-[#E85D04]"
                 initial={{ width: 0 }}
@@ -54,7 +54,7 @@ export function PageLoader() {
                 transition={{ duration: 0.3 }}
               />
             </div>
-            <div className="text-xs text-white/40 mt-2 font-mono">
+            <div className="text-xs text-gray-400 mt-2 font-mono">
               {Math.min(Math.round(progress), 100)}%
             </div>
           </motion.div>

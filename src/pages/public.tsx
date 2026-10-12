@@ -33,7 +33,7 @@ function Navigation() {
   ];
 
   return (
-    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isHome ? 'bg-transparent' : 'glass-dark'}`}>
+    <nav data-lenis-prevent className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isHome ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -41,9 +41,9 @@ function Navigation() {
             <div className="w-10 h-10 bg-[#E85D04] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="text-white font-bold text-sm">MG</span>
             </div>
-            <div className="hidden sm:block text-white">
+            <div className={`hidden sm:block ${isHome ? 'text-white' : 'text-gray-900'}`}>
               <div className="font-semibold text-sm leading-tight">Maple Grove</div>
-              <div className="text-xs opacity-50">International School</div>
+              <div className={`text-xs ${isHome ? 'opacity-70' : 'opacity-50'}`}>International School</div>
             </div>
           </Link>
 
@@ -56,7 +56,7 @@ function Navigation() {
                 className={`text-sm font-medium transition-all hover:text-[#E85D04] line-draw ${
                   location.pathname === link.path
                     ? 'text-[#E85D04] active'
-                    : 'text-white/70 hover:text-white'
+                    : isHome ? 'text-white/90 hover:text-white' : 'text-gray-700'
                 }`}
               >
                 {link.label}
@@ -74,7 +74,7 @@ function Navigation() {
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 rounded-lg text-white"
+              className={`lg:hidden p-2 rounded-lg ${isHome ? 'text-white' : 'text-gray-900'}`}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -85,7 +85,7 @@ function Navigation() {
       {/* Mobile Menu Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -98,7 +98,7 @@ function Navigation() {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-y-0 left-0 z-50 w-72 bg-black border-r border-white/10 lg:hidden overflow-y-auto"
+            className="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 lg:hidden overflow-y-auto shadow-2xl"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-8">
@@ -106,12 +106,12 @@ function Navigation() {
                   <div className="w-10 h-10 bg-[#E85D04] rounded-xl flex items-center justify-center">
                     <span className="text-white font-bold text-sm">MG</span>
                   </div>
-                  <div className="text-white">
+                  <div className="text-gray-900">
                     <div className="font-semibold text-sm">Maple Grove</div>
-                    <div className="text-xs opacity-50">International School</div>
+                    <div className="text-xs text-gray-500">International School</div>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-lg text-white">
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg text-gray-900">
                   <X size={20} />
                 </button>
               </div>
@@ -125,7 +125,7 @@ function Navigation() {
                     className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors min-h-[44px] flex items-center ${
                       location.pathname === link.path
                         ? 'bg-[#E85D04]/10 text-[#E85D04]'
-                        : 'text-white/70 hover:bg-white/5 hover:text-white active:bg-white/10'
+                        : 'text-gray-700 hover:bg-gray-50 active:bg-gray-100'
                     }`}
                   >
                     {link.label}
@@ -133,7 +133,7 @@ function Navigation() {
                 ))}
               </nav>
               
-              <div className="mt-8 pt-6 border-t border-white/10">
+              <div className="mt-8 pt-6 border-t border-gray-200">
                 <Link
                   to="/admissions"
                   onClick={() => setIsOpen(false)}
@@ -142,10 +142,10 @@ function Navigation() {
                   Apply Now
                 </Link>
                 <div className="mt-4 space-y-1">
-                  <Link to="/parent" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-white/40 hover:text-white/60 transition-colors min-h-[44px] flex items-center">
+                  <Link to="/parent" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-gray-500 hover:text-gray-700 transition-colors min-h-[44px] flex items-center">
                     Parent Portal
                   </Link>
-                  <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-white/40 hover:text-white/60 transition-colors min-h-[44px] flex items-center">
+                  <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-gray-500 hover:text-gray-700 transition-colors min-h-[44px] flex items-center">
                     School Admin
                   </Link>
                 </div>
@@ -163,7 +163,7 @@ function Navigation() {
 // ============================================================================
 function Footer() {
   return (
-    <footer className="bg-black border-t border-white/5">
+    <footer className="bg-gray-900 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           {/* Brand */}
@@ -174,10 +174,10 @@ function Footer() {
               </div>
               <div>
                 <div className="font-semibold text-white">Maple Grove</div>
-                <div className="text-xs text-white/40">International School</div>
+                <div className="text-xs text-gray-400">International School</div>
               </div>
             </div>
-            <p className="text-sm text-white/40 leading-relaxed">
+            <p className="text-sm text-gray-400 leading-relaxed">
               {school.motto}. Providing quality education from Early Years through JHS with a blended Ghanaian and Cambridge curriculum.
             </p>
           </div>
@@ -188,7 +188,7 @@ function Footer() {
             <ul className="space-y-3">
               {['About', 'Academics', 'Admissions', 'Gallery', 'News'].map(item => (
                 <li key={item}>
-                  <Link to={`/${item.toLowerCase()}`} className="text-sm text-white/40 hover:text-[#E85D04] transition-colors line-draw">
+                  <Link to={`/${item.toLowerCase()}`} className="text-sm text-gray-400 hover:text-[#E85D04] transition-colors line-draw">
                     {item}
                   </Link>
                 </li>
@@ -202,7 +202,7 @@ function Footer() {
             <ul className="space-y-3">
               {['Early Years (KG 1 - KG 2)', 'Primary (P1 - P6)', 'Junior High School', 'Cambridge Enrichment Stream'].map(item => (
                 <li key={item}>
-                  <span className="text-sm text-white/40">{item}</span>
+                  <span className="text-sm text-gray-400">{item}</span>
                 </li>
               ))}
             </ul>
@@ -214,26 +214,26 @@ function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-[#E85D04] mt-0.5 shrink-0" />
-                <span className="text-sm text-white/40">{school.address}</span>
+                <span className="text-sm text-gray-400">{school.address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={16} className="text-[#E85D04] shrink-0" />
-                <span className="text-sm text-white/40">{school.phone}</span>
+                <span className="text-sm text-gray-400">{school.phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={16} className="text-[#E85D04] shrink-0" />
-                <span className="text-sm text-white/40">{school.email}</span>
+                <span className="text-sm text-gray-400">{school.email}</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/30">&copy; 2026 {school.name}. All rights reserved.</p>
+        <div className="mt-16 pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-500">&copy; 2026 {school.name}. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link to="/parent" className="text-xs text-white/30 hover:text-[#E85D04] transition-colors">Parent Portal</Link>
-            <Link to="/admin" className="text-xs text-white/30 hover:text-[#E85D04] transition-colors">School Admin</Link>
+            <Link to="/parent" className="text-xs text-gray-500 hover:text-[#E85D04] transition-colors">Parent Portal</Link>
+            <Link to="/admin" className="text-xs text-gray-500 hover:text-[#E85D04] transition-colors">School Admin</Link>
           </div>
         </div>
       </div>
@@ -263,8 +263,8 @@ function HeroSection() {
       )}
 
       {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-[1]" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -274,9 +274,9 @@ function HeroSection() {
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="mb-6 sm:mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass rounded-full mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6 sm:mb-8">
             <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#E85D04] rounded-full animate-pulse" />
-            <span className="text-[10px] sm:text-xs font-medium text-white/80 tracking-widest uppercase">Now Enrolling 2026/2027</span>
+            <span className="text-[10px] sm:text-xs font-medium text-white/90 tracking-widest uppercase">Now Enrolling 2026/2027</span>
           </div>
         </motion.div>
 
@@ -294,7 +294,7 @@ function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={loaded ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="text-base sm:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4"
+          className="text-base sm:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4"
         >
           A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
         </motion.p>
@@ -335,9 +335,9 @@ function HeroSection() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
         <div className="flex flex-col items-center gap-2">
-          <span className="text-xs text-white/40 tracking-widest uppercase">Scroll</span>
+          <span className="text-xs text-white/50 tracking-widest uppercase">Scroll</span>
           <motion.div
-            className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent"
+            className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent"
             animate={{ scaleY: [0, 1, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -361,7 +361,7 @@ function CTASection() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section ref={ref} className="relative py-24 sm:py-40 overflow-hidden">
+    <section ref={ref} className="relative py-24 sm:py-40 overflow-hidden bg-gray-900">
       {/* Animated background */}
       <motion.div
         className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center"
@@ -370,12 +370,12 @@ function CTASection() {
           opacity: prefersReducedMotion ? 0.3 : opacity,
         }}
       />
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute inset-0 bg-gray-900/80" />
 
       {/* Gradient orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#E85D04] rounded-full blur-[100px] sm:blur-[150px] opacity-20"
+          className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#E85D04] rounded-full blur-[100px] sm:blur-[150px] opacity-30"
           animate={{
             x: [0, 100, 0],
             y: [0, -50, 0],
@@ -397,12 +397,12 @@ function CTASection() {
           <h2 className="text-3xl sm:text-5xl lg:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight">
             Ready to Give<br />
             <span className="gradient-text">Your Child</span><br />
-            <span className="text-stroke">The Best Start?</span>
+            <span style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)', color: 'transparent' }}>The Best Start?</span>
           </h2>
         </ScrollReveal>
 
         <ScrollReveal delay={0.3}>
-          <p className="text-base sm:text-xl text-white/60 mb-8 sm:mb-12 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-xl text-white/70 mb-8 sm:mb-12 max-w-2xl mx-auto px-4">
             Join the Maple Grove family. Applications are now open for the 2026/2027 academic year.
           </p>
         </ScrollReveal>
@@ -423,7 +423,7 @@ function CTASection() {
             <MagneticButton>
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center gap-2 sm:gap-3 px-8 sm:px-10 py-4 sm:py-5 glass text-white text-base sm:text-lg font-medium rounded-full hover:bg-white/10 transition-colors w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 sm:gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-base sm:text-lg font-medium rounded-full hover:bg-white/20 transition-colors w-full sm:w-auto"
               >
                 Book a School Visit
               </Link>
@@ -439,44 +439,43 @@ function CTASection() {
 // ============================================================================
 function HomePage() {
   return (
-    <div className="bg-black noise">
+    <div className="bg-[#FAFAF7]">
       {/* Hero */}
       <HeroSection />
 
       {/* Marquee Stats */}
-      <section className="py-8 sm:py-12 border-y border-white/10 overflow-hidden">
+      <section className="py-8 sm:py-12 border-y border-gray-200 overflow-hidden bg-white">
         <div className="flex animate-marquee whitespace-nowrap">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center gap-8 sm:gap-16 px-4 sm:px-8">
               <div className="flex items-center gap-3 sm:gap-4">
                 <span className="text-3xl sm:text-6xl font-bold gradient-text">320+</span>
-                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Students</span>
+                <span className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Students</span>
               </div>
-              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="w-px h-8 sm:h-12 bg-gray-200" />
               <div className="flex items-center gap-3 sm:gap-4">
                 <span className="text-3xl sm:text-6xl font-bold gradient-text">18</span>
-                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Years</span>
+                <span className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Years</span>
               </div>
-              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="w-px h-8 sm:h-12 bg-gray-200" />
               <div className="flex items-center gap-3 sm:gap-4">
                 <span className="text-3xl sm:text-6xl font-bold gradient-text">95%</span>
-                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap">BECE Pass Rate</span>
+                <span className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap">BECE Pass Rate</span>
               </div>
-              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="w-px h-8 sm:h-12 bg-gray-200" />
               <div className="flex items-center gap-3 sm:gap-4">
                 <span className="text-3xl sm:text-6xl font-bold gradient-text">25:1</span>
-                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Class Size</span>
+                <span className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Class Size</span>
               </div>
-              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="w-px h-8 sm:h-12 bg-gray-200" />
             </div>
           ))}
         </div>
       </section>
 
       {/* Why Maple Grove - 3D Tilt Cards */}
-      <section className="py-20 sm:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
-        <div className="absolute inset-0 opacity-20">
+      <section className="py-20 sm:py-32 relative overflow-hidden bg-white">
+        <div className="absolute inset-0 opacity-[0.03]">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#E85D04] rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FF8C42] rounded-full blur-[120px]" />
         </div>
@@ -484,7 +483,7 @@ function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-12 sm:mb-20">
             <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Why Parents Choose Us</span>
-            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4 leading-tight">
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mt-4 leading-tight">
               Education That<br />
               <span className="gradient-text">Prepares For Life</span>
             </h2>
@@ -509,14 +508,14 @@ function HomePage() {
             ].map((item, i) => (
               <ScrollReveal key={i} delay={i * 0.2}>
                 <TiltCard intensity={10}>
-                  <div className="group relative p-10 glass rounded-3xl h-full preserve-3d hover:border-[#E85D04]/30 transition-colors duration-500">
+                  <div className="group relative p-8 sm:p-10 bg-[#FAFAF7] border border-gray-100 rounded-3xl h-full preserve-3d hover:border-[#E85D04]/30 hover:shadow-lg transition-all duration-500">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#E85D04]/0 to-[#E85D04]/0 group-hover:from-[#E85D04]/5 group-hover:to-transparent transition-all duration-500 rounded-3xl" />
                     <div className="relative preserve-3d">
                       <div className="w-16 h-16 bg-[#E85D04]/10 rounded-2xl flex items-center justify-center text-[#E85D04] mb-6 group-hover:bg-[#E85D04]/20 transition-colors">
                         {item.icon}
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-                      <p className="text-white/60 leading-relaxed">{item.description}</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
+                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
                     </div>
                   </div>
                 </TiltCard>
@@ -527,11 +526,11 @@ function HomePage() {
       </section>
 
       {/* Programmes - Horizontal Scroll */}
-      <section className="py-20 sm:py-32 bg-black relative">
+      <section className="py-20 sm:py-32 bg-[#FAFAF7] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
           <ScrollReveal className="text-center">
             <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Our Programmes</span>
-            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mt-4">
               From First Steps<br />
               <span className="text-stroke-orange">To BECE Success</span>
             </h2>
@@ -542,26 +541,26 @@ function HomePage() {
           {departments.map((dept, i) => (
             <div key={dept.id} className="flex-shrink-0 w-[85vw] sm:w-[60vw] lg:w-[40vw]">
               <TiltCard intensity={5}>
-                <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
+                <div className="group relative h-[70vh] bg-white border border-gray-100 rounded-3xl overflow-hidden preserve-3d hover:shadow-xl transition-shadow duration-500">
                   <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
                   <div className="p-6 sm:p-8 lg:p-12 h-full flex flex-col justify-between preserve-3d">
                     <div>
                       <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
                         {i === 0 ? <Star size={32} className="sm:hidden text-[#E85D04]" /> : i === 1 ? <BookOpen size={32} className="sm:hidden text-[#E85D04]" /> : <GraduationCap size={32} className="sm:hidden text-[#E85D04]" />}
                         {i === 0 ? <Star size={40} className="hidden sm:block text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="hidden sm:block text-[#E85D04]" /> : <GraduationCap size={40} className="hidden sm:block text-[#E85D04]" />}
-                        <span className="text-5xl sm:text-6xl lg:text-8xl font-bold text-white/10">0{i + 1}</span>
+                        <span className="text-5xl sm:text-6xl lg:text-8xl font-bold text-gray-100">0{i + 1}</span>
                       </div>
-                      <h3 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">{dept.name}</h3>
+                      <h3 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">{dept.name}</h3>
                       <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
                         {dept.levels.map(level => (
-                          <span key={level} className="px-3 sm:px-4 py-1.5 sm:py-2 glass rounded-full text-xs sm:text-sm text-white/80">
+                          <span key={level} className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-50 border border-gray-100 rounded-full text-xs sm:text-sm text-gray-700">
                             {level}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm sm:text-base lg:text-lg text-white/60 leading-relaxed mb-6 sm:mb-8">
+                      <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8">
                         {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
                         {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
                         {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
@@ -581,11 +580,11 @@ function HomePage() {
       </section>
 
       {/* School Life - Immersive Grid */}
-      <section className="py-20 sm:py-32 bg-black relative overflow-hidden">
+      <section className="py-20 sm:py-32 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-12 sm:mb-20">
             <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">School Life</span>
-            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4 leading-tight">
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mt-4 leading-tight">
               More Than<br />
               <span className="gradient-text">Academics</span>
             </h2>
@@ -594,18 +593,18 @@ function HomePage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal direction="left">
               <div className="space-y-8">
-                <p className="text-2xl text-white/80 leading-relaxed">
+                <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed">
                   At Maple Grove, we believe education extends beyond the classroom. Our students participate in sports, cultural activities, community service, and creative arts that develop well-rounded individuals.
                 </p>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {['Inter-house Sports', 'Debate Club', 'Cultural Dance', 'Science Club', 'Music & Arts', 'Community Service'].map((item, i) => (
                     <motion.div
                       key={i}
-                      className="flex items-center gap-3 p-4 glass rounded-xl hover:border-[#E85D04]/30 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 bg-[#FAFAF7] border border-gray-100 rounded-xl hover:border-[#E85D04]/30 transition-colors"
                       whileHover={{ x: 10 }}
                     >
                       <div className="w-2 h-2 bg-[#E85D04] rounded-full" />
-                      <span className="text-white/80">{item}</span>
+                      <span className="text-sm sm:text-base text-gray-700">{item}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -656,15 +655,15 @@ function HomePage() {
       </section>
 
       {/* News - Immersive Cards */}
-      <section className="py-20 sm:py-32 bg-gradient-to-b from-black to-gray-900 relative">
+      <section className="py-20 sm:py-32 bg-[#FAFAF7] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 sm:mb-16 gap-4">
             <ScrollReveal>
               <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Latest Updates</span>
-              <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">News &<br /><span className="gradient-text">Events</span></h2>
+              <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mt-4">News &<br /><span className="gradient-text">Events</span></h2>
             </ScrollReveal>
             <MagneticButton className="hidden sm:inline-flex">
-              <Link to="/news" className="inline-flex items-center gap-3 px-6 py-3 glass text-white rounded-full hover:bg-white/10 transition-colors">
+              <Link to="/news" className="inline-flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-gray-900 rounded-full hover:border-[#E85D04]/30 transition-colors">
                 View all <ArrowRight size={16} />
               </Link>
             </MagneticButton>
@@ -674,18 +673,18 @@ function HomePage() {
             {news.slice(0, 3).map((item, i) => (
               <ScrollReveal key={item.id} delay={i * 0.2}>
                 <TiltCard intensity={8}>
-                  <article className="group relative glass rounded-3xl overflow-hidden h-full preserve-3d">
-                    <div className="h-56 bg-gradient-to-br from-[#E85D04]/20 to-[#FF8C42]/10 flex items-center justify-center relative overflow-hidden">
-                      <Calendar size={48} className="text-white/20" />
-                      <div className="absolute inset-0 bg-[#E85D04]/0 group-hover:bg-[#E85D04]/10 transition-colors duration-500" />
+                  <article className="group relative bg-white border border-gray-100 rounded-3xl overflow-hidden h-full preserve-3d hover:shadow-xl transition-shadow duration-500">
+                    <div className="h-56 bg-gradient-to-br from-[#E85D04]/10 to-[#FF8C42]/5 flex items-center justify-center relative overflow-hidden">
+                      <Calendar size={48} className="text-gray-300" />
+                      <div className="absolute inset-0 bg-[#E85D04]/0 group-hover:bg-[#E85D04]/5 transition-colors duration-500" />
                     </div>
                     <div className="p-8 preserve-3d">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="px-3 py-1 bg-[#E85D04]/20 text-[#E85D04] text-xs font-medium rounded-full">{item.category}</span>
-                        <span className="text-xs text-white/40">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                        <span className="px-3 py-1 bg-[#E85D04]/10 text-[#E85D04] text-xs font-medium rounded-full">{item.category}</span>
+                        <span className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#E85D04] transition-colors">{item.title}</h3>
-                      <p className="text-white/60 text-sm leading-relaxed">{item.excerpt}</p>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#E85D04] transition-colors">{item.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{item.excerpt}</p>
                     </div>
                   </article>
                 </TiltCard>
@@ -696,18 +695,18 @@ function HomePage() {
       </section>
 
       {/* Events - Timeline Style */}
-      <section className="py-20 sm:py-32 bg-black relative">
+      <section className="py-20 sm:py-32 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-12 sm:mb-20">
             <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">What's Coming Up</span>
-            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">Upcoming<br /><span className="text-stroke">Events</span></h2>
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mt-4">Upcoming<br /><span className="text-stroke">Events</span></h2>
           </ScrollReveal>
 
           <div className="space-y-4 sm:space-y-6">
             {events.slice(0, 4).map((event, i) => (
               <ScrollReveal key={event.id} direction="left" delay={i * 0.15}>
                 <motion.div
-                  className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 p-5 sm:p-8 glass rounded-2xl hover:border-[#E85D04]/30 transition-all duration-500 cursor-pointer"
+                  className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 p-5 sm:p-8 bg-[#FAFAF7] border border-gray-100 rounded-2xl hover:border-[#E85D04]/30 hover:shadow-lg transition-all duration-500 cursor-pointer"
                   whileHover={{ x: window.innerWidth >= 640 ? 20 : 0 }}
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#E85D04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -715,15 +714,15 @@ function HomePage() {
                     <span className="text-[10px] sm:text-xs font-medium text-[#E85D04] uppercase">
                       {new Date(event.date).toLocaleDateString('en', { month: 'short' })}
                     </span>
-                    <span className="text-xl sm:text-3xl font-bold text-white">
+                    <span className="text-xl sm:text-3xl font-bold text-gray-900">
                       {new Date(event.date).getDate()}
                     </span>
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-[#E85D04] transition-colors">{event.title}</h4>
-                    <p className="text-sm sm:text-base text-white/60">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
+                    <h4 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-[#E85D04] transition-colors">{event.title}</h4>
+                    <p className="text-sm sm:text-base text-gray-600">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
                   </div>
-                  <ArrowRight size={20} className="hidden sm:block text-white/20 group-hover:text-[#E85D04] group-hover:translate-x-2 transition-all" />
+                  <ArrowRight size={20} className="hidden sm:block text-gray-300 group-hover:text-[#E85D04] group-hover:translate-x-2 transition-all" />
                 </motion.div>
               </ScrollReveal>
             ))}
@@ -1307,23 +1306,23 @@ function DemoBanner() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm animate-fade-in-up">
-      <div className="bg-gray-900 text-white rounded-xl shadow-2xl p-4 border border-gray-700">
+      <div className="bg-white text-gray-900 rounded-xl shadow-2xl p-4 border border-gray-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-medium text-[#E85D04] uppercase tracking-wide mb-1">Explore the Ecosystem</p>
-            <p className="text-sm text-gray-300 leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed">
               This website is connected to a parent portal and school management platform. See the full experience.
             </p>
             <div className="flex gap-2 mt-3">
               <Link to="/parent" className="px-3 py-1.5 bg-[#E85D04] text-white text-xs font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
                 Parent Portal
               </Link>
-              <Link to="/admin" className="px-3 py-1.5 bg-white/10 text-white text-xs font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+              <Link to="/admin" className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors">
                 School Admin
               </Link>
             </div>
           </div>
-          <button onClick={() => setDismissed(true)} className="text-gray-400 hover:text-white shrink-0">
+          <button onClick={() => setDismissed(true)} className="text-gray-400 hover:text-gray-600 shrink-0">
             <X size={16} />
           </button>
         </div>
