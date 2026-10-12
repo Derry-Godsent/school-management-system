@@ -184,13 +184,23 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Mobile Menu Backdrop */}
+        {mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileMenuOpen ? 'fixed inset-0 z-50 bg-white p-4 overflow-auto' : 'hidden'} lg:block lg:relative lg:w-60 shrink-0`}>
+          <aside className={`${mobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl p-6 overflow-y-auto' : 'hidden'} lg:block lg:relative lg:w-60 shrink-0 transition-transform`}>
             {mobileMenuOpen && (
               <div className="flex items-center justify-between mb-6 lg:hidden">
                 <span className="font-semibold text-sm">Menu</span>
-                <button onClick={() => setMobileMenuOpen(false)}><X size={20} /></button>
+                <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                  <X size={20} />
+                </button>
               </div>
             )}
             <nav className="space-y-1">
@@ -199,7 +209,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === item.path
                       ? 'bg-[#E85D04]/10 text-[#E85D04]'
                       : 'text-gray-600 hover:bg-gray-100'
@@ -218,11 +228,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
+              <Link to="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
-              <Link to="/parent" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mt-3">
+              <Link to="/parent" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mt-3 py-2">
                 <ArrowLeft size={14} />
                 Parent Portal
               </Link>
@@ -266,49 +276,61 @@ function AdminDashboard() {
       </div>
 
       {/* Attention Items */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link to="/admin/admissions" className="bg-white rounded-xl border p-5 hover:border-[#E85D04]/30 transition-colors">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center">
-              <ClipboardList size={16} className="text-red-600" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Link to="/admin/admissions" className="bg-white rounded-xl border p-4 sm:p-5 hover:border-[#E85D04]/30 active:bg-gray-50 transition-colors min-h-[120px] flex flex-col justify-between">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 rounded-lg flex items-center justify-center shrink-0">
+              <ClipboardList size={14} className="sm:hidden text-red-600" />
+              <ClipboardList size={16} className="hidden sm:block text-red-600" />
             </div>
-            <span className="text-xs font-medium text-gray-500 uppercase">Pending Admissions</span>
+            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Pending Admissions</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{pendingApps.length}</p>
-          <p className="text-xs text-gray-500 mt-1">applications awaiting review</p>
+          <div>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{pendingApps.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">awaiting review</p>
+          </div>
         </Link>
 
-        <div className="bg-white rounded-xl border p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 bg-orange-50 rounded-lg flex items-center justify-center">
-              <DollarSign size={16} className="text-[#E85D04]" />
+        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-orange-50 rounded-lg flex items-center justify-center shrink-0">
+              <DollarSign size={14} className="sm:hidden text-[#E85D04]" />
+              <DollarSign size={16} className="hidden sm:block text-[#E85D04]" />
             </div>
-            <span className="text-xs font-medium text-gray-500 uppercase">Outstanding Fees</span>
+            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Outstanding Fees</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalOutstanding)}</p>
-          <p className="text-xs text-gray-500 mt-1">from {studentsWithDebt.length} student(s)</p>
+          <div>
+            <p className="text-lg sm:text-2xl font-bold text-gray-900 truncate">{formatCurrency(totalOutstanding)}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl border p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 bg-yellow-50 rounded-lg flex items-center justify-center">
-              <UserX size={16} className="text-yellow-600" />
+        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-yellow-50 rounded-lg flex items-center justify-center shrink-0">
+              <UserX size={14} className="sm:hidden text-yellow-600" />
+              <UserX size={16} className="hidden sm:block text-yellow-600" />
             </div>
-            <span className="text-xs font-medium text-gray-500 uppercase">Attendance Issues</span>
+            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Attendance Issues</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{attendanceIssues.length}</p>
-          <p className="text-xs text-gray-500 mt-1">students with 2+ absences</p>
+          <div>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{attendanceIssues.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">2+ absences</p>
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl border p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center">
-              <UserCheck size={16} className="text-green-600" />
+        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+              <UserCheck size={14} className="sm:hidden text-green-600" />
+              <UserCheck size={16} className="hidden sm:block text-green-600" />
             </div>
-            <span className="text-xs font-medium text-gray-500 uppercase">Total Students</span>
+            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Total Students</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
-          <p className="text-xs text-gray-500 mt-1">enrolled this academic year</p>
+          <div>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalStudents}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">enrolled</p>
+          </div>
         </div>
       </div>
 

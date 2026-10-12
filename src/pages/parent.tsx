@@ -189,13 +189,23 @@ function ParentLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Mobile Menu Backdrop */}
+        {mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileMenuOpen ? 'fixed inset-0 z-50 bg-white p-4' : 'hidden'} lg:block lg:relative lg:w-56 shrink-0`}>
+          <aside className={`${mobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl p-6 overflow-y-auto' : 'hidden'} lg:block lg:relative lg:w-56 shrink-0 transition-transform`}>
             {mobileMenuOpen && (
               <div className="flex items-center justify-between mb-6 lg:hidden">
                 <span className="font-semibold text-sm">Menu</span>
-                <button onClick={() => setMobileMenuOpen(false)}><X size={20} /></button>
+                <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                  <X size={20} />
+                </button>
               </div>
             )}
             <nav className="space-y-1">
@@ -204,7 +214,7 @@ function ParentLayout({ children }: { children: React.ReactNode }) {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === item.path
                       ? 'bg-[#E85D04]/10 text-[#E85D04]'
                       : 'text-gray-600 hover:bg-gray-100'
@@ -216,7 +226,7 @@ function ParentLayout({ children }: { children: React.ReactNode }) {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
+              <Link to="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
@@ -249,13 +259,14 @@ function ChildSelector({ selectedChild, onSelect }: { selectedChild: string; onS
           <button
             key={child.id}
             onClick={() => onSelect(child.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors min-h-[44px] ${
               selectedChild === child.id
                 ? 'bg-[#E85D04] text-white'
-                : 'bg-white border border-gray-200 text-gray-700 hover:border-[#E85D04]/30'
+                : 'bg-white border border-gray-200 text-gray-700 hover:border-[#E85D04]/30 active:bg-gray-50'
             }`}
           >
-            {child.name} <span className="opacity-70">({cls?.name})</span>
+            <span className="block sm:inline">{child.name}</span>
+            <span className="opacity-70 block sm:inline sm:ml-1 text-[10px] sm:text-xs">({cls?.name})</span>
           </button>
         );
       })}

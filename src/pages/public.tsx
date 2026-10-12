@@ -82,37 +82,74 @@ function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden glass-dark border-t border-white/10"
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'tween', duration: 0.3 }}
+            className="fixed inset-y-0 left-0 z-50 w-72 bg-black border-r border-white/10 lg:hidden overflow-y-auto"
           >
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map(link => (
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#E85D04] rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">MG</span>
+                  </div>
+                  <div className="text-white">
+                    <div className="font-semibold text-sm">Maple Grove</div>
+                    <div className="text-xs opacity-50">International School</div>
+                  </div>
+                </div>
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-lg text-white">
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <nav className="space-y-1">
+                {navLinks.map(link => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors min-h-[44px] flex items-center ${
+                      location.pathname === link.path
+                        ? 'bg-[#E85D04]/10 text-[#E85D04]'
+                        : 'text-white/70 hover:bg-white/5 hover:text-white active:bg-white/10'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+              
+              <div className="mt-8 pt-6 border-t border-white/10">
                 <Link
-                  key={link.path}
-                  to={link.path}
+                  to="/admissions"
                   onClick={() => setIsOpen(false)}
-                  className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                    location.pathname === link.path
-                      ? 'bg-[#E85D04]/10 text-[#E85D04]'
-                      : 'text-white/70 hover:bg-white/5 hover:text-white'
-                  }`}
+                  className="block px-4 py-3 bg-[#E85D04] text-white text-sm font-medium rounded-xl text-center min-h-[44px] flex items-center justify-center"
                 >
-                  {link.label}
+                  Apply Now
                 </Link>
-              ))}
-              <Link
-                to="/admissions"
-                onClick={() => setIsOpen(false)}
-                className="block px-4 py-3 mt-3 bg-[#E85D04] text-white text-sm font-medium rounded-xl text-center"
-              >
-                Apply Now
-              </Link>
+                <div className="mt-4 space-y-1">
+                  <Link to="/parent" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-white/40 hover:text-white/60 transition-colors min-h-[44px] flex items-center">
+                    Parent Portal
+                  </Link>
+                  <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-white/40 hover:text-white/60 transition-colors min-h-[44px] flex items-center">
+                    School Admin
+                  </Link>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
@@ -127,8 +164,8 @@ function Navigation() {
 function Footer() {
   return (
     <footer className="bg-black border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
@@ -210,19 +247,29 @@ function Footer() {
 function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const [loaded, setLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     setTimeout(() => setLoaded(true), 100);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   return (
-    <section ref={ref} className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* 3D Background Scene */}
-      {!prefersReducedMotion && (
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
+      {/* 3D Background Scene - disabled on mobile for performance */}
+      {!prefersReducedMotion && !isMobile && (
         <div className="absolute inset-0 z-0">
           <Hero3DScene />
         </div>
+      )}
+      
+      {/* Mobile fallback background */}
+      {isMobile && (
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-orange-500/20 via-black to-orange-900/20" />
       )}
 
       {/* Gradient overlays */}
@@ -235,15 +282,15 @@ function HeroSection() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={loaded ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full mb-8">
-            <div className="w-2 h-2 bg-[#E85D04] rounded-full animate-pulse" />
-            <span className="text-xs font-medium text-white/80 tracking-widest uppercase">Now Enrolling 2026/2027</span>
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 glass rounded-full mb-6 sm:mb-8">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#E85D04] rounded-full animate-pulse" />
+            <span className="text-[10px] sm:text-xs font-medium text-white/80 tracking-widest uppercase">Now Enrolling 2026/2027</span>
           </div>
         </motion.div>
 
-        <h1 className="text-5xl sm:text-7xl lg:text-9xl font-bold text-white leading-[0.9] mb-8 tracking-tight">
+        <h1 className="text-4xl sm:text-6xl lg:text-9xl font-bold text-white leading-[0.9] mb-6 sm:mb-8 tracking-tight">
           <CharReveal text="WHERE" className="block" delay={200} />
           <CharReveal text="EVERY" className="block" delay={400} />
           <span className="block gradient-text">
@@ -257,7 +304,7 @@ function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={loaded ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
+          className="text-base sm:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4"
         >
           A premium private school in Kumasi offering a blended Ghanaian and Cambridge curriculum from Early Years through Junior High School.
         </motion.p>
@@ -266,22 +313,23 @@ function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={loaded ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 1.5, duration: 0.8 }}
-          className="flex flex-wrap justify-center gap-4"
+          className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 px-4"
         >
           <MagneticButton>
             <Link
               to="/admissions"
-              className="group relative inline-flex items-center gap-3 px-8 py-4 bg-[#E85D04] text-white font-medium rounded-full overflow-hidden glow-orange"
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-[#E85D04] text-white text-sm sm:text-base font-medium rounded-full overflow-hidden glow-orange w-full sm:w-auto"
             >
               <span className="relative z-10">Apply for Admission</span>
-              <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={16} className="sm:hidden relative z-10" />
+              <ArrowRight size={18} className="hidden sm:block relative z-10 group-hover:translate-x-1 transition-transform" />
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Link>
           </MagneticButton>
           <MagneticButton>
             <Link
               to="/about"
-              className="inline-flex items-center gap-3 px-8 py-4 glass text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+              className="inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 glass text-white text-sm sm:text-base font-medium rounded-full hover:bg-white/10 transition-colors w-full sm:w-auto"
             >
               Explore Our School
             </Link>
@@ -323,7 +371,7 @@ function CTASection() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section ref={ref} className="relative py-40 overflow-hidden">
+    <section ref={ref} className="relative py-24 sm:py-40 overflow-hidden">
       {/* Animated background */}
       <motion.div
         className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80')] bg-cover bg-center"
@@ -333,11 +381,11 @@ function CTASection() {
         }}
       />
       <div className="absolute inset-0 bg-black/70" />
-      
+
       {/* Gradient orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#E85D04] rounded-full blur-[150px] opacity-20"
+          className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#E85D04] rounded-full blur-[100px] sm:blur-[150px] opacity-20"
           animate={{
             x: [0, 100, 0],
             y: [0, -50, 0],
@@ -345,7 +393,7 @@ function CTASection() {
           transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF8C42] rounded-full blur-[150px] opacity-20"
+          className="absolute bottom-1/4 right-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#FF8C42] rounded-full blur-[100px] sm:blur-[150px] opacity-20"
           animate={{
             x: [0, -100, 0],
             y: [0, 50, 0],
@@ -356,35 +404,36 @@ function CTASection() {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <ScrollReveal>
-          <h2 className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-5xl lg:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight">
             Ready to Give<br />
             <span className="gradient-text">Your Child</span><br />
             <span className="text-stroke">The Best Start?</span>
           </h2>
         </ScrollReveal>
-        
+
         <ScrollReveal delay={0.3}>
-          <p className="text-xl text-white/60 mb-12 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-white/60 mb-8 sm:mb-12 max-w-2xl mx-auto px-4">
             Join the Maple Grove family. Applications are now open for the 2026/2027 academic year.
           </p>
         </ScrollReveal>
 
         <ScrollReveal delay={0.5}>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 sm:gap-6 px-4">
             <MagneticButton>
               <Link
                 to="/admissions"
-                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-[#E85D04] text-white text-lg font-medium rounded-full overflow-hidden glow-orange"
+                className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-[#E85D04] text-white text-base sm:text-lg font-medium rounded-full overflow-hidden glow-orange w-full sm:w-auto"
               >
                 <span className="relative z-10">Start Application</span>
-                <ArrowRight size={20} className="relative z-10 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight size={18} className="sm:hidden relative z-10" />
+                <ArrowRight size={20} className="hidden sm:block relative z-10 group-hover:translate-x-2 transition-transform" />
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </Link>
             </MagneticButton>
             <MagneticButton>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-3 px-10 py-5 glass text-white text-lg font-medium rounded-full hover:bg-white/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 sm:gap-3 px-8 sm:px-10 py-4 sm:py-5 glass text-white text-base sm:text-lg font-medium rounded-full hover:bg-white/10 transition-colors w-full sm:w-auto"
               >
                 Book a School Visit
               </Link>
@@ -395,7 +444,6 @@ function CTASection() {
     </section>
   );
 }
-
 // ============================================================================
 // HOME PAGE - IMMERSIVE EXPERIENCE
 // ============================================================================
@@ -406,54 +454,53 @@ function HomePage() {
       <HeroSection />
 
       {/* Marquee Stats */}
-      <section className="py-12 border-y border-white/10 overflow-hidden">
+      <section className="py-8 sm:py-12 border-y border-white/10 overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-16 px-8">
-              <div className="flex items-center gap-4">
-                <span className="text-6xl font-bold gradient-text">320+</span>
-                <span className="text-white/40 text-sm uppercase tracking-widest">Students</span>
+            <div key={i} className="flex items-center gap-8 sm:gap-16 px-4 sm:px-8">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="text-3xl sm:text-6xl font-bold gradient-text">320+</span>
+                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Students</span>
               </div>
-              <div className="w-px h-12 bg-white/10" />
-              <div className="flex items-center gap-4">
-                <span className="text-6xl font-bold gradient-text">18</span>
-                <span className="text-white/40 text-sm uppercase tracking-widest">Years</span>
+              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="text-3xl sm:text-6xl font-bold gradient-text">18</span>
+                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Years</span>
               </div>
-              <div className="w-px h-12 bg-white/10" />
-              <div className="flex items-center gap-4">
-                <span className="text-6xl font-bold gradient-text">95%</span>
-                <span className="text-white/40 text-sm uppercase tracking-widest">BECE Pass Rate</span>
+              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="text-3xl sm:text-6xl font-bold gradient-text">95%</span>
+                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap">BECE Pass Rate</span>
               </div>
-              <div className="w-px h-12 bg-white/10" />
-              <div className="flex items-center gap-4">
-                <span className="text-6xl font-bold gradient-text">25:1</span>
-                <span className="text-white/40 text-sm uppercase tracking-widest">Class Size</span>
+              <div className="w-px h-8 sm:h-12 bg-white/10" />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="text-3xl sm:text-6xl font-bold gradient-text">25:1</span>
+                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-widest">Class Size</span>
               </div>
-              <div className="w-px h-12 bg-white/10" />
+              <div className="w-px h-8 sm:h-12 bg-white/10" />
             </div>
           ))}
         </div>
       </section>
 
       {/* Why Maple Grove - 3D Tilt Cards */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-20 sm:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#E85D04] rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FF8C42] rounded-full blur-[120px]" />
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal className="text-center mb-20">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Why Parents Choose Us</span>
-            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4 leading-tight">
+          <ScrollReveal className="text-center mb-12 sm:mb-20">
+            <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Why Parents Choose Us</span>
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4 leading-tight">
               Education That<br />
               <span className="gradient-text">Prepares For Life</span>
             </h2>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-3 gap-8 perspective-1000">
-            {[
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 perspective-1000">            {[
               {
                 icon: <BookOpen size={32} />,
                 title: 'Blended Curriculum',
@@ -489,64 +536,101 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Programmes - Horizontal Scroll */}
-      <section className="py-32 bg-black relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      {/* Programmes - Horizontal Scroll (Desktop) / Vertical Cards (Mobile) */}
+      <section className="py-20 sm:py-32 bg-black relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
           <ScrollReveal className="text-center">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Our Programmes</span>
-            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">
+            <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Our Programmes</span>
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">
               From First Steps<br />
               <span className="text-stroke-orange">To BECE Success</span>
             </h2>
           </ScrollReveal>
         </div>
 
-        <HorizontalScroll>
-          {departments.map((dept, i) => (
-            <div key={dept.id} className="flex-shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw]">
-              <TiltCard intensity={5}>
-                <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
-                  <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
-                  <div className="p-12 h-full flex flex-col justify-between preserve-3d">
-                    <div>
-                      <div className="flex items-center gap-4 mb-8">
-                        {i === 0 ? <Star size={40} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="text-[#E85D04]" /> : <GraduationCap size={40} className="text-[#E85D04]" />}
-                        <span className="text-8xl font-bold text-white/10">0{i + 1}</span>
+        {/* Desktop: Horizontal Scroll */}
+        <div className="hidden md:block">
+          <HorizontalScroll>
+            {departments.map((dept, i) => (
+              <div key={dept.id} className="flex-shrink-0 w-[60vw] lg:w-[40vw]">
+                <TiltCard intensity={5}>
+                  <div className="group relative h-[70vh] glass rounded-3xl overflow-hidden preserve-3d">
+                    <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
+                    <div className="p-8 lg:p-12 h-full flex flex-col justify-between preserve-3d">
+                      <div>
+                        <div className="flex items-center gap-4 mb-8">
+                          {i === 0 ? <Star size={40} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={40} className="text-[#E85D04]" /> : <GraduationCap size={40} className="text-[#E85D04]" />}
+                          <span className="text-6xl lg:text-8xl font-bold text-white/10">0{i + 1}</span>
+                        </div>
+                        <h3 className="text-3xl lg:text-5xl font-bold text-white mb-6">{dept.name}</h3>
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {dept.levels.map(level => (
+                            <span key={level} className="px-4 py-2 glass rounded-full text-sm text-white/80">
+                              {level}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                      <h3 className="text-4xl sm:text-5xl font-bold text-white mb-6">{dept.name}</h3>
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {dept.levels.map(level => (
-                          <span key={level} className="px-4 py-2 glass rounded-full text-sm text-white/80">
-                            {level}
-                          </span>
-                        ))}
+                      <div>
+                        <p className="text-base lg:text-lg text-white/60 leading-relaxed mb-8">
+                          {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
+                          {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
+                          {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
+                        </p>
+                        <Link to="/academics" className="inline-flex items-center gap-3 text-[#E85D04] font-medium group-hover:gap-4 transition-all">
+                          <span>Learn more</span>
+                          <ArrowRight size={20} />
+                        </Link>
                       </div>
-                    </div>
-                    <div>
-                      <p className="text-lg text-white/60 leading-relaxed mb-8">
-                        {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
-                        {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
-                        {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
-                      </p>
-                      <Link to="/academics" className="inline-flex items-center gap-3 text-[#E85D04] font-medium group-hover:gap-4 transition-all">
-                        <span>Learn more</span>
-                        <ArrowRight size={20} />
-                      </Link>
                     </div>
                   </div>
+                </TiltCard>
+              </div>
+            ))}
+          </HorizontalScroll>
+        </div>
+
+        {/* Mobile: Vertical Cards */}
+        <div className="md:hidden space-y-6 px-4">
+          {departments.map((dept, i) => (
+            <ScrollReveal key={dept.id} delay={i * 0.1}>
+              <div className="group relative glass rounded-2xl overflow-hidden">
+                <div className={`absolute top-0 left-0 right-0 h-1 ${i === 0 ? 'bg-[#E85D04]' : i === 1 ? 'bg-[#FF8C42]' : 'bg-[#FFB366]'}`} />
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    {i === 0 ? <Star size={28} className="text-[#E85D04]" /> : i === 1 ? <BookOpen size={28} className="text-[#E85D04]" /> : <GraduationCap size={28} className="text-[#E85D04]" />}
+                    <span className="text-4xl font-bold text-white/10">0{i + 1}</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{dept.name}</h3>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {dept.levels.map(level => (
+                      <span key={level} className="px-3 py-1 glass rounded-full text-xs text-white/80">
+                        {level}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-sm text-white/60 leading-relaxed mb-6">
+                    {i === 0 && 'A nurturing environment where young learners develop foundational skills through play-based and structured learning.'}
+                    {i === 1 && 'Building strong academic foundations in literacy, numeracy, science and the arts with character development.'}
+                    {i === 2 && 'Rigorous academic preparation for BECE with Cambridge enrichment opportunities for high-achieving students.'}
+                  </p>
+                  <Link to="/academics" className="inline-flex items-center gap-2 text-[#E85D04] text-sm font-medium">
+                    <span>Learn more</span>
+                    <ArrowRight size={16} />
+                  </Link>
                 </div>
-              </TiltCard>
-            </div>
+              </div>
+            </ScrollReveal>
           ))}
-        </HorizontalScroll>
+        </div>
       </section>
 
       {/* School Life - Immersive Grid */}
-      <section className="py-32 bg-black relative overflow-hidden">
+      <section className="py-20 sm:py-32 bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal className="text-center mb-20">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">School Life</span>
-            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4 leading-tight">
+          <ScrollReveal className="text-center mb-12 sm:mb-20">
+            <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">School Life</span>
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4 leading-tight">
               More Than<br />
               <span className="gradient-text">Academics</span>
             </h2>
@@ -617,12 +701,12 @@ function HomePage() {
       </section>
 
       {/* News - Immersive Cards */}
-      <section className="py-32 bg-gradient-to-b from-black to-gray-900 relative">
+      <section className="py-20 sm:py-32 bg-gradient-to-b from-black to-gray-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-16">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 sm:mb-16 gap-4">
             <ScrollReveal>
-              <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">Latest Updates</span>
-              <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">News &<br /><span className="gradient-text">Events</span></h2>
+              <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">Latest Updates</span>
+              <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">News &<br /><span className="gradient-text">Events</span></h2>
             </ScrollReveal>
             <MagneticButton className="hidden sm:inline-flex">
               <Link to="/news" className="inline-flex items-center gap-3 px-6 py-3 glass text-white rounded-full hover:bg-white/10 transition-colors">
@@ -657,34 +741,34 @@ function HomePage() {
       </section>
 
       {/* Events - Timeline Style */}
-      <section className="py-32 bg-black relative">
+      <section className="py-20 sm:py-32 bg-black relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal className="text-center mb-20">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-widest">What's Coming Up</span>
-            <h2 className="text-5xl sm:text-7xl font-bold text-white mt-4">Upcoming<br /><span className="text-stroke">Events</span></h2>
+          <ScrollReveal className="text-center mb-12 sm:mb-20">
+            <span className="text-[#E85D04] font-medium text-xs sm:text-sm uppercase tracking-widest">What's Coming Up</span>
+            <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white mt-4">Upcoming<br /><span className="text-stroke">Events</span></h2>
           </ScrollReveal>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {events.slice(0, 4).map((event, i) => (
               <ScrollReveal key={event.id} direction="left" delay={i * 0.15}>
                 <motion.div
-                  className="group relative flex items-center gap-8 p-8 glass rounded-2xl hover:border-[#E85D04]/30 transition-all duration-500 cursor-pointer"
-                  whileHover={{ x: 20 }}
+                  className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 p-5 sm:p-8 glass rounded-2xl hover:border-[#E85D04]/30 transition-all duration-500 cursor-pointer"
+                  whileHover={{ x: window.innerWidth >= 640 ? 20 : 0 }}
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#E85D04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="w-24 h-24 bg-[#E85D04]/10 rounded-2xl flex flex-col items-center justify-center shrink-0 group-hover:bg-[#E85D04]/20 transition-colors">
-                    <span className="text-xs font-medium text-[#E85D04] uppercase">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-[#E85D04]/10 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center shrink-0 group-hover:bg-[#E85D04]/20 transition-colors">
+                    <span className="text-[10px] sm:text-xs font-medium text-[#E85D04] uppercase">
                       {new Date(event.date).toLocaleDateString('en', { month: 'short' })}
                     </span>
-                    <span className="text-3xl font-bold text-white">
+                    <span className="text-xl sm:text-3xl font-bold text-white">
                       {new Date(event.date).getDate()}
                     </span>
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-2xl font-bold text-white mb-2 group-hover:text-[#E85D04] transition-colors">{event.title}</h4>
-                    <p className="text-white/60">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
+                    <h4 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2 group-hover:text-[#E85D04] transition-colors">{event.title}</h4>
+                    <p className="text-sm sm:text-base text-white/60">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
                   </div>
-                  <ArrowRight size={24} className="text-white/20 group-hover:text-[#E85D04] group-hover:translate-x-2 transition-all" />
+                  <ArrowRight size={20} className="hidden sm:block text-white/20 group-hover:text-[#E85D04] group-hover:translate-x-2 transition-all" />
                 </motion.div>
               </ScrollReveal>
             ))}
