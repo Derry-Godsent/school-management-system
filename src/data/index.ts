@@ -5,6 +5,7 @@ export const school = {
   motto: 'Nurturing Excellence, Building Character',
   address: '14 Asanteman Road, Ayigya, Kumasi',
   phone: '+233 24 123 4567',
+  phoneAlt: '+233 20 987 6543',
   email: 'info@maplegrove.edu.gh',
 };
 
@@ -470,5 +471,92 @@ export const admissionApplications = [
     status: 'pending',
     date: '2026-01-30',
     notes: '',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// PUBLIC SITE CONTENT
+// ---------------------------------------------------------------------------
+
+export const departments = [
+  {
+    id: 'early-years',
+    name: 'Early Years (KG 1 - KG 2)',
+    levels: ['KG 1', 'KG 2'],
+  },
+  {
+    id: 'primary',
+    name: 'Primary School (Primary 1 - Primary 6)',
+    levels: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'],
+  },
+  {
+    id: 'jhs',
+    name: 'Junior High School (JHS 1 - JHS 3)',
+    levels: ['JHS 1', 'JHS 2', 'JHS 3'],
+  },
+];
+
+export const galleryAlbums = [
+  { id: 'cultural-festival', title: 'Cultural Festival', imageCount: 48, date: '2026-03-14' },
+  { id: 'science-exhibition', title: 'Science & Maths Exhibition', imageCount: 36, date: '2026-02-21' },
+  { id: 'sports-day', title: 'Inter-House Sports Day', imageCount: 52, date: '2026-02-07' },
+  { id: 'reading-week', title: 'Reading Week', imageCount: 24, date: '2025-11-18' },
+  { id: 'graduation-2025', title: 'JHS Graduation 2025', imageCount: 64, date: '2025-07-26' },
+];
+
+export const news = [
+  {
+    id: 'news-001',
+    category: 'Academics',
+    date: '2026-09-28',
+    title: 'Maple Grove records 100% pass rate in the 2026 BECE',
+    excerpt: 'All 68 candidates passed, with 12 earning places at top senior high schools.',
+    content:
+      'All 68 candidates presented for the Basic Education Certificate Examination passed, with 41 achieving aggregate 20 or better. Twelve students earned placements at senior high schools including Prempeh College, Yaa Asantewaa Girls and Opoku Ware School.',
+  },
+  {
+    id: 'news-002',
+    category: 'Admissions',
+    date: '2026-09-15',
+    title: '2026/2027 admissions now open for all year groups',
+    excerpt: 'Apply online or collect a form from the admissions office. Early applications encouraged.',
+    content:
+      'Applications are open for KG 1 through JHS 2. Parents may apply online through the school website or collect a form from the admissions office. Early applications are encouraged as places in Primary and JHS fill quickly.',
+  },
+  {
+    id: 'news-003',
+    category: 'Events',
+    date: '2026-08-30',
+    title: 'Science & Maths Exhibition showcases 40 student projects',
+    excerpt: 'Three projects were selected for the regional STEM fair in Kumasi.',
+    content:
+      'Students from Primary 4 to JHS 3 presented projects ranging from solar-powered irrigation models to a locally built water filtration system. Three projects were selected to represent the school at the regional STEM fair in Kumasi.',
+  },
+  {
+    id: 'news-004',
+    category: 'Facilities',
+    date: '2026-08-12',
+    title: 'New ICT laboratory opens with 30 workstations',
+    excerpt: 'Thirty workstations with power backup and broadband for Primary 4 upwards.',
+    content:
+      'Our refurbished ICT laboratory now provides 30 workstations with reliable power backup and broadband access. Every student from Primary 4 upwards receives a timetabled ICT lesson each week as part of the curriculum.',
+  },
+  {
+    id: 'news-005',
+    category: 'Sports',
+    date: '2026-07-19',
+    title: 'Eagles House wins Inter-House Sports for the third year running',
+    excerpt: 'Eagles retained the trophy with strong athletics and football performances.',
+    content:
+      'Eagles House retained the inter-house trophy with a strong showing in athletics and football. The day closed with a march past and a display by our cultural troupe, with parents and alumni in attendance.',
+  },
+  {
+    id: 'news-006',
+    category: 'Notices',
+    date: '2026-06-25',
+    title: 'Second term reopening and fee payment reminder',
+    excerpt: 'School reopens 8 September 2026. Please settle outstanding fees before reopening.',
+    content:
+      'School reopens on 8 September 2026. Parents are kindly reminded to settle outstanding fees before reopening to allow smooth registration. Fee statements are available in the Parent Portal under the Fees section.',
   },
 ];

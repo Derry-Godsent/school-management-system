@@ -17,11 +17,12 @@ export default function HomePage() {
   });
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
+  // Placeholder photography. Swap these for real school photos in /public when available.
   const heroSlides = [
     {
       title: 'Maple Grove International School',
       subtitle: 'Nurturing Excellence | Building Character | Transforming Futures',
-      image: '/generated-images/18a01946-dafb-44d2-932c-18e2a4ecec2e/_result.png',
+      image: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1920&q=80',
     },
     {
       title: 'Our Vision',
@@ -31,7 +32,7 @@ export default function HomePage() {
     {
       title: 'Excellence in Education',
       subtitle: 'Where every child discovers their best through personalized learning and character development.',
-      image: '/generated-images/ffa9b3a9-22ad-4f05-aebf-c302436fd777/_result.png',
+      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80',
     },
   ];
 
