@@ -424,3 +424,51 @@ export function getFeeSummary(studentId: string) {
 export function formatCurrency(amount: number): string {
   return `GHS ${amount.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
+
+export const staff = [
+  {
+    id: 'admin-1',
+    name: 'Mr. Kwame Asante',
+    role: 'Super Admin',
+    title: 'School Director',
+    department: 'Administration',
+    email: 'k.asante@maplegrove.edu.gh',
+    phone: '+233 24 111 2233',
+  },
+];
+
+export const classes = [
+  { id: 'jhs2', name: 'JHS 2', department: 'jhs' },
+  { id: 'p5', name: 'Primary 5', department: 'primary' },
+];
+
+export function getClassById(id: string) {
+  return classes.find(c => c.id === id);
+}
+
+export const admissionApplications = [
+  {
+    id: 'app-001',
+    childName: 'Adwoa Boateng',
+    dob: '2018-06-15',
+    applyingFor: 'KG 2',
+    parentName: 'Mrs. Yaa Boateng',
+    parentPhone: '+233 24 888 9900',
+    parentEmail: 'y.boateng@email.com',
+    status: 'pending',
+    date: '2026-01-28',
+    notes: '',
+  },
+  {
+    id: 'app-002',
+    childName: 'Kwame Asare',
+    dob: '2016-03-22',
+    applyingFor: 'Primary 4',
+    parentName: 'Mr. & Mrs. Asare',
+    parentPhone: '+233 20 777 6655',
+    parentEmail: 'asare.family@email.com',
+    status: 'pending',
+    date: '2026-01-30',
+    notes: '',
+  },
+];
