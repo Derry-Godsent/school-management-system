@@ -52,19 +52,13 @@ export function TiltCard({ children, className = '', intensity = 15 }: TiltCardP
       style={{
         rotateX: isHovered ? rotateX : 0,
         rotateY: isHovered ? rotateY : 0,
-        transformStyle: 'preserve-3d',
-        perspective: 1000,
+        transform: 'perspective(1000px)',
+        willChange: 'transform',
       }}
     >
-      <motion.div
-        style={{
-          transform: isHovered ? 'translateZ(20px)' : 'translateZ(0)',
-          transformStyle: 'preserve-3d',
-          transition: 'transform 0.3s',
-        }}
-      >
+      <div style={{ transition: 'transform 0.3s' }}>
         {children}
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
