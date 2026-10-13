@@ -1,6 +1,5 @@
-import { useState, createContext, useContext, ReactNode } from 'react';
+import React, { useState, createContext, useContext, ReactNode } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, BookOpen, Calendar, CreditCard, Bell, User, LogOut,
   ChevronRight, TrendingUp, Clock, AlertCircle, Check, X,
@@ -69,11 +68,7 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
-      >
+      <div className="w-full max-w-md animate-fade-in">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-[#E85D04] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-white font-bold text-xl">MG</span>
@@ -131,7 +126,7 @@ function LoginPage() {
             ← Back to school website
           </Link>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -168,10 +163,7 @@ function BottomNav() {
               <Icon size={22} className={isActive ? 'scale-110' : ''} />
               <span className="text-xs mt-1 font-medium">{item.label}</span>
               {isActive && (
-                <motion.div
-                  layoutId="bottomNavIndicator"
-                  className="absolute top-0 w-12 h-0.5 bg-[#E85D04]"
-                />
+                <div className="absolute top-0 w-12 h-0.5 bg-[#E85D04]" />
               )}
             </button>
           );
@@ -269,11 +261,7 @@ function ParentDashboard() {
 
         {/* Student Info Card */}
         {student && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-br from-[#E85D04] to-[#DC4A03] rounded-2xl p-6 text-white shadow-xl shadow-orange-500/20"
-          >
+          <div className="bg-gradient-to-br from-[#E85D04] to-[#DC4A03] rounded-2xl p-6 text-white shadow-xl shadow-orange-500/20 animate-fade-in">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <span className="text-2xl font-bold">{student.name.split(' ').map(n => n[0]).join('')}</span>
@@ -284,17 +272,12 @@ function ParentDashboard() {
                 <p className="text-xs text-white/60 mt-1">{student.programme}</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
-          >
+          <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm card-hover">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
                 <TrendingUp size={16} className="text-blue-600" />
@@ -302,14 +285,9 @@ function ParentDashboard() {
               <span className="text-xs font-medium text-gray-500">Average</span>
             </div>
             <p className="text-2xl font-bold text-gray-900">{averageScore}%</p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
-          >
+          <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm card-hover">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
                 <Check size={16} className="text-green-600" />
@@ -317,14 +295,9 @@ function ParentDashboard() {
               <span className="text-xs font-medium text-gray-500">Attendance</span>
             </div>
             <p className="text-2xl font-bold text-gray-900">{attendanceStats.percentage}%</p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
-          >
+          <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm card-hover">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center">
                 <CreditCard size={16} className="text-[#E85D04]" />
@@ -332,14 +305,9 @@ function ParentDashboard() {
               <span className="text-xs font-medium text-gray-500">Balance</span>
             </div>
             <p className="text-lg font-bold text-gray-900">{formatCurrency(feeSummary.totalBalance)}</p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
-          >
+          <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm card-hover">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
                 <Bell size={16} className="text-purple-600" />
@@ -347,7 +315,7 @@ function ParentDashboard() {
               <span className="text-xs font-medium text-gray-500">News</span>
             </div>
             <p className="text-2xl font-bold text-gray-900">{announcements.length}</p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Recent Results */}
@@ -641,11 +609,9 @@ function AnnouncementsPage() {
       
       <div className="px-4 py-6 space-y-4">
         {announcements.map(ann => (
-          <motion.div
+          <div
             key={ann.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl border border-gray-100 shadow-sm p-4"
+            className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 animate-fade-in"
           >
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex items-center gap-2">
@@ -660,7 +626,7 @@ function AnnouncementsPage() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-1">{ann.title}</h3>
             <p className="text-sm text-gray-600">{ann.content}</p>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
