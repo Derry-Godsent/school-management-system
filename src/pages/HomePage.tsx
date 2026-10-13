@@ -64,7 +64,7 @@ export default function HomePage() {
       </div>
 
       {/* Main Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg">
+      <nav className="sticky top-0 z-50 bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link to="/" className="flex items-center gap-3">
@@ -199,7 +199,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - Dark Background */}
       <section className="py-16 bg-[#1a1a1a]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -231,11 +231,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Welcome Message Section */}
+      {/* Welcome Message - Full Width with Sidebar */}
       <section className="py-24 bg-[#FAFAF7]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-12">
-            {/* Main Content */}
+            {/* Main Content - 2/3 width */}
             <div className="lg:col-span-2">
               <ScrollReveal>
                 <h2 className="text-4xl sm:text-5xl font-bold text-[#1a1a1a] mb-8">
@@ -244,50 +244,46 @@ export default function HomePage() {
               </ScrollReveal>
 
               <ScrollReveal delay={0.2}>
-                <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl mb-12">
-                  <blockquote className="text-xl text-gray-700 leading-relaxed mb-8">
-                    <p className="mb-6">
-                      On behalf of the Maple Grove International School community, I welcome you to our digital home. It is my hope that by the time you are done navigating through our various pages, you will not only be satisfied with what you will read and see, but you will equally develop a unique affinity to our brand and services.
-                    </p>
-                    <p className="mb-6">
-                      In 2008, when a group of visionary educators decided to establish a school that would combine the rigour of the Ghanaian national curriculum with the global perspective of Cambridge international standards, little did they know that this school would grow to become one of Kumasi's most respected educational institutions.
-                    </p>
-                    <p>
-                      Today, with over 320 students from Early Years through Junior High School, we continue to nurture excellence and build character in every child who walks through our doors.
-                    </p>
-                  </blockquote>
-                  <div className="pt-6 border-t-4 border-[#E85D04]">
-                    <div className="flex items-center gap-6">
-                      <div className="w-20 h-20 bg-gradient-to-br from-[#E85D04] to-[#DC4A03] rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                        KA
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-[#1a1a1a]">Mr. Kwame Asante</div>
-                        <div className="text-lg text-[#E85D04] font-semibold">School Director / Proprietor</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <blockquote className="text-xl text-gray-700 leading-relaxed mb-8 border-l-4 border-[#E85D04] pl-8">
+                  <p className="mb-6">
+                    On behalf of the Maple Grove International School community, I welcome you to our digital home. It is my hope that by the time you are done navigating through our various pages, you will not only be satisfied with what you will read and see, but you will equally develop a unique affinity to our brand and services and recommend us to friends, family and others in your network who are craving for quality education.
+                  </p>
+                  <p className="mb-6">
+                    In 2008, when a group of visionary educators decided to establish a school that would combine the rigour of the Ghanaian national curriculum with the global perspective of Cambridge international standards, little did they know that that school that started with five students and two teachers would grow to become one of Kumasi's most respected educational institutions.
+                  </p>
+                  <p className="text-2xl font-bold text-[#E85D04] mt-8">
+                    Mr. Kwame Asante, School Director
+                  </p>
+                </blockquote>
+              </ScrollReveal>
+
+              {/* Large Image */}
+              <ScrollReveal delay={0.3}>
+                <img 
+                  src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80"
+                  alt="School"
+                  className="w-full rounded-lg shadow-xl mb-12"
+                />
               </ScrollReveal>
 
               {/* News/Achievement Section */}
-              <ScrollReveal delay={0.3}>
-                <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl">
-                  <div className="flex gap-4 mb-8">
+              <ScrollReveal delay={0.4}>
+                <div className="mb-12">
+                  <div className="grid grid-cols-3 gap-4 mb-8">
                     <img 
-                      src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=200&q=80"
+                      src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80"
                       alt="Achievement"
-                      className="w-32 h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover rounded-lg"
                     />
                     <img 
-                      src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=300&q=80"
+                      src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=400&q=80"
                       alt="Students"
-                      className="w-48 h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover rounded-lg"
                     />
                     <img 
-                      src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=300&q=80"
+                      src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=400&q=80"
                       alt="School"
-                      className="w-48 h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover rounded-lg"
                     />
                   </div>
                   <div className="text-lg text-gray-700 leading-relaxed space-y-4">
@@ -303,9 +299,25 @@ export default function HomePage() {
                   </div>
                 </div>
               </ScrollReveal>
+
+              {/* Image Gallery */}
+              <ScrollReveal delay={0.5}>
+                <div className="grid grid-cols-2 gap-4">
+                  <img 
+                    src="/generated-images/ffa9b3a9-22ad-4f05-aebf-c302436fd777/_result.png"
+                    alt="Students"
+                    className="w-full rounded-lg shadow-lg"
+                  />
+                  <img 
+                    src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80"
+                    alt="Learning"
+                    className="w-full rounded-lg shadow-lg"
+                  />
+                </div>
+              </ScrollReveal>
             </div>
 
-            {/* Sidebar */}
+            {/* Sidebar - 1/3 width */}
             <div className="lg:col-span-1 space-y-8">
               <ScrollReveal>
                 <Link to="/academics" className="block w-full px-8 py-4 bg-[#E85D04] text-white text-lg font-bold rounded-full text-center hover:bg-[#DC4A03] transition-colors shadow-lg">
@@ -314,34 +326,30 @@ export default function HomePage() {
               </ScrollReveal>
 
               <ScrollReveal delay={0.1}>
-                <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
-                  <div className="bg-[#1a1a1a] text-white p-6">
-                    <h3 className="text-2xl font-bold mb-4">Updates</h3>
-                  </div>
-                  <div className="p-6">
-                    <ul className="space-y-4 text-gray-700">
-                      <li className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-2" />
-                        <span>Second Term Begins - January 12, 2026</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-2" />
-                        <span>PTA Meeting - February 15, 2026</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-2" />
-                        <span>Inter-House Sports - March 7, 2026</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-2" />
-                        <span>Mid-Term Break - February 17-21</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-2" />
-                        <span>Annual Sports Day - March 14, 2026</span>
-                      </li>
-                    </ul>
-                  </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-[#1a1a1a] mb-6 pb-3 border-b-2 border-[#E85D04]">Updates</h3>
+                  <ul className="space-y-4 text-gray-700 text-lg">
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-3" />
+                      <span>Second Term Begins - January 12, 2026</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-3" />
+                      <span>PTA Meeting - February 15, 2026</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-3" />
+                      <span>Inter-House Sports - March 7, 2026</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-3" />
+                      <span>Mid-Term Break - February 17-21</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-[#E85D04] rounded-full mt-3" />
+                      <span>Annual Sports Day - March 14, 2026</span>
+                    </li>
+                  </ul>
                 </div>
               </ScrollReveal>
 
@@ -357,20 +365,20 @@ export default function HomePage() {
                 </Link>
               </ScrollReveal>
 
-              {/* Gallery Images */}
               <ScrollReveal delay={0.4}>
-                <div className="space-y-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80"
-                    alt="School"
-                    className="w-full rounded-2xl shadow-lg"
-                  />
-                  <img 
-                    src="/generated-images/ffa9b3a9-22ad-4f05-aebf-c302436fd777/_result.png"
-                    alt="Students"
-                    className="w-full rounded-2xl shadow-lg"
-                  />
-                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80"
+                  alt="Classroom"
+                  className="w-full rounded-lg shadow-lg"
+                />
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.5}>
+                <img 
+                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
+                  alt="Students"
+                  className="w-full rounded-lg shadow-lg"
+                />
               </ScrollReveal>
             </div>
           </div>
