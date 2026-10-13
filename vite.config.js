@@ -8,8 +8,8 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 3000,
     strictPort: true,
-    hmr: {
-      port: 3000,
-    },
+    // Allow the sandbox preview host (*.e2b.app) through Vite's Host-header
+    // check, alongside localhost. Without this the dev server returns 403.
+    allowedHosts: [".e2b.app", "localhost"],
   },
 });
