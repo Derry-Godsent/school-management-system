@@ -65,46 +65,46 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-ink flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-[#E85D04] rounded-xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-12 bg-gold flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-sm">MG</span>
           </div>
           <h1 className="text-2xl font-bold text-white">School Management</h1>
-          <p className="text-sm text-gray-400 mt-1">{school.name}</p>
+          <p className="text-sm text-ink-mute/60 mt-1">{school.name}</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-paper p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="p-3 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">{error}</div>
+              <div className="p-3 bg-red-50 border border-red-100 text-sm text-red-700">{error}</div>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-ink-mute mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E85D04]/20 focus:border-[#E85D04]"
+                className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-ink-mute mb-1.5">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E85D04]/20 focus:border-[#E85D04]"
+                className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
               />
             </div>
-            <button type="submit" className="w-full py-3.5 bg-[#E85D04] text-white font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
+            <button type="submit" className="w-full py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors">
               Sign In
             </button>
           </form>
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-gray-500 text-center mb-2">Demo Credentials</p>
-            <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-600 space-y-1">
+            <p className="text-xs text-ink-mute/80 text-center mb-2">Demo Credentials</p>
+            <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
               <p><span className="font-medium">Email:</span> admin@demo.com</p>
               <p><span className="font-medium">Password:</span> demo123</p>
             </div>
@@ -112,7 +112,7 @@ function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-gray-500 hover:text-gray-300">← Back to school website</Link>
+          <Link to="/" className="text-sm text-ink-mute/80 hover:text-paper/40">← Back to school website</Link>
         </div>
       </div>
     </div>
@@ -147,30 +147,30 @@ function AdminLayout({ children }: { children: ReactNode }) {
   const pendingAdmissions = admissionApplications.filter(a => a.status === 'pending').length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-40">
+      <header className="bg-paper border-b sticky top-0 z-40">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-gray-600">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-ink-mute">
                 <Menu size={20} />
               </button>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#E85D04] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gold flex items-center justify-center">
                   <span className="text-white font-bold text-xs">MG</span>
                 </div>
-                <span className="font-semibold text-sm text-gray-900 hidden sm:block">Management</span>
+                <span className="font-semibold text-sm text-ink hidden sm:block">Management</span>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden sm:block text-right">
-                <p className="text-sm font-medium text-gray-900">{staffMember?.name}</p>
-                <p className="text-xs text-gray-500">{staffMember?.title}</p>
+                <p className="text-sm font-medium text-ink">{staffMember?.name}</p>
+                <p className="text-xs text-ink-mute/80">{staffMember?.title}</p>
               </div>
               <button
                 onClick={() => { logout(); navigate('/'); }}
-                className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700"
+                className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute"
               >
                 <LogOut size={16} />
               </button>
@@ -182,11 +182,11 @@ function AdminLayout({ children }: { children: ReactNode }) {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl p-6 overflow-y-auto' : 'hidden'} lg:block lg:relative lg:w-60 shrink-0`}>
+          <aside className={`${mobileMenuOpen ? 'fixed inset-y-0 left-0 z-50 w-72 bg-paper p-6 overflow-y-auto' : 'hidden'} lg:block lg:relative lg:w-60 shrink-0`}>
             {mobileMenuOpen && (
               <div className="flex items-center justify-between mb-6 lg:hidden">
                 <span className="font-semibold text-sm">Menu</span>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-cream">
                   <X size={20} />
                 </button>
               </div>
@@ -197,10 +197,10 @@ function AdminLayout({ children }: { children: ReactNode }) {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-between px-3 py-3 text-sm font-medium transition-colors ${
                     location.pathname === item.path
-                      ? 'bg-[#E85D04]/10 text-[#E85D04]'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'bg-gold/10 text-gold-deep'
+                      : 'text-ink-mute hover:bg-cream'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -208,7 +208,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                     {item.label}
                   </div>
                   {item.path === '/admin/admissions' && pendingAdmissions > 0 && (
-                    <span className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    <span className="w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center">
                       {pendingAdmissions}
                     </span>
                   )}
@@ -216,11 +216,11 @@ function AdminLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 py-2">
+              <Link to="/" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
-              <Link to="/parent" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mt-3 py-2">
+              <Link to="/parent" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute mt-3 py-2">
                 <ArrowLeft size={14} />
                 Parent Portal
               </Link>
@@ -255,73 +255,73 @@ function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Attention Centre</h1>
-        <p className="text-sm text-gray-500 mt-0.5">What needs your focus right now</p>
+        <h1 className="text-2xl font-bold text-ink">Attention Centre</h1>
+        <p className="text-sm text-ink-mute/80 mt-0.5">What needs your focus right now</p>
       </div>
 
       {/* Attention Items */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Link to="/admin/admissions" className="bg-white rounded-xl border p-4 sm:p-5 hover:border-[#E85D04]/30 transition-colors min-h-[120px] flex flex-col justify-between">
+        <Link to="/admin/admissions" className="bg-paper border p-4 sm:p-5 hover:border-gold/30 transition-colors min-h-[120px] flex flex-col justify-between">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-50 flex items-center justify-center shrink-0">
               <ClipboardList size={14} className="sm:hidden text-red-600" />
               <ClipboardList size={16} className="hidden sm:block text-red-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Pending Admissions</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Pending Admissions</span>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{pendingApps.length}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">awaiting review</p>
+            <p className="text-xl sm:text-2xl font-bold text-ink">{pendingApps.length}</p>
+            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">awaiting review</p>
           </div>
         </Link>
 
-        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+        <div className="bg-paper border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-orange-50 rounded-lg flex items-center justify-center shrink-0">
-              <DollarSign size={14} className="sm:hidden text-[#E85D04]" />
-              <DollarSign size={16} className="hidden sm:block text-[#E85D04]" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-orange-50 flex items-center justify-center shrink-0">
+              <DollarSign size={14} className="sm:hidden text-gold-deep" />
+              <DollarSign size={16} className="hidden sm:block text-gold-deep" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Outstanding Fees</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Outstanding Fees</span>
           </div>
           <div>
-            <p className="text-lg sm:text-2xl font-bold text-gray-900 truncate">{formatCurrency(totalOutstanding)}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
+            <p className="text-lg sm:text-2xl font-bold text-ink truncate">{formatCurrency(totalOutstanding)}</p>
+            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+        <div className="bg-paper border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-yellow-50 rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-yellow-50 flex items-center justify-center shrink-0">
               <UserX size={14} className="sm:hidden text-yellow-600" />
               <UserX size={16} className="hidden sm:block text-yellow-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Attendance Issues</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Attendance Issues</span>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{attendanceIssues.length}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">2+ absences</p>
+            <p className="text-xl sm:text-2xl font-bold text-ink">{attendanceIssues.length}</p>
+            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">2+ absences</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
+        <div className="bg-paper border p-4 sm:p-5 min-h-[120px] flex flex-col justify-between">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-green-50 flex items-center justify-center shrink-0">
               <UserCheck size={14} className="sm:hidden text-green-600" />
               <UserCheck size={16} className="hidden sm:block text-green-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase leading-tight">Total Students</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Total Students</span>
           </div>
           <div>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalStudents}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">enrolled</p>
+            <p className="text-xl sm:text-2xl font-bold text-ink">{totalStudents}</p>
+            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">enrolled</p>
           </div>
         </div>
       </div>
 
       {/* Recent Payments */}
-      <div className="bg-white rounded-xl border">
+      <div className="bg-paper border">
         <div className="p-5 border-b">
-          <h3 className="font-semibold text-gray-900">Recent Payments</h3>
+          <h3 className="font-semibold text-ink">Recent Payments</h3>
         </div>
         <div className="divide-y">
           {recentPayments.map(payment => {
@@ -329,8 +329,8 @@ function AdminDashboard() {
             return (
               <div key={payment.id} className="flex items-center justify-between px-5 py-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{student?.name}</p>
-                  <p className="text-xs text-gray-500">{payment.category} • {payment.method}</p>
+                  <p className="text-sm font-medium text-ink">{student?.name}</p>
+                  <p className="text-xs text-ink-mute/80">{payment.category} • {payment.method}</p>
                 </div>
                 <span className="text-sm font-medium text-green-600">{formatCurrency(payment.amount)}</span>
               </div>
@@ -357,52 +357,52 @@ function StudentsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{students.length} students enrolled</p>
+          <h1 className="text-2xl font-bold text-ink">Students</h1>
+          <p className="text-sm text-ink-mute/80 mt-0.5">{students.length} students enrolled</p>
         </div>
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#E85D04] text-white text-sm font-medium rounded-lg hover:bg-[#DC4A03] transition-colors">
+        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
           <Plus size={16} />
           Add Student
         </button>
       </div>
 
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute/60" />
         <input
           type="text"
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Search by name or student ID..."
-          className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E85D04]/20 focus:border-[#E85D04]"
+          className="w-full pl-9 pr-4 py-2.5 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
         />
       </div>
 
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-paper border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50">
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase">Student</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase">ID</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase">Class</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Programme</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
+              <tr className="bg-cream">
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Student</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">ID</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Class</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden md:table-cell">Programme</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {filtered.map(student => (
-                <tr key={student.id} className="hover:bg-gray-50">
+                <tr key={student.id} className="hover:bg-cream">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-medium text-gray-600">{student.name.split(' ').map(n => n[0]).join('')}</span>
+                      <div className="w-8 h-8 bg-cream flex items-center justify-center">
+                        <span className="text-xs font-medium text-ink-mute">{student.name.split(' ').map(n => n[0]).join('')}</span>
                       </div>
-                      <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                      <span className="text-sm font-medium text-ink">{student.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3 text-sm text-gray-600">{student.studentId}</td>
-                  <td className="px-5 py-3 text-sm text-gray-700">{student.className}</td>
-                  <td className="px-5 py-3 text-sm text-gray-600 hidden md:table-cell">{student.programme}</td>
+                  <td className="px-5 py-3 text-sm text-ink-mute">{student.studentId}</td>
+                  <td className="px-5 py-3 text-sm text-ink-mute">{student.className}</td>
+                  <td className="px-5 py-3 text-sm text-ink-mute hidden md:table-cell">{student.programme}</td>
                   <td className="px-5 py-3 text-center">
                     <span className="text-xs px-2 py-0.5 rounded font-medium bg-green-50 text-green-700">Active</span>
                   </td>

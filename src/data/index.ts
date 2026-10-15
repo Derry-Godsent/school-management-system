@@ -560,3 +560,174 @@ export const news = [
       'School reopens on 8 September 2026. Parents are kindly reminded to settle outstanding fees before reopening to allow smooth registration. Fee statements are available in the Parent Portal under the Fees section.',
   },
 ];
+
+// ---------------------------------------------------------------------------
+// INSTITUTIONAL PROFILE
+// ---------------------------------------------------------------------------
+
+export const schoolStats = [
+  { label: 'Established', value: 2008 },
+  { label: 'Students', value: 1240 },
+  { label: 'Teaching Staff', value: 86 },
+  { label: 'BECE Pass Rate', value: 100, suffix: '%' },
+];
+
+export const facilities = [
+  { id: 'ict-lab', name: 'ICT Laboratory', image: '/images/classroom.jpg' },
+  { id: 'library', name: 'Library & Reading Room', image: '/images/campus-life.jpg' },
+  { id: 'science-lab', name: 'Science Laboratory', image: '/images/classroom.jpg' },
+  { id: 'school-field', name: 'School Field', image: '/images/hero-campus.jpg' },
+  { id: 'assembly-hall', name: 'Assembly Hall', image: '/images/hero-campus.jpg' },
+  { id: 'pre-school', name: 'Pre-School Wing', image: '/images/campus-life.jpg' },
+];
+
+export const termDates = [
+  { term: 'First Term', opens: '8 September 2026', closes: '18 December 2026' },
+  { term: 'Second Term', opens: '12 January 2027', closes: '2 April 2027' },
+  { term: 'Third Term', opens: '27 April 2027', closes: '30 July 2027' },
+];
+
+export const upcomingEvents = [
+  { id: 'ev-01', title: 'Parent and Teacher Conference', date: '2026-10-24' },
+  { id: 'ev-02', title: 'Inter-House Sports Day', date: '2026-11-07' },
+  { id: 'ev-03', title: 'Speech and Prize-Giving Day', date: '2026-11-28' },
+  { id: 'ev-04', title: 'Examination Week', date: '2026-12-01' },
+  { id: 'ev-05', title: 'End of Term Graduation', date: '2026-12-17' },
+];
+
+// ---------------------------------------------------------------------------
+// MESSAGES FROM THE SCHOOL LEADERSHIP
+// ---------------------------------------------------------------------------
+
+export interface LeadershipMessage {
+  id: string;
+  name: string;
+  role: string;
+  image: string;
+  /** Short pull-quote shown beside the portrait. */
+  quote: string;
+  /** Body paragraphs, rendered in order. */
+  body: string[];
+}
+
+export const leadershipMessages: LeadershipMessage[] = [
+  {
+    id: 'director',
+    name: 'Mr. Kwame Asante',
+    role: 'School Director & Proprietor',
+    image: '/images/director.jpg',
+    quote:
+      'A school is not its buildings. It is the daily, patient work of teachers who refuse to give up on a child.',
+    body: [
+      'When we opened our gates in 2008 with two classrooms, a borrowed chalkboard and forty-one pupils, we had a single conviction: that children in Kumasi deserved an education that was both rooted in Ghanaian values and equal to the best available anywhere in the world.',
+      'Seventeen years later, that conviction has not changed. We have grown to over twelve hundred students, three departments and a staff of more than eighty. What has not changed is the standard. Every child who walks through our gates is known by name, tracked by progress, and expected to achieve.',
+      'We do not measure ourselves by the awards on our wall, welcome as they are. We measure ourselves by what happens after our students leave us — at senior high school, at university, and in the workplaces and communities where they eventually serve. That is the only verdict that matters.',
+      'To every parent who has entrusted us with a child: thank you. We do not take that trust lightly, and we will not waste it.',
+    ],
+  },
+  {
+    id: 'headteacher',
+    name: 'Mrs. Esi Boateng',
+    role: 'Headteacher',
+    image: '/images/headteacher.jpg',
+    quote:
+      'Good teaching is relentless attention to a single question: has this child actually understood?',
+    body: [
+      'Teaching is easy to do badly and very difficult to do well. My work, and the work of our department heads, is to make sure that every lesson in this school moves a child forward — not merely fills an hour.',
+      'We insist on small class sizes, on regular and honest assessment, and on feedback that reaches parents before problems become habits. When a pupil is struggling, we want to know within the week, not at the end of the term.',
+      'Our teachers are given time to plan together and to keep learning themselves. A school whose staff have stopped learning cannot honestly ask its students to keep learning either.',
+      'To our parents: you are the first teachers. Read with your children, ask them what they learned, and tell us early when something worries you. We would far rather hear from you twice a term than once a year.',
+    ],
+  },
+  {
+    id: 'administration',
+    name: 'Mrs. Abena Mensah',
+    role: 'Head of Administration',
+    image: '/images/headteacher.jpg',
+    quote:
+      'Administration is invisible when it is done well, and it is never neutral. Behind every smooth term is a great deal of quiet work.',
+    body: [
+      'A school runs on small details: fee statements that are clear and accurate, transport that arrives on time, records that can be found when a student transfers, and staff who are paid correctly and on schedule.',
+      'My office is responsible for making sure that the practical side of school life never becomes a source of anxiety for parents. Where something can be explained more simply, we try to explain it more simply.',
+      'We keep our fee structure transparent and we publish it in full. Families should never have to guess what they owe or what it covers. Statements are always available in the Parent Portal, and my office is open to any parent who would rather speak to someone directly.',
+      'If you have not received a clear answer from us, please persist. That is not trouble — that is accountability, and we welcome it.',
+    ],
+  },
+  {
+    id: 'prefect',
+    name: 'Master Kwabena Osei',
+    role: 'School Prefect (2026/2027)',
+    image: '/images/prefect.jpg',
+    quote:
+      'A prefect is not a title you wear. It is a responsibility to the student standing next to you.',
+    body: [
+      'When I was made School Prefect, I understood quickly that the role is not about privilege. It is about being answerable — to the teachers who trust us, and to the students who look to us to speak for them.',
+      'My work is practical. I sit with the student council each week. We take up concerns about the dining hall, about study time, about the condition of the playing field. Some of what we raise is small. Some of it has changed how things are done.',
+      'The thing I have learned at Maple Grove is that a school is better when students are treated as participants rather than as guests. Our opinions are asked for, and they are acted on.',
+      'To my fellow students: the standard we set in these years is the standard we will carry into senior high school and beyond. Let us set it deliberately and set it high.',
+    ],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// CAMPUS LIFE
+// ---------------------------------------------------------------------------
+
+export interface CampusLifeEvent {
+  id: string;
+  title: string;
+  month: string;
+  description: string;
+  images: { src: string; alt: string }[];
+}
+
+export const campusLifeEvents: CampusLifeEvent[] = [
+  {
+    id: 'cultural-day',
+    title: 'Cultural Day & Drumming',
+    month: 'March',
+    description:
+      'Students dress in traditional cloth from across Ghana, perform in the cultural troupe, and take part in drumming and dance. It remains the loudest and most joyful day in our calendar.',
+    images: [
+      { src: '/images/campus-life.jpg', alt: 'Students in traditional cloth drumming and dancing' },
+      { src: '/images/campus-life.jpg', alt: 'The cultural troupe performing in the courtyard' },
+      { src: '/images/hero-campus.jpg', alt: 'Parents and students gathered on the school grounds' },
+    ],
+  },
+  {
+    id: 'science-exhibition',
+    title: 'Science & Maths Exhibition',
+    month: 'August',
+    description:
+      'Every class from Primary 4 upwards presents a project. Recent exhibits have included a solar-powered irrigation model and a water filtration system built entirely from local materials.',
+    images: [
+      { src: '/images/classroom.jpg', alt: 'Students presenting a science project' },
+      { src: '/images/classroom.jpg', alt: 'A class explaining their exhibition to judges' },
+      { src: '/images/hero-campus.jpg', alt: 'Visitors touring the exhibition stands' },
+    ],
+  },
+  {
+    id: 'sports-day',
+    title: 'Inter-House Sports',
+    month: 'November',
+    description:
+      'The four houses compete across athletics, football and volleyball. The day closes with a march past and a display by the cadet corps, with parents and alumni in attendance.',
+    images: [
+      { src: '/images/hero-campus.jpg', alt: 'Athletes competing on the school field' },
+      { src: '/images/campus-life.jpg', alt: 'Supporters cheering from the sidelines' },
+      { src: '/images/classroom.jpg', alt: 'The house march past' },
+    ],
+  },
+];
+
+export const campusLifeProgrammes = [
+  'Cadet Corps',
+  'Brass Band',
+  'Cultural Troupe',
+  'Science & Robotics Club',
+  'Debate & Public Speaking',
+  'Football & Athletics',
+  'Reading Club',
+  'Choir',
+  'Drama Society',
+];

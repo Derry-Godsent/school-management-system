@@ -8,6 +8,7 @@ import AdmissionsPage from './pages/public/AdmissionsPage';
 import GalleryPage from './pages/public/GalleryPage';
 import NewsPage from './pages/public/NewsPage';
 import ContactPage from './pages/public/ContactPage';
+import CampusLifePage from './pages/public/CampusLifePage';
 import {
   AuthProvider,
   ParentLayout,
@@ -34,9 +35,15 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        {/* Public Website — HomePage still renders its own bespoke header/footer
-            pending unification onto PublicLayout. */}
-        <Route path="/" element={<HomePage />} />
+        {/* Public Website — every route shares one shell */}
+        <Route
+          path="/"
+          element={
+            <Public>
+              <HomePage />
+            </Public>
+          }
+        />
         <Route
           path="/about"
           element={
@@ -66,6 +73,14 @@ export default function App() {
           element={
             <Public>
               <GalleryPage />
+            </Public>
+          }
+        />
+        <Route
+          path="/campus-life"
+          element={
+            <Public>
+              <CampusLifePage />
             </Public>
           }
         />
@@ -160,8 +175,16 @@ export default function App() {
           }
         />
 
-        {/* 404 - Redirect to home */}
-        <Route path="*" element={<HomePage />} />
+        {/* Unknown paths fall back to the homepage for now. A dedicated 404
+            route would be better than silently showing the home page. */}
+        <Route
+          path="*"
+          element={
+            <Public>
+              <HomePage />
+            </Public>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

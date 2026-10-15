@@ -17,16 +17,16 @@ const DEPARTMENT_VISUALS = [
 export default function AcademicsPage() {
   return (
     <div>
-      <section className="pt-32 pb-16 bg-gray-50">
+      <section className="pt-16 pb-14 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">
+            <span className="text-gold-deep font-medium text-sm uppercase tracking-wide">
               Academics
             </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mt-3">
+            <h1 className="text-4xl sm:text-5xl font-bold text-ink mt-3">
               Our Academic Programmes
             </h1>
-            <p className="text-lg text-gray-600 mt-4 leading-relaxed">
+            <p className="text-lg text-ink-mute mt-4 leading-relaxed">
               We offer a blended curriculum that combines the Ghanaian national curriculum with
               Cambridge international standards, giving students a strong local foundation with
               global perspective.
@@ -35,22 +35,22 @@ export default function AcademicsPage() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-paper">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           {departments.map((dept, i) => {
             const visual = DEPARTMENT_VISUALS[i % DEPARTMENT_VISUALS.length];
             return (
               <div key={dept.id} className="grid lg:grid-cols-2 gap-12 items-start">
                 <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">{dept.name}</h3>
-                  <p className="text-gray-600 leading-relaxed mb-6">
+                  <h3 className="text-2xl font-bold text-ink mb-4">{dept.name}</h3>
+                  <p className="text-ink-mute leading-relaxed mb-6">
                     {DEPARTMENT_DESCRIPTIONS[dept.id]}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
                     {dept.levels.map(level => (
                       <span
                         key={level}
-                        className="px-3 py-1.5 bg-gray-100 text-sm text-gray-700 rounded-lg"
+                        className="px-3 py-1.5 bg-cream text-sm text-ink-mute"
                       >
                         {level}
                       </span>
@@ -58,7 +58,7 @@ export default function AcademicsPage() {
                   </div>
                 </div>
                 <div
-                  className={`rounded-2xl overflow-hidden h-64 bg-gradient-to-br ${visual.gradient} flex items-center justify-center ${
+                  className={`overflow-hidden h-64 bg-gradient-to-br ${visual.gradient} flex items-center justify-center ${
                     i % 2 === 1 ? 'lg:order-1' : ''
                   }`}
                 >
@@ -73,11 +73,11 @@ export default function AcademicsPage() {
       </section>
 
       {/* Cambridge Stream */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Cambridge Enrichment Stream</h2>
-            <p className="text-gray-600 leading-relaxed">
+            <h2 className="text-3xl font-bold text-ink mb-4">Cambridge Enrichment Stream</h2>
+            <p className="text-ink-mute leading-relaxed">
               For students who wish to benchmark their learning internationally, our Cambridge
               Enrichment stream offers Cambridge Progression Tests and additional support in
               English, Mathematics and Science.
@@ -98,9 +98,9 @@ export default function AcademicsPage() {
                 desc: 'Preparation for Cambridge Lower Secondary and IGCSE qualifications.',
               },
             ].map(item => (
-              <div key={item.title} className="p-6 bg-white rounded-xl">
-                <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-                <p className="text-sm text-gray-600">{item.desc}</p>
+              <div key={item.title} className="p-6 bg-paper">
+                <h4 className="font-semibold text-ink mb-2">{item.title}</h4>
+                <p className="text-sm text-ink-mute">{item.desc}</p>
               </div>
             ))}
           </div>

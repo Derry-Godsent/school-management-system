@@ -27,29 +27,29 @@ const ALBUM_IMAGES = [
 export default function GalleryPage() {
   return (
     <div>
-      <section className="pt-32 pb-16 bg-gray-50">
+      <section className="pt-16 pb-14 bg-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <span className="text-[#E85D04] font-medium text-sm uppercase tracking-wide">
+            <span className="text-gold-deep font-medium text-sm uppercase tracking-wide">
               Gallery
             </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mt-3">
+            <h1 className="text-4xl sm:text-5xl font-bold text-ink mt-3">
               School Life in Pictures
             </h1>
-            <p className="text-lg text-gray-600 mt-4">
+            <p className="text-lg text-ink-mute mt-4">
               Moments that capture the spirit of Maple Grove.
             </p>
           </div>
         </div>
       </section>
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-paper">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryAlbums.map((album, i) => {
               const image = ALBUM_IMAGES[i % ALBUM_IMAGES.length];
               return (
                 <div key={album.id} className="group cursor-pointer">
-                  <div className="rounded-2xl overflow-hidden h-56 bg-gray-100">
+                  <div className="overflow-hidden h-56 bg-cream">
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -58,8 +58,8 @@ export default function GalleryPage() {
                     />
                   </div>
                   <div className="mt-3">
-                    <h3 className="font-medium text-gray-900">{album.title}</h3>
-                    <p className="text-sm text-gray-500 mt-0.5">
+                    <h3 className="font-medium text-ink">{album.title}</h3>
+                    <p className="text-sm text-ink-mute/80 mt-0.5">
                       {album.imageCount} photos •{' '}
                       {new Date(album.date).toLocaleDateString('en-GB', {
                         month: 'long',

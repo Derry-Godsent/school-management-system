@@ -3,6 +3,9 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, MeshDistortMaterial, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
+/** Crest gold, matching the brand palette in index.css. */
+const GOLD = '#c9a227';
+
 function AnimatedSphere() {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -17,7 +20,7 @@ function AnimatedSphere() {
     <Float speed={2} rotationIntensity={1} floatIntensity={2}>
       <Sphere ref={meshRef} args={[1.5, 64, 64]}>
         <MeshDistortMaterial
-          color="#E85D04"
+          color={GOLD}
           attach="material"
           distort={0.5}
           speed={2}
@@ -62,7 +65,7 @@ function FloatingParticles() {
       </bufferGeometry>
       <pointsMaterial
         size={0.02}
-        color="#E85D04"
+        color={GOLD}
         transparent
         opacity={0.6}
         sizeAttenuation
@@ -76,7 +79,7 @@ export function Hero3DScene() {
     <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
-      <pointLight position={[-5, -5, -5]} intensity={0.5} color="#E85D04" />
+      <pointLight position={[-5, -5, -5]} intensity={0.5} color={GOLD} />
       <AnimatedSphere />
       <FloatingParticles />
     </Canvas>

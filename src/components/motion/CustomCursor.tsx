@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
+/** Crest gold, matching the brand palette in index.css. */
+const GOLD = '#c9a227';
+
 export function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -61,7 +64,7 @@ export function CustomCursor() {
       {trail.map((point, i) => (
         <motion.div
           key={point.id}
-          className="fixed pointer-events-none z-[9998] rounded-full mix-blend-difference"
+          className="fixed pointer-events-none z-[9998] mix-blend-difference"
           initial={{ opacity: 0.5, scale: 1 }}
           animate={{ opacity: 0, scale: 0 }}
           transition={{ duration: 0.6 }}
@@ -70,14 +73,14 @@ export function CustomCursor() {
             top: point.y - 3,
             width: 6,
             height: 6,
-            backgroundColor: '#E85D04',
+            backgroundColor: GOLD,
           }}
         />
       ))}
 
       {/* Main cursor dot */}
       <motion.div
-        className="fixed pointer-events-none z-[9999] rounded-full mix-blend-difference"
+        className="fixed pointer-events-none z-[9999] mix-blend-difference"
         style={{
           left: cursorXSpring,
           top: cursorYSpring,
@@ -93,7 +96,7 @@ export function CustomCursor() {
 
       {/* Outer ring */}
       <motion.div
-        className="fixed pointer-events-none z-[9998] rounded-full border border-white/30"
+        className="fixed pointer-events-none z-[9998] border border-white/30"
         style={{
           left: cursorX,
           top: cursorY,
