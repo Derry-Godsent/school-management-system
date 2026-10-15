@@ -37,6 +37,10 @@ html {
 
 body {
   overscroll-behavior: none;
+  /* Rotated 3D planes can extend past the viewport edge, which would let a
+     phone scroll sideways. `clip` contains it without creating a scroll
+     container, so it does not break the sticky header the way `hidden` can. */
+  overflow-x: clip;
   font-family: var(--font-body);
   color: var(--color-ink);
   background: var(--color-paper);
@@ -197,4 +201,69 @@ h4,
 
 .animate-fade-in-up {
   animation: fade-in-up 500ms ease both;
+}
+
+/* ==========================================================================
+   Motion layer — smooth scroll + 3D depth
+   ========================================================================== */
+
+/* --- Lenis ---------------------------------------------------------------
+   Required Lenis rules. `scroll-behavior: auto` when Lenis is active, because
+   our `html { scroll-behavior: smooth }` would otherwise fight it frame by
+   frame and produce stutter. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Set by useScrollLock so Lenis halts behind open overlays. */
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* --- 3D planes -----------------------------------------------------------
+   Applied to wrappers that hold perspective-transformed children. */
+.scene-3d {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.plane-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Promote elements that animate continuously, so they get their own layer and
+   stay off the main paint path. Used sparingly — each one costs GPU memory. */
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Belt and braces: framer-motion already skips these, but any pure-CSS
+     animation should stop too. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

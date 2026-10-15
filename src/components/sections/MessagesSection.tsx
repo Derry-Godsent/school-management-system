@@ -1,4 +1,5 @@
 import { leadershipMessages } from '../../data';
+import { Reveal3D, Tilt3D, DepthImage } from '../fx';
 
 /**
  * MessagesSection — portraits paired with a written message from each of the
@@ -29,8 +30,8 @@ export function MessagesSection() {
             const imageFirst = index % 2 === 0;
 
             return (
+              <Reveal3D key={person.id} y={56} rotate={10} delay={0.05}>
               <article
-                key={person.id}
                 className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start"
               >
                 {/* Portrait */}
@@ -40,14 +41,14 @@ export function MessagesSection() {
                     imageFirst ? 'lg:order-1' : 'lg:order-2 lg:col-start-8',
                   ].join(' ')}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-ink/5">
-                    <img
+                  <Tilt3D max={7} scale={1.01} scrollDrift={14}>
+                    <DepthImage
                       src={person.image}
                       alt={`${person.name}, ${person.role}`}
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      className="w-full h-full object-cover"
+                      aspect="4/5"
+                      rotate={4}
                     />
-                  </div>
+                  </Tilt3D>
 
                   {/* Gold ribbon nameplate, echoing the crest ribbon. */}
                   <figcaption className="relative -mt-8 ml-6 mr-6 lg:mr-0">
@@ -92,6 +93,7 @@ export function MessagesSection() {
                   </p>
                 </div>
               </article>
+              </Reveal3D>
             );
           })}
         </div>

@@ -1,4 +1,5 @@
 import { campusLifeEvents, campusLifeProgrammes } from '../../data';
+import { Reveal3D, DepthImage } from '../../components/fx';
 
 export default function CampusLifePage() {
   return (
@@ -38,17 +39,18 @@ export default function CampusLifePage() {
 
               <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 {event.images.map((image, i) => (
-                  <figure key={`${event.id}-${i}`} className="group overflow-hidden bg-ink/5">
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-                      />
-                    </div>
-                    <figcaption className="sr-only">{image.alt}</figcaption>
-                  </figure>
+                  <Reveal3D
+                    key={`${event.id}-${i}`}
+                    delay={i * 0.1}
+                    y={44}
+                    rotate={i === 1 ? 18 : 12}
+                    axis={i === 1 ? 'x' : 'y'}
+                  >
+                    <figure className="group overflow-hidden bg-ink/5">
+                      <DepthImage src={image.src} alt={image.alt} aspect="4/3" rotate={5} />
+                      <figcaption className="sr-only">{image.alt}</figcaption>
+                    </figure>
+                  </Reveal3D>
                 ))}
               </div>
             </article>

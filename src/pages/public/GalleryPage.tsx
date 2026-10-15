@@ -1,4 +1,5 @@
 import { galleryAlbums } from '../../data';
+import { Reveal3D, DepthImage } from '../../components/fx';
 
 // Stand-in imagery until real school photographs are added under /public.
 const ALBUM_IMAGES = [
@@ -48,15 +49,15 @@ export default function GalleryPage() {
             {galleryAlbums.map((album, i) => {
               const image = ALBUM_IMAGES[i % ALBUM_IMAGES.length];
               return (
-                <div key={album.id} className="group cursor-pointer">
-                  <div className="overflow-hidden h-56 bg-cream">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                    />
-                  </div>
+                <Reveal3D
+                  key={album.id}
+                  delay={(i % 3) * 0.1}
+                  y={52}
+                  rotate={i % 2 === 0 ? 16 : 10}
+                  axis={i % 2 === 0 ? 'x' : 'y'}
+                >
+                <div className="group cursor-pointer">
+                  <DepthImage src={image.src} alt={image.alt} aspect="4/3" rotate={6} />
                   <div className="mt-3">
                     <h3 className="font-medium text-ink">{album.title}</h3>
                     <p className="text-sm text-ink-mute/80 mt-0.5">
@@ -68,6 +69,7 @@ export default function GalleryPage() {
                     </p>
                   </div>
                 </div>
+                </Reveal3D>
               );
             })}
           </div>

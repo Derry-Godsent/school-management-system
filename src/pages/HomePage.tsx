@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { MessagesSection } from '../components/sections/MessagesSection';
+import { Hero3D } from '../components/sections/Hero3D';
+import { Reveal3D, DepthImage } from '../components/fx';
 import { useCountUp } from '../lib/useCountUp';
 import {
   school,
@@ -40,104 +40,6 @@ const SLIDES = [
   },
 ];
 
-function HeroSlider() {
-  const [index, setIndex] = useState(0);
-  const slide = SLIDES[index];
-
-  useEffect(() => {
-    const timer = setInterval(() => setIndex(prev => (prev + 1) % SLIDES.length), 7000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <section className="relative h-[78vh] min-h-[540px] overflow-hidden bg-ink">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.9 }}
-          className="absolute inset-0"
-        >
-          <img src={slide.image} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 scrim" />
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="relative z-10 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.7 }}
-              className="max-w-3xl"
-            >
-              <span className="inline-block bg-gold text-ink px-4 py-2 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
-                {slide.eyebrow}
-              </span>
-              <h1 className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-paper leading-[1.1]">
-                {slide.title}
-              </h1>
-              <p className="mt-6 text-lg sm:text-xl text-paper/85 leading-relaxed max-w-2xl">
-                {slide.text}
-              </p>
-              <div className="mt-10 flex flex-wrap items-center gap-4">
-                <Link
-                  to={slide.to}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gold text-ink font-semibold text-sm tracking-[0.1em] uppercase hover:bg-paper transition-colors"
-                >
-                  {slide.cta}
-                  <ArrowRight size={16} />
-                </Link>
-                <Link
-                  to="/admissions"
-                  className="inline-flex items-center gap-3 px-8 py-4 border border-paper/50 text-paper font-semibold text-sm tracking-[0.1em] uppercase hover:bg-paper hover:text-ink transition-colors"
-                >
-                  Apply Now
-                </Link>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Slide markers */}
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex">
-            {SLIDES.map((s, i) => (
-              <button
-                key={s.title}
-                onClick={() => setIndex(i)}
-                aria-label={`Show slide ${i + 1}`}
-                aria-current={i === index}
-                className="group flex-1 py-5 text-left"
-              >
-                <span
-                  className={`block h-0.5 transition-colors ${
-                    i === index ? 'bg-gold' : 'bg-paper/25 group-hover:bg-paper/50'
-                  }`}
-                />
-                <span
-                  className={`hidden sm:block mt-3 text-[0.6875rem] tracking-[0.18em] uppercase transition-colors ${
-                    i === index ? 'text-gold' : 'text-paper/45'
-                  }`}
-                >
-                  {s.eyebrow}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function StatValue({ value, suffix }: { value: number; suffix?: string }) {
   const { ref, display } = useCountUp(value);
   return (
@@ -151,6 +53,7 @@ function StatValue({ value, suffix }: { value: number; suffix?: string }) {
 function StatsBand() {
   return (
     <section className="bg-ink border-t-4 border-gold">
+      <Reveal3D y={30} rotate={8}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <dl className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-paper/10 lg:divide-y-0">
           {schoolStats.map((stat, i) => (
@@ -170,6 +73,7 @@ function StatsBand() {
           ))}
         </dl>
       </div>
+      </Reveal3D>
     </section>
   );
 }
@@ -182,13 +86,14 @@ function WelcomeBand() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <figure className="lg:col-span-5 relative">
-            <div className="aspect-[4/5] overflow-hidden bg-ink/5">
-              <img
+            <Reveal3D axis="y" rotate={10}>
+              <DepthImage
                 src={director.image}
                 alt={`${director.name}, ${director.role}`}
-                className="w-full h-full object-cover"
+                aspect="4/5"
+                rotate={5}
               />
-            </div>
+            </Reveal3D>
             <div className="absolute -bottom-6 -right-0 lg:-right-10 bg-gold text-ink px-6 py-5 max-w-[16rem]">
               <p className="font-display text-sm leading-snug">{director.name}</p>
               <p className="text-[0.625rem] tracking-[0.16em] uppercase mt-1">{director.role}</p>
@@ -196,6 +101,7 @@ function WelcomeBand() {
           </figure>
 
           <div className="lg:col-span-7">
+            <Reveal3D y={40} delay={0.1}>
             <span className="eyebrow">Welcome</span>
             <h2 className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-ink leading-tight">
               Welcome to {school.name}
@@ -228,6 +134,7 @@ function WelcomeBand() {
                 Admissions
               </Link>
             </div>
+            </Reveal3D>
           </div>
         </div>
       </div>
@@ -244,6 +151,7 @@ function NewsBand() {
   return (
     <section className="bg-cream py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Reveal3D y={36}>
         <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
           <div>
             <span className="eyebrow">Latest</span>
@@ -259,6 +167,7 @@ function NewsBand() {
             <ArrowRight size={14} />
           </Link>
         </div>
+        </Reveal3D>
 
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Lead story */}
@@ -332,6 +241,7 @@ function CampusStrip() {
   return (
     <section className="bg-paper py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
           <span className="eyebrow">Campus Life</span>
           <h2 className="mt-6 font-display text-3xl sm:text-4xl font-bold text-ink">
@@ -343,19 +253,26 @@ function CampusStrip() {
             much of a child&apos;s character is formed.
           </p>
         </div>
+        </Reveal3D>
 
         <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
-          {images.map(image => (
-            <figure key={image.alt} className="group overflow-hidden">
-              <div className="aspect-[4/5] overflow-hidden bg-ink/5">
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-                />
-              </div>
-            </figure>
+          {images.map((image, i) => (
+            <Reveal3D
+              key={image.alt}
+              delay={i * 0.12}
+              rotate={i === 1 ? 22 : 14}
+              axis={i === 1 ? 'x' : 'y'}
+              y={i === 1 ? 70 : 40}
+            >
+              {/* Alternating tilt direction so the row reads as a receding wall
+                  rather than three copies of the same plane. */}
+              <DepthImage
+                src={image.src}
+                alt={image.alt}
+                aspect="4/5"
+                rotate={i === 1 ? 9 : 5}
+              />
+            </Reveal3D>
           ))}
         </div>
 
@@ -380,6 +297,7 @@ function UpdatesBand() {
   return (
     <section className="bg-cream py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Reveal3D y={36}>
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
           {/* Updates */}
           <div>
@@ -423,6 +341,7 @@ function UpdatesBand() {
             </div>
           </div>
         </div>
+        </Reveal3D>
       </div>
     </section>
   );
@@ -499,7 +418,7 @@ function VisitBand() {
 export default function HomePage() {
   return (
     <>
-      <HeroSlider />
+      <Hero3D />
       <StatsBand />
       <WelcomeBand />
       <MessagesSection />

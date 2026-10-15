@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { ScrollToTop } from './components/layout/ScrollToTop';
+import { SmoothScroll, ScrollProgress } from './components/fx';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/public/AboutPage';
 import AcademicsPage from './pages/public/AcademicsPage';
@@ -33,6 +34,10 @@ function Public({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
+      {/* Global motion layer. Each of these no-ops on reduced-motion and
+          low-power devices rather than degrading them. */}
+      <SmoothScroll />
+      <ScrollProgress />
       <ScrollToTop />
       <Routes>
         {/* Public Website — every route shares one shell */}

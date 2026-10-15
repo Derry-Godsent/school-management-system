@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, MapPin, Phone, Mail, Facebook, Youtube } from 'lucide-react';
 import { school } from '../../data';
+import { Portal, useScrollLock } from '../fx';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -57,10 +58,23 @@ function Navigation() {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
-  // Close the mobile drawer whenever the route changes.
+  // Freeze the page behind the open drawer.
+  useScrollLock(isOpen);
+
+  // Close on route change.
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  // Close on Escape.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
 
   return (
     <header className="sticky top-0 z-[100]">
@@ -116,107 +130,130 @@ function Navigation() {
                 Apply Now
               </Link>
               <button
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                onClick={() => setIsOpen(true)}
+                aria-label="Open menu"
                 aria-expanded={isOpen}
-                className="lg:hidden p-2 text-ink"
+                aria-controls="mobile-menu"
+                className="lg:hidden p-2.5 -mr-2 text-ink"
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                <Menu size={26} />
               </button>
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile drawer */}
+      {/* The drawer is rendered through a portal into <body>.
+          A `backdrop-filter` on the nav above makes it the containing block for
+          fixed descendants, which previously clipped this overlay to the nav's
+          80px height and dropped it behind the page. The portal escapes that
+          containing block entirely. */}
+      <Portal>
         <AnimatePresence>
           {isOpen && (
             <>
               <motion.div
+                key="scrim"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
                 onClick={() => setIsOpen(false)}
-                className="fixed inset-0 bg-ink/50 z-40 lg:hidden"
+                className="fixed inset-0 z-[400] bg-ink/70 lg:hidden"
+                aria-hidden="true"
               />
-              <motion.div
+
+              <motion.aside
+                key="drawer"
+                id="mobile-menu"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Site menu"
+                data-lenis-prevent
                 initial={{ x: '-100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
-                transition={{ type: 'tween', duration: 0.28 }}
-                className="fixed inset-y-0 left-0 z-50 w-72 bg-paper lg:hidden overflow-y-auto"
+                transition={{ type: 'tween', duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="fixed inset-y-0 left-0 z-[410] w-[86%] max-w-sm bg-paper lg:hidden overflow-y-auto overscroll-contain flex flex-col"
+                style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
               >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="flex items-center gap-3">
-                      <span className="w-10 h-10 bg-ink flex items-center justify-center">
-                        <span className="font-display text-paper font-bold text-sm">MG</span>
+                <div className="flex items-center justify-between h-20 px-5 border-b border-rule shrink-0">
+                  <span className="flex items-center gap-3">
+                    <span className="w-10 h-10 bg-ink flex items-center justify-center">
+                      <span className="font-display text-paper font-bold text-sm">MG</span>
+                    </span>
+                    <span className="text-ink">
+                      <span className="block font-display font-semibold text-sm leading-tight">
+                        Maple Grove
                       </span>
-                      <span className="text-ink">
-                        <span className="block font-display font-semibold text-sm">
-                          Maple Grove
-                        </span>
-                        <span className="block text-[0.625rem] tracking-[0.18em] uppercase text-gold-deep">
-                          International School
-                        </span>
+                      <span className="block text-[0.625rem] tracking-[0.18em] uppercase text-gold-deep">
+                        International School
                       </span>
                     </span>
-                    <button
-                      onClick={() => setIsOpen(false)}
-                      aria-label="Close menu"
-                      className="p-2 text-ink"
-                    >
-                      <X size={20} />
-                    </button>
-                  </div>
+                  </span>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close menu"
+                    className="p-3 -mr-2 text-ink"
+                  >
+                    <X size={22} />
+                  </button>
+                </div>
 
-                  <nav className="divide-y divide-rule border-y border-rule">
-                    {NAV_LINKS.map(link => {
-                      const active = location.pathname === link.path;
-                      return (
-                        <Link
-                          key={link.path}
-                          to={link.path}
-                          onClick={() => setIsOpen(false)}
-                          className={`flex items-center min-h-[52px] px-1 text-sm transition-colors ${
-                            active ? 'text-gold-deep font-medium' : 'text-ink-mute'
-                          }`}
-                        >
-                          {link.label}
-                        </Link>
-                      );
-                    })}
-                  </nav>
+                <nav className="px-5 py-4 flex-1">
+                  {NAV_LINKS.map(link => {
+                    const active = location.pathname === link.path;
+                    return (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={() => setIsOpen(false)}
+                        aria-current={active ? 'page' : undefined}
+                        className={`flex items-center justify-between min-h-[56px] border-b border-rule font-display text-lg transition-colors ${
+                          active ? 'text-gold-deep' : 'text-ink'
+                        }`}
+                      >
+                        {link.label}
+                        <span
+                          className={`w-1.5 h-1.5 ${active ? 'bg-gold' : 'bg-transparent'}`}
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    );
+                  })}
+                </nav>
 
+                <div className="px-5 pb-8 pt-2 shrink-0">
                   <Link
                     to="/admissions"
                     onClick={() => setIsOpen(false)}
-                    className="mt-6 flex items-center justify-center min-h-[52px] bg-gold text-ink text-xs font-semibold tracking-[0.14em] uppercase"
+                    className="flex items-center justify-center min-h-[54px] bg-gold text-ink text-xs font-semibold tracking-[0.16em] uppercase"
                   >
                     Apply Now
                   </Link>
 
-                  <div className="mt-8 pt-6 border-t border-rule space-y-1">
+                  <div className="mt-6 pt-5 border-t border-rule">
                     <Link
                       to="/parent"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center min-h-[44px] text-xs text-ink-mute"
+                      className="flex items-center min-h-[48px] text-sm text-ink-mute"
                     >
                       Parent Portal
                     </Link>
                     <Link
                       to="/admin"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center min-h-[44px] text-xs text-ink-mute"
+                      className="flex items-center min-h-[48px] text-sm text-ink-mute"
                     >
                       School Admin
                     </Link>
                   </div>
                 </div>
-              </motion.div>
+              </motion.aside>
             </>
           )}
         </AnimatePresence>
-      </nav>
+      </Portal>
     </header>
   );
 }
