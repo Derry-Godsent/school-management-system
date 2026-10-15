@@ -89,7 +89,7 @@ export function CustomCursor() {
           width: isHovering ? 48 : 8,
           height: isHovering ? 48 : 8,
           backgroundColor: isHovering ? 'transparent' : '#ffffff',
-          border: isHovering ? '2px solid #E85D04' : 'none',
+          border: isHovering ? `2px solid ${GOLD}` : 'none',
           transition: 'width 0.3s, height 0.3s, background-color 0.3s, border 0.3s',
         }}
       />
