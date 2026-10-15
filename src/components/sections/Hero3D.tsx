@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, useScroll, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
+import { LightRays, TypingAnimation, InteractiveHoverButton, ShimmerButton } from '../magic';
 
 const SLIDES = [
   {
@@ -42,6 +43,7 @@ const SLIDES = [
  */
 export function Hero3D() {
   const [index, setIndex] = useState(0);
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const tier = useDeviceTier();
   const allowed = useMotionAllowed(tier);
@@ -121,6 +123,9 @@ export function Hero3D() {
         <div className="absolute inset-0 scrim" />
       </motion.div>
 
+      {/* Ambient light falling from above the fold */}
+      <LightRays intensity={0.9} />
+
       {/* Layer 2 — gold hairline frame, sitting between the photo and the copy */}
       {allowed && (
         <motion.div
@@ -156,7 +161,13 @@ export function Hero3D() {
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
                 <span className="inline-block bg-gold text-ink px-4 py-2 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase">
-                  {slide.eyebrow}
+                  <TypingAnimation
+                    words={['Established 2008', 'Kumasi, Ghana', 'Pre-School to JHS']}
+                    pauseDelay={2600}
+                    typeSpeed={58}
+                    className="text-[0.6875rem]"
+                    cursorClassName="bg-ink"
+                  />
                 </span>
                 <h1 className="mt-6 font-display text-[2.15rem] leading-[1.08] sm:text-5xl lg:text-6xl font-bold text-paper">
                   {slide.title}
@@ -165,19 +176,19 @@ export function Hero3D() {
                   {slide.text}
                 </p>
                 <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-                  <Link
-                    to={slide.to}
-                    className="inline-flex items-center gap-3 px-7 py-4 bg-gold text-ink font-semibold text-xs sm:text-sm tracking-[0.1em] uppercase hover:bg-paper transition-colors"
+                  <InteractiveHoverButton
+                    tone="gold"
+                    onClick={() => navigate(slide.to)}
+                    className="text-xs sm:text-sm"
                   >
                     {slide.cta}
-                    <ArrowRight size={16} />
-                  </Link>
-                  <Link
-                    to="/admissions"
-                    className="inline-flex items-center gap-3 px-7 py-4 border border-paper/50 text-paper font-semibold text-xs sm:text-sm tracking-[0.1em] uppercase hover:bg-paper hover:text-ink transition-colors"
+                  </InteractiveHoverButton>
+                  <ShimmerButton
+                    onClick={() => navigate('/admissions')}
+                    className="text-xs sm:text-sm"
                   >
                     Apply Now
-                  </Link>
+                  </ShimmerButton>
                 </div>
               </motion.div>
             </AnimatePresence>

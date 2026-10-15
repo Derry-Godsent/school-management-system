@@ -1,5 +1,6 @@
 import { galleryAlbums } from '../../data';
-import { Reveal3D, DepthImage } from '../../components/fx';
+import { Reveal3D } from '../../components/fx';
+import { PixelImage } from '../../components/magic';
 
 // Stand-in imagery until real school photographs are added under /public.
 const ALBUM_IMAGES = [
@@ -57,7 +58,7 @@ export default function GalleryPage() {
                   axis={i % 2 === 0 ? 'x' : 'y'}
                 >
                 <div className="group cursor-pointer">
-                  <DepthImage src={image.src} alt={image.alt} aspect="4/3" rotate={6} />
+                  <PixelImage src={image.src} alt={image.alt} aspect="4/3" rows={4} cols={6} />
                   <div className="mt-3">
                     <h3 className="font-medium text-ink">{album.title}</h3>
                     <p className="text-sm text-ink-mute/80 mt-0.5">

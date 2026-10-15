@@ -1,8 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Calendar, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { MessagesSection } from '../components/sections/MessagesSection';
 import { Hero3D } from '../components/sections/Hero3D';
+import { Ecosystem } from '../components/sections/Ecosystem';
 import { Reveal3D, DepthImage } from '../components/fx';
+import {
+  Highlighter,
+  InteractiveHoverButton,
+  AnimatedGauge,
+  PixelImage,
+  DiaTextReveal,
+} from '../components/magic';
 import { useCountUp } from '../lib/useCountUp';
 import {
   school,
@@ -79,6 +87,7 @@ function StatsBand() {
 }
 
 function WelcomeBand() {
+  const navigate = useNavigate();
   const director = leadershipMessages[0];
 
   return (
@@ -104,7 +113,7 @@ function WelcomeBand() {
             <Reveal3D y={40} delay={0.1}>
             <span className="eyebrow">Welcome</span>
             <h2 className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-ink leading-tight">
-              Welcome to {school.name}
+              Welcome to <Highlighter color="#c9a227">{school.name}</Highlighter>
             </h2>
             <div className="mt-8 space-y-5 text-ink-mute leading-relaxed">
               <p className="dropcap text-ink/85">
@@ -119,17 +128,13 @@ function WelcomeBand() {
                 permitted to become invisible.
               </p>
             </div>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-3 px-7 py-4 bg-ink text-paper font-semibold text-xs tracking-[0.16em] uppercase hover:bg-gold hover:text-ink transition-colors"
-              >
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <InteractiveHoverButton tone="gold" onClick={() => navigate('/about')}>
                 Read Our Story
-                <ArrowRight size={15} />
-              </Link>
+              </InteractiveHoverButton>
               <Link
                 to="/admissions"
-                className="inline-flex items-center gap-3 px-7 py-4 border border-ink/20 text-ink font-semibold text-xs tracking-[0.16em] uppercase hover:border-gold hover:text-gold-deep transition-colors"
+                className="line-draw inline-flex items-center gap-3 px-7 py-4 border border-ink/20 text-ink font-semibold text-xs tracking-[0.16em] uppercase hover:border-gold hover:text-gold-deep transition-colors"
               >
                 Admissions
               </Link>
@@ -232,6 +237,7 @@ function NewsBand() {
 }
 
 function CampusStrip() {
+  const navigate = useNavigate();
   const images = [
     { src: '/images/campus-life.jpg', alt: 'Cultural day celebrations and drumming' },
     { src: '/images/classroom.jpg', alt: 'A lesson in progress' },
@@ -277,13 +283,9 @@ function CampusStrip() {
         </div>
 
         <div className="mt-12">
-          <Link
-            to="/campus-life"
-            className="inline-flex items-center gap-3 px-7 py-4 bg-ink text-paper font-semibold text-xs tracking-[0.16em] uppercase hover:bg-gold hover:text-ink transition-colors"
-          >
+          <InteractiveHoverButton tone="ink" onClick={() => navigate('/campus-life')}>
             Explore Campus Life
-            <ArrowRight size={15} />
-          </Link>
+          </InteractiveHoverButton>
         </div>
       </div>
     </section>
@@ -348,6 +350,7 @@ function UpdatesBand() {
 }
 
 function VisitBand() {
+  const navigate = useNavigate();
   return (
     <section className="bg-ink text-paper/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
@@ -402,13 +405,9 @@ function VisitBand() {
           <p className="font-display text-2xl sm:text-3xl text-paper">
             Come and see the school for yourself.
           </p>
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-3 px-7 py-4 bg-gold text-ink font-semibold text-xs tracking-[0.16em] uppercase hover:bg-paper transition-colors"
-          >
+          <InteractiveHoverButton tone="gold" onClick={() => navigate('/contact')}>
             Book a Visit
-            <ArrowRight size={15} />
-          </Link>
+          </InteractiveHoverButton>
         </div>
       </div>
     </section>
@@ -424,6 +423,7 @@ export default function HomePage() {
       <MessagesSection />
       <NewsBand />
       <CampusStrip />
+      <Ecosystem />
       <UpdatesBand />
       <VisitBand />
     </>
