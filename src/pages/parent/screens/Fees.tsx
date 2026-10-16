@@ -1,8 +1,8 @@
-import { CheckCircle2, Phone } from 'lucide-react';
+import { Banknote, CheckCircle2, CreditCard, Phone, Receipt, Smartphone, Wallet } from 'lucide-react';
 import { formatCurrency } from '../../../data';
 import { formatDate, formatLongDate, paymentChannels } from '../../../data/portal';
 import { useWard } from '../PortalShell';
-import { Card, CardBody, CardHead, Chip, Meter, StatTile } from '../ui';
+import { Card, CardPad, Chip, IconChip, Meter, Rule, ScreenTitle, StatCard } from '../ui';
 
 export function FeesScreen() {
   const { child, profile, klass, fees } = useWard();
@@ -13,64 +13,62 @@ export function FeesScreen() {
   const clear = fees.balance <= 0;
 
   return (
-    <div className="space-y-4">
-      <div className="px-1">
-        <h1 className="font-display text-2xl text-ink">Fees</h1>
-        <p className="mt-1 text-[0.8125rem] text-ink-mute">
-          {child.name} · {klass.name} · Second Term
-        </p>
-      </div>
+    <div className="space-y-5">
+      <ScreenTitle title="Fees" sub={`${child.name} · ${klass.name} · Second Term`} />
 
-      {/* The one number that matters gets the biggest, brightest card. */}
+      {/* The one figure that matters, on the one saturated card a screen gets. */}
       {clear ? (
-        <Card tone="green" shape="solid">
-          <CardBody>
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green">
-                <CheckCircle2 size={24} className="text-ink" aria-hidden="true" />
-              </span>
+        <Card variant="tint" tone="green">
+          <CardPad>
+            <div className="flex items-center gap-3.5">
+              <IconChip icon={CheckCircle2} tone="green" size="lg" />
               <div>
-                <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-green-deep">
-                  Nothing owing
-                </p>
-                <p className="mt-1 font-display text-2xl text-ink">All clear</p>
+                <Chip tone="green">Nothing owing</Chip>
+                <p className="mt-1.5 text-[1.75rem] font-semibold leading-none text-ink">All clear</p>
               </div>
             </div>
-            <p className="mt-3 text-[0.8125rem] text-ink-mute">
-              Next term is billed about two weeks before it opens.
+            <div className="mt-4">
+              <Meter value={fees.paid} max={fees.charged} tone="green" />
+            </div>
+            <p className="mt-2.5 text-[0.8125rem] text-ink-mute">
+              {formatCurrency(fees.paid)} paid of {formatCurrency(fees.charged)}. Next term is billed about two
+              weeks before it opens.
             </p>
-          </CardBody>
+          </CardPad>
         </Card>
       ) : (
-        <Card tone="yellow" shape="solid">
-          <CardBody>
-            <div className="flex flex-wrap items-end justify-between gap-3">
+        <Card variant="tint" tone="yellow">
+          <CardPad>
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-yellow-deep">
-                  Balance to pay
-                </p>
-                <p className="mt-1 font-display text-[2.25rem] leading-none text-ink">
+                <Chip tone="yellow">Balance to pay</Chip>
+                <p className="mt-2 text-[2rem] font-semibold leading-none tabular-nums text-ink">
                   {formatCurrency(fees.balance)}
                 </p>
               </div>
-              <Chip tone="ink" solid>
-                Due {formatDate(profile.fees.nextDue.date)}
-              </Chip>
+              <Chip tone="plain">Due {formatDate(profile.fees.nextDue.date)}</Chip>
             </div>
             <div className="mt-4">
-              <Meter value={fees.paid} max={fees.charged} tone="ink" />
+              <Meter value={fees.paid} max={fees.charged} tone="yellow" />
             </div>
-            <p className="mt-2 text-[0.8125rem] text-ink-mute">
-              {paid}% of this term's bill has been paid.
+            <p className="mt-2.5 text-[0.8125rem] text-ink-mute">
+              {paid}% of this term&apos;s bill has been paid.
             </p>
-          </CardBody>
+            <a
+              href="tel:+233241234567"
+              className="mt-3.5 inline-flex min-h-[2.75rem] items-center gap-2 rounded-full bg-gold px-4 text-[0.8125rem] font-semibold text-ink"
+            >
+              <Phone size={15} aria-hidden="true" /> Pay or ask about it
+            </a>
+          </CardPad>
         </Card>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        <StatTile label="Billed" value={formatCurrency(fees.charged).replace('GHS ', '')} note="This term" tone="orange" />
-        <StatTile label="Paid" value={formatCurrency(fees.paid).replace('GHS ', '')} note={`${paid}% of the bill`} tone="green" />
-        <StatTile
+      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">
+        <StatCard icon={Receipt} label="Billed" value={formatCurrency(fees.charged).replace('GHS ', '')} note="This term" tone="orange" />
+        <StatCard icon={CheckCircle2} label="Paid" value={formatCurrency(fees.paid).replace('GHS ', '')} note={`${paid}% of the bill`} tone="green" />
+        <StatCard
+          icon={Wallet}
           label="Balance"
           value={clear ? '0' : formatCurrency(fees.balance).replace('GHS ', '')}
           note={clear ? 'Settled' : 'Outstanding'}
@@ -78,79 +76,91 @@ export function FeesScreen() {
         />
       </div>
 
-      {/* Line by line, each line its own little card. */}
-      <Card shape="top" tone="orange">
-        <CardBody>
-          <CardHead eyebrow="Line by line" title="What the bill covers" />
-          <ul className="space-y-2.5">
-            {profile.fees.lines.map(line => {
+      {/* Line by line, as soft rows inside one card. */}
+      <Card>
+        <CardPad>
+          <div className="mb-2 flex items-center gap-2.5">
+            <IconChip icon={Receipt} tone="orange" size="sm" />
+            <h2 className="text-[0.9375rem] font-semibold text-ink">What the bill covers</h2>
+          </div>
+          <ul className="-mx-4">
+            {profile.fees.lines.map((line, index) => {
               const balance = line.charged - line.paid;
               const settled = balance <= 0;
               return (
-                <li key={line.category} className={`rounded-xl px-3.5 py-3 ${settled ? 'bg-tint-green' : 'bg-tint-orange'}`}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                    <p className="text-[0.875rem] font-medium text-ink">{line.category}</p>
-                    <p className={`text-[0.8125rem] font-semibold ${settled ? 'text-green-deep' : 'text-gold-deep'}`}>
-                      {settled ? 'Settled' : `${formatCurrency(balance)} left`}
+                <li key={line.category}>
+                  {index > 0 ? <Rule /> : null}
+                  <div className="px-4 py-3">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                      <p className="text-[0.875rem] font-medium text-ink">{line.category}</p>
+                      <p className={`text-[0.8125rem] font-semibold tabular-nums ${settled ? 'text-green-deep' : 'text-gold-deep'}`}>
+                        {settled ? 'Settled' : `${formatCurrency(balance)} left`}
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <Meter value={line.paid} max={line.charged} tone={settled ? 'green' : 'orange'} />
+                    </div>
+                    <p className="mt-1.5 text-[0.75rem] tabular-nums text-ink-mute">
+                      {formatCurrency(line.charged)} charged · {formatCurrency(line.paid)} paid
                     </p>
                   </div>
-                  <div className="mt-2">
-                    <Meter value={line.paid} max={line.charged} tone={settled ? 'green' : 'orange'} />
-                  </div>
-                  <p className="mt-1.5 text-[0.75rem] text-ink-mute">
-                    {formatCurrency(line.charged)} charged · {formatCurrency(line.paid)} paid
-                  </p>
                 </li>
               );
             })}
           </ul>
-        </CardBody>
+        </CardPad>
       </Card>
 
-      {/* Payments received. */}
-      <Card shape="top" tone="green">
-        <CardBody>
-          <CardHead eyebrow="Payments received" title={`${profile.fees.history.length} payments this term`} />
+      {/* Payments, as soft rows. */}
+      <Card>
+        <CardPad>
+          <div className="mb-2 flex items-center gap-2.5">
+            <IconChip icon={CreditCard} tone="green" size="sm" />
+            <h2 className="text-[0.9375rem] font-semibold text-ink">
+              {profile.fees.history.length} payments received
+            </h2>
+          </div>
           <ul className="space-y-2">
             {profile.fees.history.map(payment => (
-              <li key={payment.reference} className="flex items-center justify-between gap-3 rounded-xl bg-cream px-3.5 py-2.5">
-                <span className="min-w-0">
-                  <span className="block truncate text-[0.8125rem] font-medium text-ink">{payment.category}</span>
-                  <span className="block text-[0.75rem] text-ink-mute">
+              <li key={payment.reference} className="flex items-center gap-3 rounded-2xl bg-canvas px-3.5 py-3">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[0.875rem] font-medium text-ink">{payment.category}</span>
+                  <span className="block truncate text-[0.75rem] text-ink-mute">
                     {formatLongDate(payment.date)} · {payment.method}
                   </span>
                 </span>
-                <span className="shrink-0 rounded-lg bg-green px-2 py-1 text-[0.75rem] font-bold text-ink">
+                <span className="shrink-0 rounded-xl bg-tint-green px-2.5 py-1.5 text-[0.8125rem] font-semibold tabular-nums text-green-deep">
                   {formatCurrency(payment.amount).replace('GHS ', '')}
                 </span>
               </li>
             ))}
           </ul>
-        </CardBody>
+        </CardPad>
       </Card>
 
-      {/* How to pay, as three small cards. */}
-      <Card shape="top" tone="purple">
-        <CardBody>
-          <CardHead eyebrow="How to pay" title="Three ways" />
-          <ul className="grid gap-2.5 sm:grid-cols-3">
-            {paymentChannels.map(channel => (
-              <li key={channel.label} className="rounded-xl bg-tint-purple px-3.5 py-3">
-                <p className="text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-purple-deep">
-                  {channel.label}
-                </p>
-                <p className="mt-1.5 text-[0.875rem] font-medium text-ink">{channel.value}</p>
-                <p className="mt-1 text-[0.75rem] leading-snug text-ink-mute">{channel.note}</p>
-              </li>
-            ))}
+      {/* How to pay. */}
+      <Card>
+        <CardPad>
+          <div className="mb-2 flex items-center gap-2.5">
+            <IconChip icon={Banknote} tone="purple" size="sm" />
+            <h2 className="text-[0.9375rem] font-semibold text-ink">How to pay</h2>
+          </div>
+          <ul className="space-y-2">
+            {paymentChannels.map((channel, index) => {
+              const Icon = index === 0 ? Smartphone : index === 1 ? CreditCard : Banknote;
+              return (
+                <li key={channel.label} className="flex items-start gap-3 rounded-2xl bg-canvas px-3.5 py-3">
+                  <IconChip icon={Icon} tone="purple" size="sm" />
+                  <span className="min-w-0">
+                    <span className="block text-[0.8125rem] font-medium text-ink">{channel.label}</span>
+                    <span className="mt-0.5 block text-[0.8125rem] text-ink">{channel.value}</span>
+                    <span className="mt-0.5 block text-[0.75rem] text-ink-mute">{channel.note}</span>
+                  </span>
+                </li>
+              );
+            })}
           </ul>
-          <a
-            href="tel:+233241234567"
-            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-ink px-3.5 py-2.5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-paper"
-          >
-            <Phone size={13} aria-hidden="true" /> Accounts office
-          </a>
-        </CardBody>
+        </CardPad>
       </Card>
     </div>
   );

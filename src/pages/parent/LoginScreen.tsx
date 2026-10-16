@@ -133,9 +133,9 @@ export function LoginScreen({
 
           <form onSubmit={handleSubmit} className="mt-9 space-y-6" noValidate>
             {error ? (
-              <div role="alert" className="flex items-start gap-3 bg-ink px-4 py-3.5">
-                <AlertCircle size={18} className="mt-0.5 shrink-0 text-yellow" aria-hidden="true" />
-                <p className="text-sm leading-relaxed text-paper">{error}</p>
+              <div role="alert" className="flex items-start gap-3 rounded-2xl bg-tint-orange px-4 py-3.5">
+                <AlertCircle size={18} className="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
+                <p className="text-sm leading-relaxed text-ink">{error}</p>
               </div>
             ) : null}
 

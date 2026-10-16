@@ -1,10 +1,25 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bell, CheckCircle2, Clock, Phone, Users, XCircle } from 'lucide-react';
-import { school, formatCurrency, getGrade } from '../../../data';
+import {
+  ArrowRight, Bell, CalendarCheck, CheckCircle2, Clock, GraduationCap, Phone, TrendingUp, Users,
+  Wallet, XCircle,
+} from 'lucide-react';
+import { formatCurrency, getGrade } from '../../../data';
 import { formatDate, noticesFor, pendingWork } from '../../../data/portal';
 import { useWard } from '../PortalShell';
-import { Avatar, Card, CardBody, CardHead, Chip, IconBadge, Led, Row, StatTile, gradeNote } from '../ui';
+import {
+  ActionTile, Avatar, Card, CardPad, Chip, IconChip, Meter, Row, Rule, ScreenTitle, StatCard, gradeNote,
+} from '../ui';
 
+/**
+ * Home: an app home screen, not a report.
+ *
+ * The order is the order a parent wants things: who this is about, then the
+ * shortcuts to everywhere else, then the four figures, then what to celebrate,
+ * then what is due, then the day, then the notices.
+ *
+ * Every card is white on the soft ground and every colour arrives in a small
+ * dose: a tinted icon, a chip, a bar.
+ */
 export function HomeScreen() {
   const {
     guardian, child, profile, klass, average, standing, fees, attendance, best, weakest, roster,
@@ -18,272 +33,300 @@ export function HomeScreen() {
   const latest = noticesFor(profile.classId).slice(0, 2);
   const grade = getGrade(average);
   const lastEight = profile.attendance.recent.slice(-8);
+  const nextLesson = klass.todayLessons[0];
 
   return (
-    <div className="space-y-4">
-      {/* The greeting is one line. The child gets a card, because the child is
-          what the whole screen is about. */}
-      <p className="px-1 text-[0.8125rem] text-ink-mute">
-        {greeting}, {guardian?.name.split(' ').slice(-1)[0]}
-      </p>
+    <div className="space-y-5">
+      <ScreenTitle
+        title={`${greeting}, ${guardian?.name.split(' ').slice(-1)[0]}`}
+        sub={`${child.name} is in ${klass.name} with ${klass.formTeacher.name.split(' ').slice(-1)[0]}`}
+      />
 
-      {/* ---------------------------------------------------- the child, dark */}
-      <Card shape="dark">
-        <CardBody>
-          <div className="flex items-center gap-4">
-            <Avatar name={child.name} size="lg" tone="orange" />
+      {/* ------------------------------------------------- the child, one soft card */}
+      <Card variant="tint" tone="orange">
+        <CardPad>
+          <div className="flex items-center gap-3.5">
+            <Avatar name={child.name} size="md" tone="orange" />
             <div className="min-w-0 flex-1">
-              <h1 className="truncate font-display text-xl text-paper sm:text-2xl">{child.name}</h1>
-              <p className="mt-1 text-[0.8125rem] text-paper">
+              <h2 className="truncate text-[1.0625rem] font-semibold text-ink">{child.name}</h2>
+              <p className="mt-0.5 truncate text-[0.8125rem] text-ink-mute">
                 {child.className} · {child.house} House
               </p>
             </div>
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-yellow">
-              <span className="font-display text-lg font-bold text-ink">{standing.rank}</span>
-            </span>
+            <div className="flex shrink-0 flex-col items-center rounded-2xl bg-paper px-3 py-2">
+              <span className="text-[1.25rem] font-semibold leading-none tabular-nums text-gold-deep">
+                {average.toFixed(1)}
+              </span>
+              <span className="mt-1 text-[0.625rem] font-medium uppercase tracking-[0.08em] text-ink-mute">
+                Average
+              </span>
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-paper pt-4">
-            <span className="text-[0.75rem] uppercase tracking-[0.12em] text-yellow">Form teacher</span>
-            <span className="text-[0.875rem] font-medium text-paper">{klass.formTeacher.name}</span>
-            <a
-              href={`tel:${klass.formTeacher.phone.replace(/\s/g, '')}`}
-              className="ml-auto inline-flex items-center gap-1.5 bg-yellow px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink"
-            >
-              <Phone size={13} aria-hidden="true" /> Call
-            </a>
+          <div className="mt-3.5 flex flex-wrap gap-2">
+            <Chip tone="green" icon={TrendingUp}>
+              {standing.rank} of {standing.size} in class
+            </Chip>
+            <Chip tone="plain">{grade.remark}</Chip>
           </div>
-        </CardBody>
+        </CardPad>
       </Card>
 
-      {/* ---------------------------------------------------- four coloured numbers */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Average" value={average.toFixed(1)} note={grade.remark} tone="purple" />
-        <StatTile label="Position" value={`${standing.rank}/${standing.size}`} note="In the class" tone="green" />
-        <StatTile label="Attendance" value={`${attendance}%`} note={`${profile.attendance.daysOpen} days open`} tone="orange" />
-        <StatTile
-          label="Fees"
-          value={fees.balance === 0 ? 'Clear' : formatCurrency(fees.balance).replace('GHS ', '')}
-          note={fees.balance === 0 ? 'Nothing owing' : `Due ${formatDate(profile.fees.nextDue.date)}`}
-          tone={fees.balance === 0 ? 'plain' : 'yellow'}
+      {/* ------------------------------------------------- the shortcut grid */}
+      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+        <ActionTile to="/parent/results" icon={GraduationCap} label="Grades" tone="purple" />
+        <ActionTile to="/parent/attendance" icon={CalendarCheck} label="Attendance" tone="green" />
+        <ActionTile to="/parent/fees" icon={Wallet} label="Fees" tone="yellow" />
+        <ActionTile to="/parent/class" icon={Users} label="Class" tone="green" />
+        <ActionTile to="/parent/announcements" icon={Bell} label="Notices" tone="orange" badge={latest.length} />
+        <ActionTile to="/parent/profile" icon={Phone} label="Contact" tone="plain" />
+      </div>
+
+      {/* ------------------------------------------------- the four figures */}
+      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+        <StatCard icon={GraduationCap} label="Average" value={average.toFixed(1)} note={gradeNote(average)} tone="purple" />
+        <StatCard icon={TrendingUp} label="Position" value={`${standing.rank}/${standing.size}`} note="In the class" tone="green" />
+        <StatCard icon={CalendarCheck} label="Attendance" value={`${attendance}%`} note={`${profile.attendance.daysOpen} days open`} tone="orange" />
+        <StatCard
+          icon={Wallet}
+          label="Balance"
+          value={fees.balance === 0 ? '0' : formatCurrency(fees.balance).replace('GHS ', '')}
+          note={fees.balance === 0 ? 'Fees all clear' : `Due ${formatDate(profile.fees.nextDue.date)}`}
+          tone="yellow"
         />
       </div>
 
-      {/* ---------------------------------------------------- best and weakest */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      {/* ------------------------------------------------- best and to work on */}
+      <div className="grid gap-3 sm:grid-cols-2">
         {best ? (
-          <Card tone="green" shape="left">
-            <CardBody tight>
-              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-green-deep">Best subject</p>
-              <p className="mt-1.5 font-display text-xl text-ink">
-                {best.subject} <span className="text-green-deep">{best.score}</span>
-              </p>
-              <p className="mt-1 text-[0.8125rem] text-ink-mute">
-                Position {best.position} · class average {best.classAverage}
-              </p>
-            </CardBody>
+          <Card>
+            <CardPad>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <Chip tone="green">Best subject</Chip>
+                  <p className="mt-2 truncate text-[0.9375rem] font-medium text-ink">{best.subject}</p>
+                  <p className="mt-0.5 text-[0.75rem] text-ink-mute">
+                    Position {best.position} · class {best.classAverage}
+                  </p>
+                </div>
+                <span className="shrink-0 text-[1.75rem] font-semibold leading-none tabular-nums text-green-deep">
+                  {best.score}
+                </span>
+              </div>
+              <div className="mt-3">
+                <Meter value={best.score} tone="green" />
+              </div>
+            </CardPad>
           </Card>
         ) : null}
+
         {weakest && weakest.subject !== best?.subject ? (
-          <Card tone="orange" shape="left">
-            <CardBody tight>
-              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-gold-deep">Work on this</p>
-              <p className="mt-1.5 font-display text-xl text-ink">
-                {weakest.subject} <span className="text-gold-deep">{weakest.score}</span>
-              </p>
-              <p className="mt-1 text-[0.8125rem] text-ink-mute">
-                Position {weakest.position} · class average {weakest.classAverage}
-              </p>
-            </CardBody>
+          <Card>
+            <CardPad>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <Chip tone="orange">Needs work</Chip>
+                  <p className="mt-2 truncate text-[0.9375rem] font-medium text-ink">{weakest.subject}</p>
+                  <p className="mt-0.5 text-[0.75rem] text-ink-mute">
+                    Position {weakest.position} · class {weakest.classAverage}
+                  </p>
+                </div>
+                <span className="shrink-0 text-[1.75rem] font-semibold leading-none tabular-nums text-gold-deep">
+                  {weakest.score}
+                </span>
+              </div>
+              <div className="mt-3">
+                <Meter value={weakest.score} tone="orange" />
+              </div>
+            </CardPad>
           </Card>
         ) : null}
       </div>
 
-      {/* ---------------------------------------------------- attendance strip */}
-      <Card shape="top" tone="green">
-        <CardBody>
-          <CardHead
-            eyebrow="Attendance"
-            title={`${attendance}% this term`}
-            action={
-              <Link
-                to="/parent/attendance"
-                className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-green-deep"
-              >
-                All <ArrowRight size={13} aria-hidden="true" />
-              </Link>
-            }
-          />
+      {/* ------------------------------------------------- today */}
+      <Card>
+        <CardPad>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <IconChip icon={Clock} tone="orange" size="sm" />
+              <h2 className="text-[0.9375rem] font-semibold text-ink">Today</h2>
+            </div>
+            <span className="text-[0.75rem] text-ink-mute">
+              {klass.presentToday} of {roster.length} in school
+            </span>
+          </div>
+          {nextLesson ? (
+            <div className="rounded-2xl bg-tint-orange px-3.5 py-3">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-gold-deep">
+                Next up · {nextLesson.time}
+              </p>
+              <p className="mt-1 text-[0.9375rem] font-medium text-ink">{nextLesson.subject}</p>
+              <p className="mt-0.5 text-[0.75rem] text-ink-mute">
+                {nextLesson.teacher} · {nextLesson.room}
+              </p>
+            </div>
+          ) : null}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {klass.todayLessons.slice(1).map(lesson => (
+              <Chip key={lesson.time} tone="plain">
+                {lesson.time} {lesson.subject}
+              </Chip>
+            ))}
+          </div>
+        </CardPad>
+      </Card>
+
+      {/* ------------------------------------------------- what is due */}
+      <Card>
+        <CardPad>
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <IconChip icon={GraduationCap} tone="purple" size="sm" />
+              <h2 className="text-[0.9375rem] font-semibold text-ink">
+                {due.length ? `${due.length} pieces due` : 'Nothing due'}
+              </h2>
+            </div>
+            <Link to="/parent/results" className="-my-3.5 inline-flex min-h-[2.75rem] items-center text-[0.75rem] font-semibold text-purple-deep">
+              Grades
+            </Link>
+          </div>
+          {due.length ? (
+            <div className="-mx-4 mt-1">
+              {due.map((work, index) => (
+                <div key={work.title}>
+                  {index > 0 ? <Rule /> : null}
+                  <Row
+                    icon={Clock}
+                    tone="purple"
+                    title={work.title}
+                    sub={`${work.subject} · out of ${work.outOf}`}
+                    trailing={<Chip tone="purple">{formatDate(work.date)}</Chip>}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-[0.8125rem] text-ink-mute">Every piece has been handed in.</p>
+          )}
+        </CardPad>
+      </Card>
+
+      {/* ------------------------------------------------- attendance strip */}
+      <Card>
+        <CardPad>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <IconChip icon={CalendarCheck} tone="green" size="sm" />
+              <h2 className="text-[0.9375rem] font-semibold text-ink">Attendance</h2>
+            </div>
+            <Link to="/parent/attendance" className="-my-3.5 inline-flex min-h-[2.75rem] items-center text-[0.75rem] font-semibold text-green-deep">
+              All
+            </Link>
+          </div>
           <div className="flex flex-wrap gap-1.5">
             {lastEight.map(day => {
               const look =
                 day.status === 'present'
-                  ? { cls: 'bg-green text-ink', icon: <CheckCircle2 size={13} aria-hidden="true" /> }
+                  ? { cls: 'bg-tint-green text-green-deep', icon: <CheckCircle2 size={12} aria-hidden="true" /> }
                   : day.status === 'late'
-                    ? { cls: 'bg-yellow text-ink', icon: <Clock size={13} aria-hidden="true" /> }
-                    : { cls: 'bg-ink text-yellow', icon: <XCircle size={13} aria-hidden="true" /> };
+                    ? { cls: 'bg-tint-yellow text-yellow-deep', icon: <Clock size={12} aria-hidden="true" /> }
+                    : { cls: 'bg-tint-orange text-gold-deep', icon: <XCircle size={12} aria-hidden="true" /> };
+              const [, dayNumber] = formatDate(day.date).split(', ');
               return (
                 <span
                   key={day.date}
-                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-[0.6875rem] font-medium ${look.cls}`}
+                  className={`flex items-center gap-1 rounded-full px-2 py-1 text-[0.6875rem] font-medium ${look.cls}`}
                 >
                   {look.icon}
-                  {formatDate(day.date).replace(/^[A-Za-z]+,?\s/, '')}
+                  {dayNumber ?? day.date}
                 </span>
               );
             })}
           </div>
-          <p className="mt-3 text-[0.8125rem] text-ink-mute">
+          <p className="mt-3 text-[0.75rem] text-ink-mute">
             {profile.attendance.present} present · {profile.attendance.late} late · {profile.attendance.absent} absent
           </p>
-        </CardBody>
+        </CardPad>
       </Card>
 
-      {/* ---------------------------------------------------- today, and what is due */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card shape="top">
-          <CardBody>
-            <CardHead
-              eyebrow="Today"
-              title={klass.name}
-              action={<span className="text-[0.75rem] text-ink-mute">{klass.presentToday} of {roster.length} in</span>}
-            />
-            <ol className="space-y-2.5">
-              {klass.todayLessons.map(lesson => (
-                <li key={lesson.time} className="flex items-center gap-3">
-                  <span className="flex h-9 w-11 shrink-0 items-center justify-center rounded-lg bg-cream font-display text-[0.8125rem] text-gold-deep">
-                    {lesson.time}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[0.875rem] font-medium text-ink">{lesson.subject}</span>
-                    <span className="block truncate text-[0.75rem] text-ink-mute">{lesson.teacher}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </CardBody>
-        </Card>
-
-        <Card shape="top" tone="purple">
-          <CardBody>
-            <CardHead
-              eyebrow="Work due"
-              title={due.length ? `${due.length} pieces coming up` : 'Nothing outstanding'}
-              action={
-                <Link
-                  to="/parent/results"
-                  className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-purple-deep"
-                >
-                  Grades <ArrowRight size={13} aria-hidden="true" />
-                </Link>
-              }
-            />
-            {due.length ? (
-              <ul className="space-y-2.5">
-                {due.map(work => (
-                  <li key={work.title} className="flex items-start justify-between gap-3">
-                    <span className="min-w-0">
-                      <span className="block truncate text-[0.875rem] font-medium text-ink">{work.title}</span>
-                      <span className="block text-[0.75rem] text-ink-mute">{work.subject}</span>
-                    </span>
-                    <Chip tone="purple">{formatDate(work.date)}</Chip>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <Led>Every piece has been handed in.</Led>
-            )}
-          </CardBody>
-        </Card>
-      </div>
-
-      {/* ---------------------------------------------------- the class, in one card */}
-      <Card shape="top" tone="green">
-        <CardBody>
-          <CardHead
-            eyebrow="The class"
-            title={`${klass.name} · ${roster.length} pupils`}
-            action={
-              <Link
-                to="/parent/class"
-                className="inline-flex items-center gap-2 rounded-lg bg-green px-3 py-2 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink"
-              >
-                <Users size={14} aria-hidden="true" /> Class list
-              </Link>
-            }
-          />
-          <div className="flex items-center gap-2.5">
+      {/* ------------------------------------------------- the class */}
+      <Card>
+        <CardPad>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <IconChip icon={Users} tone="green" size="sm" />
+              <h2 className="text-[0.9375rem] font-semibold text-ink">
+                {klass.name} · {roster.length} pupils
+              </h2>
+            </div>
+            <Link to="/parent/class" className="-my-3.5 inline-flex min-h-[2.75rem] items-center text-[0.75rem] font-semibold text-green-deep">
+              Class list
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
             <span className="flex -space-x-2">
               {roster.slice(0, 5).map(entry => (
-                <span key={entry.id} className="ring-2 ring-paper">
+                <span key={entry.id} className="rounded-full ring-2 ring-paper">
                   <Avatar name={entry.name} size="sm" />
                 </span>
               ))}
             </span>
-            <p className="text-[0.8125rem] text-ink-mute">
-              {roster.filter(entry => entry.badge).length} pupils hold a class duty
+            <p className="text-[0.75rem] text-ink-mute">
+              {roster.filter(entry => entry.badge).length} hold a duty, from class prefect to sports captain
             </p>
           </div>
-        </CardBody>
+        </CardPad>
       </Card>
 
-      {/* ---------------------------------------------------- notices */}
-      <Card shape="top">
-        <CardBody>
-          <CardHead
-            eyebrow="From the school"
-            title="Latest notices"
-            action={
-              <Link
-                to="/parent/announcements"
-                className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-gold-deep"
-              >
-                All <ArrowRight size={13} aria-hidden="true" />
-              </Link>
-            }
-          />
-          <ul className="space-y-3">
-            {latest.map(notice => (
-              <li key={notice.id} className="flex gap-3">
-                <span className="mt-0.5">
-                  <IconBadge icon={Bell} tone={notice.audience === 'Fees' ? 'yellow' : notice.audience === 'Class' ? 'green' : 'orange'} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[0.875rem] font-medium text-ink">{notice.title}</span>
-                  <span className="mt-0.5 block text-[0.75rem] text-ink-mute">
-                    {notice.audience} · {formatDate(notice.date)}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </CardBody>
-      </Card>
-
-      {/* ---------------------------------------------------- the teacher, in their words */}
-      <Card shape="left" tone="orange">
-        <CardBody>
-          <CardHead eyebrow="Form teacher's remark" />
-          <p className="text-[0.9375rem] leading-relaxed text-ink">{profile.remark.form}</p>
-          <p className="mt-3 text-[0.75rem] text-ink-mute">{klass.formTeacher.name}</p>
-        </CardBody>
-      </Card>
-
-      {/* One quiet card at the end: the school, and the way back to the site. */}
-      <Card shape="bare">
-        <CardBody>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <a href={`tel:${school.phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-ink">
-              <Phone size={13} aria-hidden="true" /> School office
-            </a>
-            <Link to="/" className="text-[0.8125rem] font-medium text-ink">
-              School website
-            </Link>
-            <Link to="/parent/profile" className="ml-auto text-[0.8125rem] font-medium text-gold-deep">
-              Account
+      {/* ------------------------------------------------- notices */}
+      <Card>
+        <CardPad>
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <IconChip icon={Bell} tone="orange" size="sm" />
+              <h2 className="text-[0.9375rem] font-semibold text-ink">Latest notices</h2>
+            </div>
+            <Link to="/parent/announcements" className="-my-3.5 inline-flex min-h-[2.75rem] items-center gap-1 text-[0.75rem] font-semibold text-gold-deep">
+              All <ArrowRight size={12} aria-hidden="true" />
             </Link>
           </div>
-        </CardBody>
+          <div className="-mx-4 mt-1">
+            {latest.map((notice, index) => (
+              <div key={notice.id}>
+                {index > 0 ? <Rule /> : null}
+                <Row
+                  icon={Bell}
+                  tone={notice.audience === 'Fees' ? 'yellow' : notice.audience === 'Class' ? 'green' : 'orange'}
+                  title={notice.title}
+                  sub={`${notice.audience} · ${formatDate(notice.date)}`}
+                  to="/parent/announcements"
+                />
+              </div>
+            ))}
+          </div>
+        </CardPad>
+      </Card>
+
+      {/* ------------------------------------------------- the teacher speaking */}
+      <Card>
+        <CardPad>
+          <div className="flex items-center gap-2.5">
+            <Avatar name={klass.formTeacher.name} size="sm" tone="orange" />
+            <div className="min-w-0">
+              <p className="truncate text-[0.875rem] font-medium text-ink">{klass.formTeacher.name}</p>
+              <p className="text-[0.6875rem] text-ink-mute">Form teacher&apos;s remark</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[0.875rem] leading-relaxed text-ink">{profile.remark.form}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={`tel:${klass.formTeacher.phone.replace(/\s/g, '')}`}
+              className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-gold px-4 text-[0.75rem] font-semibold text-ink"
+            >
+              <Phone size={14} aria-hidden="true" /> Call the teacher
+            </a>
+          </div>
+        </CardPad>
       </Card>
     </div>
   );

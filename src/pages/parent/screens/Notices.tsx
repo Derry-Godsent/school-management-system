@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Bell, Pin } from 'lucide-react';
+import { Bell, CalendarDays, Pin, Users } from 'lucide-react';
 import { formatDate, formatLongDate, noticesFor, type Notice } from '../../../data/portal';
 import { useWard } from '../PortalShell';
-import { Card, CardBody, Chip, IconBadge, Sheet, StatTile } from '../ui';
+import { Card, CardPad, Chip, IconChip, ScreenTitle, Segmented, Sheet, StatCard } from '../ui';
 import type { Tone } from '../ui';
 
 const FILTERS = ['All', 'School', 'Class', 'Teacher', 'Fees'] as const;
@@ -16,8 +16,8 @@ const AUDIENCE_TONE: Record<string, Tone> = {
 };
 
 /**
- * Notices, each one a card with a colour that says where it came from. A parent
- * can filter down to the ones about their own child's class in one tap.
+ * Notices: a feed of cards, the way a message feed works. Four at a time, with
+ * the headline and two lines, and the whole notice behind a tap.
  */
 export function NoticesScreen() {
   const { child, profile, klass } = useWard();
@@ -29,46 +29,31 @@ export function NoticesScreen() {
 
   const all = noticesFor(profile.classId);
   const matching = filter === 'All' ? all : all.filter(notice => notice.audience === filter);
-  // A feed, not a page: four notices are visible and the rest wait to be asked
-  // for, which keeps the screen readable on a phone.
   const shown = showAll ? matching : matching.slice(0, 4);
   const hidden = matching.length - shown.length;
-  const pinned = all.filter(notice => notice.pinned).length;
 
   return (
-    <div className="space-y-4">
-      <div className="px-1">
-        <h1 className="font-display text-2xl text-ink">Notices</h1>
-        <p className="mt-1 text-[0.8125rem] text-ink-mute">
-          {all.length} this term · {pinned} pinned
-        </p>
+    <div className="space-y-5">
+      <ScreenTitle title="Notices" sub={`${all.length} this term, for ${child.name.split(' ')[0]} and the school`} />
+
+      <div className="grid grid-cols-2 gap-2.5">
+        <StatCard
+          icon={Users}
+          label="Whole school"
+          value={all.filter(n => n.audience === 'School').length}
+          note="For every family"
+          tone="orange"
+        />
+        <StatCard
+          icon={CalendarDays}
+          label={klass.name}
+          value={all.filter(n => n.audience === 'Class').length}
+          note="About this class"
+          tone="green"
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <StatTile label="For the whole school" value={all.filter(n => n.audience === 'School').length} tone="orange" />
-        <StatTile label={`For ${klass.name}`} value={all.filter(n => n.audience === 'Class').length} tone="green" />
-      </div>
-
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" role="tablist" aria-label="Filter notices">
-        {FILTERS.map(option => {
-          const active = option === filter;
-          const count = option === 'All' ? all.length : all.filter(notice => notice.audience === option).length;
-          return (
-            <button
-              key={option}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setFilter(option)}
-              className={`shrink-0 rounded-full px-3.5 py-2 text-[0.75rem] font-semibold transition-colors ${
-                active ? 'bg-ink text-paper' : 'bg-paper text-ink-mute hover:bg-cream'
-              }`}
-            >
-              {option} {count}
-            </button>
-          );
-        })}
-      </div>
+      <Segmented options={FILTERS} value={filter} onChange={setFilter} label="Filter notices" />
 
       {shown.length ? (
         <ul className="space-y-3">
@@ -76,43 +61,40 @@ export function NoticesScreen() {
             const tone = AUDIENCE_TONE[notice.audience] ?? 'orange';
             return (
               <li key={notice.id}>
-                <Card shape="top" tone={tone}>
-                  <CardBody>
+                <Card>
+                  <CardPad>
                     <div className="flex items-start gap-3">
-                      <IconBadge icon={Bell} tone={tone} />
+                      <IconChip icon={Bell} tone={tone} />
                       <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5">
                           <Chip tone={tone}>{notice.audience}</Chip>
-                          {notice.pinned ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-ink px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-yellow">
-                              <Pin size={10} aria-hidden="true" /> Pinned
-                            </span>
-                          ) : null}
+                          {notice.pinned ? <Chip tone="plain" icon={Pin}>Pinned</Chip> : null}
                           <span className="text-[0.75rem] text-ink-mute">{formatDate(notice.date)}</span>
                         </div>
-                        <h2 className="mt-2 font-display text-[1.0625rem] leading-snug text-ink">{notice.title}</h2>
-                        <p className="mt-1.5 line-clamp-2 text-[0.875rem] leading-relaxed text-ink">{notice.body}</p>
-                        <p className="mt-2 text-[0.75rem] text-ink-mute">From {notice.from}</p>
+                        <h2 className="mt-2 text-[0.9375rem] font-semibold leading-snug text-ink">{notice.title}</h2>
+                        <p className="mt-1.5 line-clamp-2 text-[0.875rem] leading-relaxed text-ink-mute">
+                          {notice.body}
+                        </p>
                         <button
                           type="button"
                           onClick={() => setReading(notice)}
-                          className="mt-2.5 rounded-lg bg-ink px-3 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-paper"
+                          className="mt-3 inline-flex min-h-[2.25rem] items-center rounded-full bg-canvas px-3.5 text-[0.75rem] font-semibold text-ink"
                         >
-                          Read the notice
+                          Read
                         </button>
                       </div>
                     </div>
-                  </CardBody>
+                  </CardPad>
                 </Card>
               </li>
             );
           })}
         </ul>
       ) : (
-        <Card shape="bare">
-          <CardBody>
+        <Card>
+          <CardPad>
             <p className="text-[0.875rem] text-ink-mute">Nothing in this category.</p>
-          </CardBody>
+          </CardPad>
         </Card>
       )}
 
@@ -120,7 +102,7 @@ export function NoticesScreen() {
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className="w-full rounded-xl bg-ink px-4 py-3.5 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-paper"
+          className="min-h-[3rem] w-full rounded-2xl bg-paper py-3.5 text-[0.8125rem] font-semibold text-ink shadow-[0_1px_3px_rgba(17,17,17,0.06)]"
         >
           Show {hidden} more
         </button>
@@ -129,28 +111,17 @@ export function NoticesScreen() {
         <button
           type="button"
           onClick={() => setShowAll(false)}
-          className="w-full rounded-xl bg-cream px-4 py-3.5 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-ink-mute"
+          className="min-h-[3rem] w-full rounded-2xl bg-canvas py-3.5 text-[0.8125rem] font-semibold text-ink-mute"
         >
           Show fewer
         </button>
       ) : null}
 
-      <Card shape="bare">
-        <CardBody>
-          <p className="text-[0.8125rem] text-ink-mute">
-            Older notices are kept at the school office and can be requested by phone.
-          </p>
-        </CardBody>
-      </Card>
-
-      {/* The full notice, opened from its card. */}
       <Sheet open={!!reading} onClose={() => setReading(null)} title={reading?.title ?? ''}>
         {reading ? (
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <Chip tone={AUDIENCE_TONE[reading.audience] ?? 'orange'}>
-                {reading.audience}
-              </Chip>
+              <Chip tone={AUDIENCE_TONE[reading.audience] ?? 'orange'}>{reading.audience}</Chip>
               <span className="text-[0.75rem] text-ink-mute">{formatLongDate(reading.date)}</span>
             </div>
             <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink">{reading.body}</p>

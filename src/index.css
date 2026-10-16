@@ -53,6 +53,10 @@
 
   /* Section grounds. All very light, so the page stays bright, but each is a
      clear hue rather than a shade of grey. */
+  /* The ground a phone app sits on. White cards read as raised against it, which
+     is how a mobile app gets separation without a single heavy colour. */
+  --color-canvas: #f3f5f8;
+  --color-canvas-deep: #e9edf2;
   --color-tint-orange: #fff7ed;
   --color-tint-yellow: #fefce8;
   --color-tint-green: #ecfdf5;
