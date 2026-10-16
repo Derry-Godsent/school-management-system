@@ -539,7 +539,7 @@ export const notices: Notice[] = [
     audience: 'School',
     pinned: true,
     body:
-      'School closes for the mid term break on Friday 17 February and reopens on Monday 24 February. Boarders may be collected from 12 noon on the Friday. The school bus will not run during the break.',
+      'School closes Friday 17 February and reopens Monday 24 February. Boarders may be collected from 12 noon on the Friday. No school bus during the break.',
   },
   {
     id: 'notice-2',
@@ -549,7 +549,7 @@ export const notices: Notice[] = [
     audience: 'Fees',
     pinned: true,
     body:
-      'Parents with a balance on the current term are kindly asked to clear it before the mid term break. Payment may be made by mobile money to the school number or by transfer to the school account. Receipts are issued at the office and appear in this portal within a day.',
+      'Please clear any balance before the mid term break. Pay by mobile money or bank transfer. Receipts appear here within a day.',
   },
   {
     id: 'notice-3',
@@ -559,7 +559,7 @@ export const notices: Notice[] = [
     audience: 'Class',
     classId: 'jhs2',
     body:
-      'The class will visit the science museum in Kumasi on Thursday 26 February, leaving at 7am and returning by 3pm. The cost is 50 cedis for transport and entry. A signed consent slip is required and both are due by Friday 21 February.',
+      'The science museum trip is Thursday 26 February, 7am to 3pm. Cost 50 cedis. A signed consent slip and the money are due by Friday 21 February.',
   },
   {
     id: 'notice-4',
@@ -568,7 +568,7 @@ export const notices: Notice[] = [
     from: 'The School Office',
     audience: 'School',
     body:
-      'Parents evening runs from 3pm to 6pm. Each parent has fifteen minutes with the form teacher and may see subject teachers in the hall. Please come with this term report, which you can read in this portal before you arrive.',
+      'Parents evening is Thursday 19 February, 3pm to 6pm. Fifteen minutes with the form teacher, and subject teachers in the hall.',
   },
   {
     id: 'notice-5',
@@ -578,7 +578,7 @@ export const notices: Notice[] = [
     audience: 'Teacher',
     classId: 'jhs2',
     body:
-      'French support classes now run every Thursday from 3pm to 4pm in Room 4. Any pupil who scored below 70 in the last test is expected to attend. There is no charge for these lessons.',
+      'French support runs every Thursday, 3pm to 4pm in Room 4. Pupils who scored below 70 should attend. No charge.',
   },
   {
     id: 'notice-6',
@@ -587,7 +587,7 @@ export const notices: Notice[] = [
     from: 'The School Nurse',
     audience: 'School',
     body:
-      'The district health team will visit to give the measles and rubella vaccination. Please sign and return the consent form that was sent home with your child. Pupils without a signed form will not be vaccinated.',
+      'The district health team visits on Thursday 26 February. Please sign and return the consent form sent home. Pupils without one will not be vaccinated.',
   },
   {
     id: 'notice-7',
@@ -597,7 +597,7 @@ export const notices: Notice[] = [
     audience: 'Class',
     classId: 'p5',
     body:
-      'Every pupil in Primary 5 is challenged to read twenty books before the end of term. Books may be borrowed from the class box. Please write the title and the date in the reading card at the back of the exercise book.',
+      'Primary 5 is challenged to read twenty books before the end of term. Borrow from the class box and write each title in the reading card.',
   },
   {
     id: 'notice-8',
@@ -606,7 +606,7 @@ export const notices: Notice[] = [
     from: 'The Sports Department',
     audience: 'School',
     body:
-      'Annual sports day will be held on the school field from 8am. Every pupil needs a house vest, shorts and trainers. Parents are welcome and there will be a parents race at midday. House colours are available at the school shop.',
+      'Sports day is Saturday 14 March, from 8am on the school field. House vest, shorts and trainers needed. Parents race at midday.',
   },
 ];
 

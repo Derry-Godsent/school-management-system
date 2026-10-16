@@ -1,35 +1,101 @@
 import { useEffect, type ReactNode } from 'react';
-import { X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, type LucideIcon } from 'lucide-react';
 import { useScrollLock } from '../../components/fx';
 import { getGrade } from '../../data';
 
 /**
- * The pieces the portal is built from.
+ * The card kit the portal is built from.
  *
- * Everything here is sized for a phone first, because the portal is meant to be
- * an app in a parent's hand, and then allowed to breathe on a wider screen.
+ * This is a phone app, so the page is a stack of cards rather than a run of
+ * paragraphs. The point of a card is that it separates one idea from the next,
+ * which is what stops a long page reading as a wall of text.
  *
- * There are no floating rounded cards with drop shadows anywhere in the portal.
- * The school's own design language, flat colour blocks and hairline rules, is
- * carried through, which also keeps a large page calm rather than making it a
- * stack of boxes.
+ * The cards are deliberately not all the same shape. A screen mixes:
+ *
+ *   numbers    solid colour tiles, big figure, one label. The most colour.
+ *   the lead   one dark card, for the thing that matters most on the screen.
+ *   groups     a light card with a coloured bar, holding a short list.
+ *   details    a plain card, for reading rather than scanning.
+ *   attention  a card with a coloured edge, for what needs doing.
+ *
+ * Corners are slightly rounded here, unlike the marketing site, because that is
+ * what a phone app looks like. Colour carries meaning consistently across every
+ * screen: green for attendance, purple for grades, yellow for money, orange for
+ * notices, so a parent learns the scheme once.
  */
 
 export type Tone = 'orange' | 'green' | 'purple' | 'yellow' | 'ink' | 'plain';
 
-const TONE: Record<Tone, { block: string; text: string; fill: string; line: string }> = {
-  orange: { block: 'bg-tint-orange', text: 'text-gold-deep', fill: 'bg-gold', line: 'border-gold-deep' },
-  green: { block: 'bg-tint-green', text: 'text-green-deep', fill: 'bg-green', line: 'border-green-deep' },
-  purple: { block: 'bg-tint-purple', text: 'text-purple-deep', fill: 'bg-purple', line: 'border-purple-deep' },
-  yellow: { block: 'bg-tint-yellow', text: 'text-yellow-deep', fill: 'bg-yellow', line: 'border-yellow-deep' },
-  ink: { block: 'bg-ink', text: 'text-paper', fill: 'bg-ink', line: 'border-ink' },
-  plain: { block: 'bg-paper', text: 'text-ink', fill: 'bg-ink-mute', line: 'border-rule' },
+interface ToneSet {
+  /** Bright fill, for a tile that has to shout. Text on it is ink or paper. */
+  strong: string;
+  /** Text colour that belongs on the strong fill. */
+  onStrong: string;
+  /** Pale fill, for a quiet card. */
+  tint: string;
+  /** Deep accent, for text and edges on a pale card. */
+  deep: string;
+  /** The bright colour itself, for bars and meters. */
+  bright: string;
+}
+
+const TONE: Record<Tone, ToneSet> = {
+  orange: {
+    strong: 'bg-gold',
+    onStrong: 'text-ink',
+    tint: 'bg-tint-orange',
+    deep: 'text-gold-deep',
+    bright: 'bg-gold',
+  },
+  green: {
+    strong: 'bg-green',
+    onStrong: 'text-ink',
+    tint: 'bg-tint-green',
+    deep: 'text-green-deep',
+    bright: 'bg-green',
+  },
+  purple: {
+    strong: 'bg-purple',
+    onStrong: 'text-paper',
+    tint: 'bg-tint-purple',
+    deep: 'text-purple-deep',
+    bright: 'bg-purple',
+  },
+  yellow: {
+    strong: 'bg-yellow',
+    onStrong: 'text-ink',
+    tint: 'bg-tint-yellow',
+    deep: 'text-yellow-deep',
+    bright: 'bg-yellow',
+  },
+  ink: {
+    strong: 'bg-ink',
+    onStrong: 'text-paper',
+    tint: 'bg-ink',
+    deep: 'text-paper',
+    bright: 'bg-ink',
+  },
+  plain: {
+    strong: 'bg-paper',
+    onStrong: 'text-ink',
+    tint: 'bg-paper',
+    deep: 'text-ink-mute',
+    bright: 'bg-ink-mute',
+  },
 };
 
-export const toneOf = (tone: Tone) => TONE[tone];
+export const tones = TONE;
 
-/** Four hues cycled by position, so a list of people is never one flat colour. */
-const AVATAR_TONES: Tone[] = ['orange', 'green', 'purple', 'yellow'];
+/** The colour a domain always uses, so a parent learns it once. */
+export const domainTone = {
+  attendance: 'green',
+  grades: 'purple',
+  fees: 'yellow',
+  notices: 'orange',
+  class: 'green',
+  account: 'orange',
+} as const satisfies Record<string, Tone>;
 
 function initials(name: string): string {
   const parts = name.replace(/^(Mr\.|Mrs\.|Madam|Master|Miss)\s+/i, '').split(/\s+/).filter(Boolean);
@@ -38,27 +104,179 @@ function initials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+const AVATAR_TONES: Tone[] = ['orange', 'green', 'purple', 'yellow'];
+
 function toneForName(name: string): Tone {
   let sum = 0;
   for (let index = 0; index < name.length; index += 1) sum += name.charCodeAt(index);
   return AVATAR_TONES[sum % AVATAR_TONES.length];
 }
 
+/* -------------------------------------------------------------------------- */
+/* Cards                                                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Card.
+ *
+ * `solid`  a pale block of colour, flat, no border.
+ * `top`    a light card with a bright bar across the top, the workhorse.
+ * `left`   a light card with a bright edge down the side, for a note.
+ * `dark`   the one card per screen that carries the most weight.
+ * `bare`   a light card with a hairline edge and nothing else.
+ */
+export function Card({
+  children,
+  tone = 'plain',
+  shape = 'top',
+  className = '',
+}: {
+  children: ReactNode;
+  tone?: Tone;
+  shape?: 'solid' | 'top' | 'left' | 'dark' | 'bare';
+  className?: string;
+}) {
+  const palette = TONE[shape === 'dark' ? 'ink' : tone];
+  const skin = {
+    solid: `${palette.tint} rounded-xl`,
+    top: `bg-paper rounded-xl shadow-[0_1px_2px_rgba(17,17,17,0.05)]`,
+    left: `${palette.tint} rounded-xl border-l-4 ${edgeOf(tone)}`,
+    dark: `bg-ink rounded-xl`,
+    bare: `bg-paper rounded-xl border border-rule`,
+  }[shape];
+
+  return (
+    <section className={`relative overflow-hidden ${skin} ${className}`}>
+      {shape === 'top' ? <span className={`absolute inset-x-0 top-0 h-1 ${palette.bright}`} aria-hidden="true" /> : null}
+      {children}
+    </section>
+  );
+}
+
+function edgeOf(tone: Tone): string {
+  return {
+    orange: 'border-gold-deep',
+    green: 'border-green-deep',
+    purple: 'border-purple-deep',
+    yellow: 'border-yellow-deep',
+    ink: 'border-ink',
+    plain: 'border-rule',
+  }[tone];
+}
+
+/** The standard inside of a card: padding, and a heading row. */
+export function CardBody({
+  children,
+  className = '',
+  tight = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  tight?: boolean;
+}) {
+  return <div className={`${tight ? 'p-4' : 'p-5'} ${className}`}>{children}</div>;
+}
+
+export function CardHead({
+  eyebrow,
+  title,
+  action,
+  dark = false,
+}: {
+  eyebrow?: ReactNode;
+  title?: ReactNode;
+  action?: ReactNode;
+  dark?: boolean;
+}) {
+  return (
+    <div className="mb-3.5 flex flex-wrap items-start justify-between gap-3">
+      <div className="min-w-0">
+        {eyebrow ? (
+          <p className={`text-[0.625rem] font-semibold uppercase tracking-[0.16em] ${dark ? 'text-yellow' : 'text-ink-mute'}`}>
+            {eyebrow}
+          </p>
+        ) : null}
+        {title ? (
+          <h2 className={`mt-1 font-display text-lg leading-snug ${dark ? 'text-paper' : 'text-ink'}`}>{title}</h2>
+        ) : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
+    </div>
+  );
+}
+
+/**
+ * StatTile: a solid block of colour with one number on it.
+ *
+ * These carry the colour on a screen. Four of them in a row, in four different
+ * colours, is what makes the app feel alive rather than grey.
+ */
+export function StatTile({
+  label,
+  value,
+  note,
+  tone = 'plain',
+  size = 'md',
+}: {
+  label: string;
+  value: ReactNode;
+  note?: ReactNode;
+  tone?: Tone;
+  size?: 'sm' | 'md' | 'lg';
+}) {
+  const palette = TONE[tone];
+  const strong = tone !== 'plain';
+  const figure = { sm: 'text-xl', md: 'text-2xl', lg: 'text-[2rem]' }[size];
+
+  return (
+    <div className={`rounded-xl ${strong ? palette.strong : 'bg-paper border border-rule'} px-4 py-3.5`}>
+      <p
+        className={`text-[0.625rem] font-semibold uppercase tracking-[0.14em] ${
+          strong ? palette.onStrong : 'text-ink-mute'
+        }`}
+      >
+        {label}
+      </p>
+      <p className={`mt-1.5 font-display leading-none ${figure} ${strong ? palette.onStrong : 'text-ink'}`}>{value}</p>
+      {note ? (
+        <p className={`mt-2 text-[0.75rem] leading-snug ${strong ? palette.onStrong : 'text-ink-mute'}`}>{note}</p>
+      ) : null}
+    </div>
+  );
+}
+
+export function Chip({
+  children,
+  tone = 'plain',
+  solid = false,
+}: {
+  children: ReactNode;
+  tone?: Tone;
+  solid?: boolean;
+}) {
+  const palette = TONE[tone];
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] ${
+        solid ? `${palette.strong} ${palette.onStrong}` : `${palette.tint} ${palette.deep}`
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
 export function Avatar({
   name,
   size = 'md',
   tone,
-  square = false,
 }: {
   name: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   tone?: Tone;
-  square?: boolean;
 }) {
   const chosen = tone ?? toneForName(name);
   const palette = TONE[chosen];
-  // Purple and ink fills need light text; the bright fills need dark text.
-  const text = chosen === 'purple' || chosen === 'ink' ? 'text-paper' : 'text-ink';
   const box = {
     sm: 'h-8 w-8 text-[0.6875rem]',
     md: 'h-11 w-11 text-sm',
@@ -68,59 +286,27 @@ export function Avatar({
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex ${box} shrink-0 items-center justify-center font-semibold ${palette.fill} ${text} ${
-        square ? '' : ''
-      }`}
+      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-full font-semibold ${palette.strong} ${palette.onStrong}`}
     >
       {initials(name)}
     </span>
   );
 }
 
-export function Eyebrow({ children, tone = 'orange' }: { children: ReactNode; tone?: Tone }) {
-  return <span className={`eyebrow eyebrow--${tone === 'plain' ? 'orange' : tone}`}>{children}</span>;
-}
-
-export function SectionHead({
-  eyebrow,
-  title,
-  note,
-  action,
-}: {
-  eyebrow?: ReactNode;
-  title: ReactNode;
-  note?: ReactNode;
-  action?: ReactNode;
-}) {
-  return (
-    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-      <div className="min-w-0">
-        {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-        <h2 className="mt-2 font-display text-xl text-ink sm:text-2xl">{title}</h2>
-        {note ? <p className="mt-1.5 max-w-2xl text-[0.875rem] leading-relaxed text-ink-mute">{note}</p> : null}
-      </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
-    </div>
-  );
-}
-
-export function Stat({
+/** A labelled row inside a card. Kept to one line wherever possible. */
+export function Row({
   label,
-  value,
-  note,
-  tone = 'plain',
+  children,
+  tone,
 }: {
-  label: string;
-  value: ReactNode;
-  note?: ReactNode;
+  label: ReactNode;
+  children: ReactNode;
   tone?: Tone;
 }) {
-  const palette = TONE[tone];
   return (
-    <div className={`${palette.block} px-4 py-3.5`}>
-      <p className={`text-[0.625rem] font-semibold uppercase tracking-[0.16em] ${palette.text}`}>{label}</p>
-      <p className="mt-1.5 font-display text-2xl leading-none text-ink sm:text-[1.75rem]">{value}</p>
-      {note ? <p className="mt-1.5 text-[0.75rem] leading-snug text-ink-mute">{note}</p> : null}
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 border-b border-rule py-2.5 last:border-b-0">
+      <dt className="text-[0.8125rem] text-ink-mute">{label}</dt>
+      <dd className={`text-[0.875rem] font-medium ${tone ? TONE[tone].deep : 'text-ink'}`}>{children}</dd>
     </div>
   );
 }
@@ -128,25 +314,25 @@ export function Stat({
 export function Meter({ value, max = 100, tone = 'orange' }: { value: number; max?: number; tone?: Tone }) {
   const percent = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
   return (
-    <span className="block h-1.5 w-full bg-rule" role="presentation">
-      <span className={`block h-full ${TONE[tone].fill}`} style={{ width: `${percent}%` }} />
+    <span className="block h-2 w-full overflow-hidden rounded-full bg-rule" role="presentation">
+      <span className={`block h-full rounded-full ${TONE[tone].bright}`} style={{ width: `${percent}%` }} />
     </span>
   );
 }
 
-export function Badge({ children, tone = 'plain' }: { children: ReactNode; tone?: Tone }) {
+/** A small coloured square holding an icon, used on top of a card. */
+export function IconBadge({ icon: Icon, tone = 'orange' }: { icon: LucideIcon; tone?: Tone }) {
   const palette = TONE[tone];
   return (
-    <span className={`inline-block px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-[0.12em] ${palette.block} ${palette.text}`}>
-      {children}
+    <span className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${palette.strong} ${palette.onStrong}`}>
+      <Icon size={17} aria-hidden="true" />
     </span>
   );
 }
 
-/** The remark that belongs to a score, read from the school's grading scale. */
 export function gradeNote(score: number): string {
   const grade = getGrade(score);
-  return `Grade ${grade.grade}, ${grade.remark}`;
+  return `Grade ${grade.grade} · ${grade.remark}`;
 }
 
 export function scoreTone(score: number): Tone {
@@ -156,70 +342,17 @@ export function scoreTone(score: number): Tone {
   return 'purple';
 }
 
-/** How a score moved against the same subject last term. */
-export function Delta({ from, to }: { from: number; to: number }) {
+export function Delta({ from, to, dark = false }: { from: number; to: number; dark?: boolean }) {
   const change = to - from;
-  if (change === 0) return <span className="text-[0.75rem] text-ink-mute">No change</span>;
+  if (change === 0) return <span className={`text-[0.75rem] ${dark ? 'text-paper' : 'text-ink-mute'}`}>No change</span>;
   const up = change > 0;
   return (
-    <span className={`text-[0.75rem] font-medium ${up ? 'text-green-deep' : 'text-gold-deep'}`}>
+    <span className={`text-[0.75rem] font-semibold ${up ? (dark ? 'text-yellow' : 'text-green-deep') : dark ? 'text-paper' : 'text-gold-deep'}`}>
       {up ? 'Up' : 'Down'} {Math.abs(change)}
     </span>
   );
 }
 
-export function Callout({
-  tone = 'orange',
-  title,
-  children,
-}: {
-  tone?: Tone;
-  title: ReactNode;
-  children?: ReactNode;
-}) {
-  const palette = TONE[tone];
-  return (
-    <div className={`${palette.block} border-l-4 ${palette.line} px-4 py-3.5`}>
-      <p className={`text-[0.6875rem] font-semibold uppercase tracking-[0.16em] ${palette.text}`}>{title}</p>
-      {children ? <div className="mt-2 text-[0.875rem] leading-relaxed text-ink">{children}</div> : null}
-    </div>
-  );
-}
-
-/** A label and a value on one line, the workhorse of every list in the portal. */
-export function Field({ label, children }: { label: ReactNode; children: ReactNode }) {
-  return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-rule py-2.5 last:border-b-0">
-      <dt className="text-[0.8125rem] text-ink-mute">{label}</dt>
-      <dd className="text-[0.875rem] font-medium text-ink">{children}</dd>
-    </div>
-  );
-}
-
-export function LinkButton({
-  children,
-  onClick,
-  tone = 'orange',
-}: {
-  children: ReactNode;
-  onClick: () => void;
-  tone?: Tone;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`text-[0.8125rem] font-semibold uppercase tracking-[0.12em] ${TONE[tone].text} transition-colors hover:underline hover:underline-offset-4`}
-    >
-      {children}
-    </button>
-  );
-}
-
-/**
- * A panel that slides up from the bottom of a phone, and sits in the middle of a
- * wide screen. Used for a pupil's profile and for the account menu.
- */
 export function Sheet({
   open,
   onClose,
@@ -246,22 +379,15 @@ export function Sheet({
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center" role="dialog" aria-modal="true">
-      <button
-        type="button"
-        aria-label="Close"
-        onClick={onClose}
-        className="absolute inset-0 bg-ink/70"
-      />
-      {/* max-h keeps the panel scrollable on a short phone rather than running
-          off the top of the screen. */}
-      <div className="relative z-10 max-h-[86vh] w-full overflow-y-auto bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-2xl sm:max-w-lg sm:px-7 sm:py-7">
+      <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/70" />
+      <div className="relative z-10 max-h-[86vh] w-full overflow-y-auto rounded-t-2xl bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-2xl sm:max-w-lg sm:rounded-2xl sm:px-6 sm:py-6">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0 font-display text-lg text-ink">{title}</div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="-mr-1 -mt-1 shrink-0 p-2 text-ink-mute transition-colors hover:bg-cream hover:text-ink"
+            className="-mr-1 -mt-1 shrink-0 rounded-lg p-2 text-ink-mute transition-colors hover:bg-cream hover:text-ink"
           >
             <X size={18} />
           </button>
@@ -272,27 +398,19 @@ export function Sheet({
   );
 }
 
-/** A row that behaves like a link, used for every tappable list in the portal. */
-export function TapRow({
-  children,
-  onClick,
-  className = '',
-}: {
-  children: ReactNode;
-  onClick?: () => void;
-  className?: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex w-full items-center gap-3 border-b border-rule px-1 py-3 text-left transition-colors last:border-b-0 hover:bg-cream ${className}`}
-    >
-      {children}
-    </button>
-  );
+/** A short line of plain language under a heading. No more than a sentence. */
+export function Led({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+  return <p className={`text-[0.875rem] leading-relaxed ${dark ? 'text-paper' : 'text-ink-mute'}`}>{children}</p>;
 }
 
-export function EmptyNote({ children }: { children: ReactNode }) {
-  return <p className="bg-cream px-4 py-4 text-[0.875rem] leading-relaxed text-ink-mute">{children}</p>;
+/** The link that takes a parent to the fuller screen. */
+export function MoreLink({ to, children, tone = 'orange' }: { to: string; children: ReactNode; tone?: Tone }) {
+  return (
+    <Link
+      to={to}
+      className={`inline-flex items-center gap-1.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] ${TONE[tone].deep}`}
+    >
+      {children}
+    </Link>
+  );
 }

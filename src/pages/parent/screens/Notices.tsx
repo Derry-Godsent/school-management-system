@@ -1,111 +1,163 @@
 import { useState } from 'react';
-import { Pin } from 'lucide-react';
-import { formatLongDate, noticesFor } from '../../../data/portal';
+import { Bell, Pin } from 'lucide-react';
+import { formatDate, formatLongDate, noticesFor, type Notice } from '../../../data/portal';
 import { useWard } from '../PortalShell';
-import { Badge, Eyebrow, SectionHead } from '../ui';
+import { Card, CardBody, Chip, IconBadge, Sheet, StatTile } from '../ui';
+import type { Tone } from '../ui';
 
 const FILTERS = ['All', 'School', 'Class', 'Teacher', 'Fees'] as const;
 type Filter = (typeof FILTERS)[number];
 
-const AUDIENCE_TONE = {
+const AUDIENCE_TONE: Record<string, Tone> = {
   School: 'orange',
   Class: 'green',
   Teacher: 'purple',
   Fees: 'yellow',
-} as const;
+};
 
 /**
- * Notices.
- *
- * A parent's real question here is "does this concern my child", so the notices
- * for their class come with everything else and the whole list can be filtered
- * down to the class or the teacher. Pinned notices stay at the top.
+ * Notices, each one a card with a colour that says where it came from. A parent
+ * can filter down to the ones about their own child's class in one tap.
  */
 export function NoticesScreen() {
   const { child, profile, klass } = useWard();
   const [filter, setFilter] = useState<Filter>('All');
+  const [showAll, setShowAll] = useState(false);
+  const [reading, setReading] = useState<Notice | null>(null);
 
   if (!child || !profile || !klass) return null;
 
   const all = noticesFor(profile.classId);
-  const shown = filter === 'All' ? all : all.filter(notice => notice.audience === filter);
+  const matching = filter === 'All' ? all : all.filter(notice => notice.audience === filter);
+  // A feed, not a page: four notices are visible and the rest wait to be asked
+  // for, which keeps the screen readable on a phone.
+  const shown = showAll ? matching : matching.slice(0, 4);
+  const hidden = matching.length - shown.length;
   const pinned = all.filter(notice => notice.pinned).length;
 
   return (
-    <div className="space-y-8">
-      <section>
-        <Eyebrow>Notices</Eyebrow>
-        <h1 className="mt-2 font-display text-2xl text-ink sm:text-3xl">From the school</h1>
-        <p className="mt-2 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-mute">
-          {all.length} notices, {pinned} of them pinned. The {klass.name} notices are included here
-          because {child.name} is in that class.
+    <div className="space-y-4">
+      <div className="px-1">
+        <h1 className="font-display text-2xl text-ink">Notices</h1>
+        <p className="mt-1 text-[0.8125rem] text-ink-mute">
+          {all.length} this term · {pinned} pinned
         </p>
-      </section>
+      </div>
 
-      <section>
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="tablist" aria-label="Filter notices">
-          {FILTERS.map(option => {
-            const active = option === filter;
-            const count = option === 'All' ? all.length : all.filter(notice => notice.audience === option).length;
-            return (
-              <button
-                key={option}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => setFilter(option)}
-                className={`shrink-0 px-3 py-2 text-[0.75rem] font-semibold uppercase tracking-[0.1em] transition-colors ${
-                  active ? 'bg-ink text-paper' : 'bg-paper text-ink-mute hover:bg-cream'
-                }`}
-              >
-                {option} {count}
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      <div className="grid grid-cols-2 gap-3">
+        <StatTile label="For the whole school" value={all.filter(n => n.audience === 'School').length} tone="orange" />
+        <StatTile label={`For ${klass.name}`} value={all.filter(n => n.audience === 'Class').length} tone="green" />
+      </div>
+
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" role="tablist" aria-label="Filter notices">
+        {FILTERS.map(option => {
+          const active = option === filter;
+          const count = option === 'All' ? all.length : all.filter(notice => notice.audience === option).length;
+          return (
+            <button
+              key={option}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setFilter(option)}
+              className={`shrink-0 rounded-full px-3.5 py-2 text-[0.75rem] font-semibold transition-colors ${
+                active ? 'bg-ink text-paper' : 'bg-paper text-ink-mute hover:bg-cream'
+              }`}
+            >
+              {option} {count}
+            </button>
+          );
+        })}
+      </div>
 
       {shown.length ? (
         <ul className="space-y-3">
-          {shown.map(notice => (
-            <li key={notice.id} className="bg-paper px-4 py-4 sm:px-5 sm:py-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge tone={AUDIENCE_TONE[notice.audience]}>{notice.audience}</Badge>
-                {notice.pinned ? (
-                  <span className="inline-flex items-center gap-1 bg-tint-purple px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-purple-deep">
-                    <Pin size={11} aria-hidden="true" /> Pinned
-                  </span>
-                ) : null}
-                <span className="text-[0.75rem] text-ink-mute">{formatLongDate(notice.date)}</span>
-              </div>
-              <h2 className="mt-3 font-display text-lg text-ink sm:text-xl">{notice.title}</h2>
-              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink">{notice.body}</p>
-              <p className="mt-3 border-t border-rule pt-3 text-[0.8125rem] text-ink-mute">
-                From {notice.from}
-                {notice.classId ? ` · sent to ${klass.name}` : ' · sent to the whole school'}
-              </p>
-            </li>
-          ))}
+          {shown.map(notice => {
+            const tone = AUDIENCE_TONE[notice.audience] ?? 'orange';
+            return (
+              <li key={notice.id}>
+                <Card shape="top" tone={tone}>
+                  <CardBody>
+                    <div className="flex items-start gap-3">
+                      <IconBadge icon={Bell} tone={tone} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Chip tone={tone}>{notice.audience}</Chip>
+                          {notice.pinned ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-ink px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-yellow">
+                              <Pin size={10} aria-hidden="true" /> Pinned
+                            </span>
+                          ) : null}
+                          <span className="text-[0.75rem] text-ink-mute">{formatDate(notice.date)}</span>
+                        </div>
+                        <h2 className="mt-2 font-display text-[1.0625rem] leading-snug text-ink">{notice.title}</h2>
+                        <p className="mt-1.5 line-clamp-2 text-[0.875rem] leading-relaxed text-ink">{notice.body}</p>
+                        <p className="mt-2 text-[0.75rem] text-ink-mute">From {notice.from}</p>
+                        <button
+                          type="button"
+                          onClick={() => setReading(notice)}
+                          className="mt-2.5 rounded-lg bg-ink px-3 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-paper"
+                        >
+                          Read the notice
+                        </button>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              </li>
+            );
+          })}
         </ul>
       ) : (
-        <p className="bg-paper px-4 py-5 text-[0.9375rem] text-ink-mute">
-          Nothing in this category. Choose another filter to see the rest.
-        </p>
+        <Card shape="bare">
+          <CardBody>
+            <p className="text-[0.875rem] text-ink-mute">Nothing in this category.</p>
+          </CardBody>
+        </Card>
       )}
 
-      <section className="bg-tint-orange px-4 py-5">
-        <SectionHead
-          eyebrow="Older notices"
-          title="Where the rest went"
-          note="Notices older than this term are kept by the school office and can be requested by phone or at the front desk."
-        />
-        <a
-          href="tel:+233241234567"
-          className="inline-flex items-center bg-ink px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-paper"
+      {hidden > 0 ? (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="w-full rounded-xl bg-ink px-4 py-3.5 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-paper"
         >
-          Call the office
-        </a>
-      </section>
+          Show {hidden} more
+        </button>
+      ) : null}
+      {showAll && matching.length > 4 ? (
+        <button
+          type="button"
+          onClick={() => setShowAll(false)}
+          className="w-full rounded-xl bg-cream px-4 py-3.5 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-ink-mute"
+        >
+          Show fewer
+        </button>
+      ) : null}
+
+      <Card shape="bare">
+        <CardBody>
+          <p className="text-[0.8125rem] text-ink-mute">
+            Older notices are kept at the school office and can be requested by phone.
+          </p>
+        </CardBody>
+      </Card>
+
+      {/* The full notice, opened from its card. */}
+      <Sheet open={!!reading} onClose={() => setReading(null)} title={reading?.title ?? ''}>
+        {reading ? (
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Chip tone={AUDIENCE_TONE[reading.audience] ?? 'orange'}>
+                {reading.audience}
+              </Chip>
+              <span className="text-[0.75rem] text-ink-mute">{formatLongDate(reading.date)}</span>
+            </div>
+            <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink">{reading.body}</p>
+            <p className="mt-4 text-[0.8125rem] text-ink-mute">From {reading.from}</p>
+          </div>
+        ) : null}
+      </Sheet>
     </div>
   );
 }
