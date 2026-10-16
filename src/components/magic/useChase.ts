@@ -3,30 +3,38 @@ import { useSpring, type MotionValue } from 'framer-motion';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 /**
- * useChase: makes an element follow the pointer.
+ * useChase: makes an element follow the pointer while the pointer is on it.
  *
- * The element does not wait to be hovered. As soon as the pointer comes within
- * `radius` pixels of its edge it leans toward the cursor, and it keeps leaning
- * further the closer the pointer gets. The springs are deliberately soft so the
- * movement trails the cursor rather than snapping to it, which is what makes it
- * read as chasing instead of dragging.
+ * The element leans toward the cursor and eases back when the cursor leaves.
+ * Soft springs make the movement trail the pointer rather than snap to it, which
+ * is what reads as chasing rather than dragging.
+ *
+ * Crucially the attraction is confined to the element's own box, plus a small
+ * grace margin. An earlier version pulled from up to 110px away, which meant
+ * hovering the gap between two buttons dragged both of them, and hovering one
+ * 28px-wide nav link moved its four neighbours. Everything appeared to move as
+ * one object. Restricting the pull to the box under the cursor keeps exactly one
+ * element responding at a time, so the motion reads as deliberate.
  *
  * Only runs for devices with a real pointer. Touch has no hover, and tracking a
  * finger would fight the scroll.
  */
 export function useChase({
-  strength = 0.45,
-  radius = 90,
+  /** Fraction of the pointer's offset from the element's centre that it follows. */
+  strength = 0.18,
+  /** Pixels of leeway outside the element's box that still attract. */
+  grace = 8,
+  /** Ceiling on displacement, in px, so nothing can slide far out of place. */
+  max = 14,
+  /** Degrees of rotation toward the pointer. Needs a perspective parent. */
   tilt = 0,
-  stiffness = 150,
-  damping = 15,
+  stiffness = 170,
+  damping = 16,
   mass = 0.4,
 }: {
-  /** How far it follows, as a fraction of the pointer's offset from centre. */
   strength?: number;
-  /** Pixels beyond the element's edge that still attract. */
-  radius?: number;
-  /** Degrees of rotation toward the pointer. Needs a perspective parent. */
+  grace?: number;
+  max?: number;
   tilt?: number;
   stiffness?: number;
   damping?: number;
@@ -47,6 +55,8 @@ export function useChase({
     const el = ref.current;
     if (!el) return;
 
+    const clamp = (value: number) => Math.max(-max, Math.min(max, value));
+
     let frame = 0;
     let latest: PointerEvent | null = null;
 
@@ -58,37 +68,43 @@ export function useChase({
 
       const rect = node.getBoundingClientRect();
 
-      // The element is already translated by these springs, so its measured
-      // rect moves with it. Subtract the current offset to recover where it
-      // would sit at rest, otherwise the element chases its own tail.
-      const centreX = rect.left - x.get() + rect.width / 2;
-      const centreY = rect.top - y.get() + rect.height / 2;
+      // The element is already translated by these springs, so its measured box
+      // moves with it. Subtract the current offset to recover where it sits at
+      // rest, otherwise the element chases its own tail.
+      const left = rect.left - x.get();
+      const top = rect.top - y.get();
+      const { width, height } = rect;
 
-      const dx = event.clientX - centreX;
-      const dy = event.clientY - centreY;
+      const inside =
+        event.clientX >= left - grace &&
+        event.clientX <= left + width + grace &&
+        event.clientY >= top - grace &&
+        event.clientY <= top + height + grace;
 
-      const reachX = rect.width / 2 + radius;
-      const reachY = rect.height / 2 + radius;
-
-      if (Math.abs(dx) < reachX && Math.abs(dy) < reachY) {
-        x.set(dx * strength);
-        y.set(dy * strength);
-        if (tilt) {
-          rotateY.set((dx / reachX) * tilt);
-          rotateX.set(-(dy / reachY) * tilt);
-        }
-      } else {
+      if (!inside) {
         x.set(0);
         y.set(0);
         rotateX.set(0);
         rotateY.set(0);
+        return;
+      }
+
+      const dx = event.clientX - (left + width / 2);
+      const dy = event.clientY - (top + height / 2);
+
+      x.set(clamp(dx * strength));
+      y.set(clamp(dy * strength));
+
+      if (tilt) {
+        rotateY.set(clamp((dx / (width / 2)) * tilt) / 3);
+        rotateX.set(clamp(-(dy / (height / 2)) * tilt) / 3);
       }
     };
 
     const onMove = (event: PointerEvent) => {
       if (event.pointerType === 'touch') return;
       latest = event;
-      // One measurement per frame, however fast the pointer is reporting.
+      // One measurement per frame, however fast the pointer reports.
       if (!frame) frame = requestAnimationFrame(settle);
     };
 
@@ -101,7 +117,7 @@ export function useChase({
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('blur', release);
-    // Returning from another tab or a resize leaves stale coordinates behind.
+    // A resize or a return from another tab leaves stale coordinates behind.
     window.addEventListener('resize', release);
 
     return () => {
@@ -110,7 +126,7 @@ export function useChase({
       window.removeEventListener('blur', release);
       window.removeEventListener('resize', release);
     };
-  }, [active, strength, radius, tilt, x, y, rotateX, rotateY]);
+  }, [active, strength, grace, max, tilt, x, y, rotateX, rotateY]);
 
   return {
     ref,
@@ -122,8 +138,6 @@ export function useChase({
           ...(tilt ? { rotateX, rotateY } : {}),
         } as { x: MotionValue<number>; y: MotionValue<number> })
       : undefined,
-    /** For consumers that want to animate something else off the same motion. */
-    swing: { x, y },
   };
 }
 

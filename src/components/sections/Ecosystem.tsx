@@ -8,7 +8,7 @@ import {
   DiaTextReveal,
   Floating3DParticles,
 } from '../magic';
-import { Reveal3D, ScrollStage, SectionEdge } from '../fx';
+import { Reveal3D, SectionEdge } from '../fx';
 import { ROLES } from '../magic/EcosystemPortals';
 
 /**
@@ -26,12 +26,11 @@ export function Ecosystem() {
   const adminRef = useRef<HTMLDivElement>(null);
 
   return (
-    <ScrollStage className="bg-ink" tilt="up" depth={0.9}>
-      <section className="relative overflow-hidden bg-ink">
-        <SectionEdge from="cream" to="ink" direction="right" />
-        <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
+    <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
+      <SectionEdge />
+      <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 lg:items-center">
           {/* ---- Left: the copy and the wiring diagram ---- */}
           <div>
@@ -241,8 +240,7 @@ export function Ecosystem() {
           </Reveal3D>
         </div>
       </div>
-      </section>
-    </ScrollStage>
+    </section>
   );
 }
 

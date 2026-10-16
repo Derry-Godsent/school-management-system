@@ -3,7 +3,7 @@ import { ArrowRight, Calendar, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { MessagesSection } from '../components/sections/MessagesSection';
 import { Hero3D } from '../components/sections/Hero3D';
 import { Ecosystem } from '../components/sections/Ecosystem';
-import { Reveal3D, DepthImage, ScrollStage, SectionEdge } from '../components/fx';
+import { Reveal3D, DepthImage, SectionEdge } from '../components/fx';
 import {
   Highlighter,
   InteractiveHoverButton,
@@ -91,10 +91,9 @@ function WelcomeBand() {
   const director = leadershipMessages[0];
 
   return (
-    <ScrollStage className="bg-paper" tilt="up">
-      <section className="bg-paper">
-        <SectionEdge from="ink" to="paper" direction="right" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+    <section className="bg-paper py-20 sm:py-28">
+      <SectionEdge />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <figure className="lg:col-span-5 relative">
             <Reveal3D axis="y" rotate={10}>
@@ -144,9 +143,8 @@ function WelcomeBand() {
             </Reveal3D>
           </div>
         </div>
-        </div>
-      </section>
-    </ScrollStage>
+      </div>
+    </section>
   );
 }
 
@@ -157,10 +155,9 @@ function NewsBand() {
   const recent = rest.slice(0, 3);
 
   return (
-    <ScrollStage className="bg-paper" tilt="down" depth={0.85}>
-      <section className="bg-paper">
-        <SectionEdge from="cream" to="paper" direction="left" rule={false} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+    <section className="bg-cream py-20 sm:py-28">
+      <SectionEdge />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
           <div>
@@ -236,9 +233,8 @@ function NewsBand() {
             </div>
           </div>
         </div>
-        </div>
-      </section>
-    </ScrollStage>
+      </div>
+    </section>
   );
 }
 
@@ -251,10 +247,9 @@ function CampusStrip() {
   ];
 
   return (
-    <ScrollStage className="bg-cream" tilt="up">
-      <section className="bg-cream">
-        <SectionEdge from="paper" to="cream" direction="right" rule={false} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+    <section className="bg-paper py-20 sm:py-28">
+      <SectionEdge />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
           <span className="eyebrow">Campus Life</span>
@@ -295,9 +290,8 @@ function CampusStrip() {
             Explore Campus Life
           </InteractiveHoverButton>
         </div>
-        </div>
-      </section>
-    </ScrollStage>
+      </div>
+    </section>
   );
 }
 
@@ -306,10 +300,9 @@ function UpdatesBand() {
     new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <ScrollStage className="bg-paper" tilt="down" depth={0.85}>
-      <section className="bg-paper">
-        <SectionEdge from="ink" to="paper" direction="left" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+    <section className="bg-cream py-20 sm:py-28">
+      <SectionEdge />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
           {/* Updates */}
@@ -355,19 +348,17 @@ function UpdatesBand() {
           </div>
         </div>
         </Reveal3D>
-        </div>
-      </section>
-    </ScrollStage>
+      </div>
+    </section>
   );
 }
 
 function VisitBand() {
   const navigate = useNavigate();
   return (
-    <ScrollStage className="bg-ink" tilt="up" depth={0.7}>
-      <section className="bg-ink text-paper/80">
-        <SectionEdge from="paper" to="ink" direction="right" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <section className="bg-ink text-paper/80">
+      <SectionEdge />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Clock size={20} className="text-gold mb-4" aria-hidden="true" />
@@ -423,9 +414,8 @@ function VisitBand() {
             Book a Visit
           </InteractiveHoverButton>
         </div>
-        </div>
-      </section>
-    </ScrollStage>
+      </div>
+    </section>
   );
 }
 

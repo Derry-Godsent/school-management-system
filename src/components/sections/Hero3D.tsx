@@ -66,8 +66,15 @@ export function Hero3D() {
   const bgRotateX = useTransform(smooth, [0, 1], [0, 7]);
   const copyY = useTransform(smooth, [0, 1], ['0%', '-42%']);
   const copyRotateX = useTransform(smooth, [0, 1], [0, -10]);
-  const copyOpacity = useTransform(smooth, [0, 0.75], [1, 0]);
-  const railOpacity = useTransform(smooth, [0, 0.4], [1, 0]);
+  // Neither the headline nor the slide rail is tied to opacity.
+  //
+  // Both used to fade to nothing as the section scrolled away, which looked
+  // good until a scroll measurement returned something unexpected: the fade
+  // then left the hero headline and the slide controls at zero opacity, and the
+  // top of the page read as a large blank space. Movement is now carried by
+  // translate and rotation alone, and the section clips the copy as it leaves,
+  // so the text can never be invisible while it is on screen.
+  const railLift = useTransform(smooth, [0, 1], ['0%', '30%']);
   // Hoisted out of JSX: calling a hook inside a conditional render expression
   // would change the hook count between renders.
   const frameY = useTransform(smooth, [0, 1], ['0%', '10%']);
@@ -144,7 +151,6 @@ export function Hero3D() {
               allowed
                 ? {
                     y: copyY,
-                    opacity: copyOpacity,
                     rotateX: usePointer ? pointerRotateX : copyRotateX,
                     rotateY: usePointer ? pointerRotateY : 0,
                     transformStyle: 'preserve-3d',
@@ -199,7 +205,7 @@ export function Hero3D() {
       {/* Slide rail */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 z-10"
-        style={allowed ? { opacity: railOpacity } : undefined}
+        style={allowed ? { y: railLift } : undefined}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex">

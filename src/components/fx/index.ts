@@ -5,5 +5,4 @@ export { Tilt3D } from './Tilt3D';
 export { Reveal3D } from './Reveal3D';
 export { DepthImage } from './DepthImage';
 export { useScrollLock } from './useScrollLock';
-export { ScrollStage } from './ScrollStage';
 export { SectionEdge } from './SectionEdge';

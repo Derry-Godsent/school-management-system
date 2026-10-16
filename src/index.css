@@ -412,30 +412,3 @@ html.lenis body {
     stroke-dasharray: 1000 1000 !important;
   }
 }
-
-
-/* ==========================================================================
-   Scroll stage
-   ========================================================================== */
-
-/* The frame each section rides in. `perspective` has to sit on the direct
-   parent of the rotating element, so it lives here rather than on <main>. */
-.scroll-stage {
-  position: relative;
-  isolation: isolate;
-}
-
-/* The rotating plane. `preserve-3d` lets its own children keep their depth.
-   There is deliberately no `will-change: transform` here: with a stage per
-   section that would promote seven viewport-height layers at once, which is
-   how a phone runs out of GPU memory. Framer Motion already promotes a layer
-   while it is actually animating. */
-.scroll-stage > * {
-  transform-style: preserve-3d;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-stage > * {
-    transform: none !important;
-  }
-}
