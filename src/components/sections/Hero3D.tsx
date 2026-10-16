@@ -169,12 +169,14 @@ export function Hero3D() {
                 <p className="mt-5 text-base sm:text-xl text-paper leading-relaxed max-w-2xl">
                   {slide.text}
                 </p>
-                <div className="mt-9 flex flex-wrap items-center gap-4 sm:gap-5">
-                  {/* Both answer the pointer: they tilt toward it, step a few
-                      pixels after it, rise toward the viewer, and catch the
-                      light. Only the one under the pointer ever moves, and the
-                      gap here is wider than the furthest it can reach, so the
-                      two can never touch. See usePointerFx for the budget. */}
+                <div className="mt-9 flex flex-wrap items-center gap-6 sm:gap-8">
+                  {/* Both answer the pointer from a short distance away: they
+                      lean toward it, step after it, rise toward the viewer and
+                      catch the light. One tracker decides which single button
+                      is nearest the pointer and drives only that one, so the
+                      pair can never move toward each other at the same time.
+                      See usePointerFx for the reach budget and for why the gap
+                      here is as wide as it is. */}
                   <InteractiveHoverButton
                     tone="gold"
                     onClick={() => navigate(slide.to)}

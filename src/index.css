@@ -525,8 +525,11 @@ html.lenis body {
 .spot-soft-orange { --spot-soft: rgba(254, 215, 170, 0.4); }
 .spot-soft-purple { --spot-soft: rgba(221, 214, 254, 0.4); }
 
-/* The tilt needs a perspective on the parent to have any depth. */
+/* The lean needs a perspective on the parent to have any depth, and a
+   positioning context so the element that is answering the pointer can be
+   raised above its neighbours while it leans toward them. */
 .tilt-stage {
+  position: relative;
   perspective: 900px;
   transform-style: preserve-3d;
 }

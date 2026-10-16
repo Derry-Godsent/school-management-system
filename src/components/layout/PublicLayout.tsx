@@ -43,7 +43,12 @@ function PortalChip({
   tone: 'purple' | 'orange';
 }) {
   const tier = useDeviceTier();
-  const { ref, spotlightOn, style } = usePointerFx({ maxTilt: 20, maxShift: 5, lift: 22, scaleTo: 1.03 });
+  const { ref, spotlightOn, style } = usePointerFx({
+    maxTilt: 22,
+    maxShift: 8,
+    lift: 30,
+    scaleTo: 1.05,
+  });
   const needsSweep = tier.ready && !tier.canHover;
 
   const fill =
@@ -134,7 +139,7 @@ function ContactBar() {
           </div>
 
           {/* Portal gateways */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
             <PortalChip
               to="/parent"
               label="Parent Portal"
@@ -241,7 +246,7 @@ function Navigation() {
               })}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <div className="hidden sm:block">
                 <InteractiveHoverButton
                   tone="gold"

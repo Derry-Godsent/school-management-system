@@ -1,85 +1,286 @@
 import { useEffect, useRef } from 'react';
-import { useSpring, type MotionValue } from 'framer-motion';
+import { useSpring, useTransform, type MotionValue } from 'framer-motion';
 import { useDeviceTier } from '../../lib/useDeviceTier';
 
 /**
- * usePointerFx: the button sees the pointer and answers it.
+ * usePointerFx: the element sees the pointer and answers it.
  *
  * WHAT IT DOES
  *
- * When the pointer is inside the element the element tilts toward it in 3D and
- * shifts a few pixels after it: move to the left edge and it leans and steps
- * left, move to the right edge and it leans and steps right, and the same up
- * and down. It also lifts toward the viewer and a pool of light tracks the
- * cursor across its face. Everything springs back to rest when the pointer
- * leaves, so the element always returns to exactly where it started.
+ * As the pointer comes near, the element leans toward it, steps after it, rises
+ * toward the viewer and lights up under it. Move to the left and it leans left,
+ * to the right and it leans right, above it and it tips up, below it and it tips
+ * down. Everything eases back to rest when the pointer wanders off.
  *
- * WHY IT CANNOT COLLIDE, which was the earlier complaint
+ * WHY IT IS BUILT THIS WAY, which took two attempts to get right
  *
- * The earlier version pulled on every element within a radius of the pointer.
- * Two buttons twelve pixels apart both answered the same pointer, moved toward
- * it, and met in the middle. That was a genuine bug and it looked broken.
+ * The first attempt pulled on every element within a radius of the pointer, so
+ * two buttons side by side both answered the same pointer and met in the middle.
+ * The second attempt fixed that by tying the effect to the element the pointer
+ * was already inside, which quietly removed the behaviour: a button could not
+ * react until the pointer had arrived on it, and because the lean is
+ * proportional to the distance from the element's centre, a pointer resting on
+ * the middle of a button produced no movement at all. That is where a pointer
+ * rests. The effect was therefore doing nothing for most of the time it was
+ * supposedly working.
  *
- * The displacement here is driven by the pointer's position *inside this
- * element*, and its listeners are attached to this element alone. A pointer can
- * only be inside one element at a time, so only one element ever moves, and the
- * shift is capped at a few pixels, well under the gap between neighbours. A row
- * of buttons therefore cannot converge. No proximity, no radius, no pull.
+ * This version keeps one document level tracker and lets it decide, once per
+ * frame, which single element is nearest the pointer. Only that element is ever
+ * driven and every other element is explicitly parked at rest, so two elements
+ * can never answer the pointer at once and cannot converge. Because the choice
+ * is made centrally it can also react while the pointer is still approaching,
+ * which is what makes the element feel aware of it.
  *
- * HOW IT IS GATED, and why it is gated this way
+ * GATING
  *
- * An earlier version required measured AND no reduced motion AND can hover AND
- * not touch before it did anything. Every one of those is unreliable in
- * practice: `(hover: hover) and (pointer: fine)` is false on a touchscreen
- * laptop, in Windows tablet mode, and whenever a phone is the primary pointer,
- * and it defaulted to false before measurement had run. Any single one being
- * false produced no effect at all, silently, with nothing in the console.
+ * One gate: the first measurement, so nothing animates before the page has
+ * settled. `prefers-reduced-motion` scales the movement down to about half
+ * rather than switching it off. It used to switch it off, and that preference is
+ * one buried OS switch that is easy to have on without knowing, which made the
+ * whole thing silently do nothing for anyone who had it set.
  *
- * Now there is exactly one gate, `tier.ready`, and it only waits for the first
- * measurement so nothing animates during the first paint.
+ * COLLISION BUDGET
  *
- * `prefers-reduced-motion` no longer switches this off. That was the last
- * silent killer: reduce-motion is on for many people without their knowing,
- * since it is a single switch buried in the OS accessibility settings, and with
- * it on the buttons did nothing at all and there was no way to tell why. The
- * preference now scales the movement down, to roughly half, instead of
- * removing it. A tilt of a few degrees is not the kind of large travel that
- * preference exists to prevent, and a button that answers the pointer is the
- * behaviour the site is required to have.
+ * The engaged element reaches this far past its own edge on the side it leans
+ * toward:
  *
- * Touch screens get the same response: the light follows a finger, and a tap
- * tilts the face at the point touched. Every listener is passive, so none of
- * this can ever block a scroll.
+ *   OVERREACH * maxShift
+ *     + width * (scaleTo - 1) / 2
+ *     + width * (perspective / (perspective - lift) - 1) / 2
  *
- * THE COLLISION BUDGET
+ * The first term carries OVERREACH because the pointer is allowed to be outside
+ * the box, where the step is at its largest. Keep the total under the gap to the
+ * next element. Worked out for the rows on this site: the hero pair 23.0px
+ * against a 32px gap, the top bar chips 15.5px against 20px, a nav item 4.4px
+ * against 16px of padding on each side of it.
  *
- * An element reaches this far past its own edge on the side it is moving toward:
- *
- *   maxShift  +  width * (scaleTo - 1) / 2  +  width * (perspective / (perspective - lift) - 1) / 2
- *
- * That total must stay under the gap to the next element. For the hero pair it
- * is 13.5px against a 16px gap, and 8.9px against 12px for the top bar chips.
- * The scale and lift terms come from `perspective: 900px` on `.tilt-stage`, so
- * changing that value changes the third term. Raise `maxShift`, `scaleTo` or
- * `lift` and re-check the sum against the gap before committing.
+ * As a second line of defence the engaged element is raised in the stack while
+ * it is active, so even a few pixels of reach paints over its neighbour rather
+ * than colliding with it. And only one element is ever driven, which is the
+ * property that actually rules the collision out.
  */
+
+/** How far outside its own box an element still answers the pointer, in px. */
+const ENGAGE_PAD = 46;
+/** The lean may overshoot a little once the pointer is outside the box. */
+const OVERREACH = 1.2;
+/** Touch has no hover, so a tap blooms and then settles on its own. */
+const TOUCH_SETTLE = 700;
+
+type Springs = {
+  rotateX: MotionValue<number>;
+  rotateY: MotionValue<number>;
+  shiftX: MotionValue<number>;
+  shiftY: MotionValue<number>;
+  rise: MotionValue<number>;
+  growth: MotionValue<number>;
+};
+
+interface Settings {
+  maxTilt: number;
+  maxShift: number;
+  lift: number;
+  scaleTo: number;
+  shadow: boolean;
+}
+
+interface Entry {
+  node: HTMLElement;
+  springs: Springs;
+  amount: number;
+  settings: Settings;
+  lit: boolean;
+}
+
+const registry = new Set<Entry>();
+let pending: { x: number; y: number } | null = null;
+let frame = 0;
+let settleTimer: ReturnType<typeof setTimeout> | null = null;
+let installed = false;
+
+const clamp = (value: number, low: number, high: number) =>
+  Math.min(high, Math.max(low, value));
+
+function stageOf(node: HTMLElement): HTMLElement {
+  return (node.closest('.tilt-stage') as HTMLElement | null) ?? node;
+}
+
+function park(entry: Entry) {
+  if (!entry.lit) return;
+  entry.lit = false;
+  const { springs, node } = entry;
+  springs.rotateX.set(0);
+  springs.rotateY.set(0);
+  springs.shiftX.set(0);
+  springs.shiftY.set(0);
+  springs.rise.set(0);
+  springs.growth.set(1);
+  node.style.setProperty('--on', '0');
+  stageOf(node).style.zIndex = '';
+}
+
+function parkAll() {
+  for (const entry of registry) park(entry);
+}
+
+function drive(entry: Entry, rect: DOMRect, x: number, y: number) {
+  const { springs, node, amount } = entry;
+  const { maxTilt, maxShift, lift, scaleTo } = entry.settings;
+
+  const halfWidth = rect.width / 2;
+  const halfHeight = rect.height / 2;
+
+  // Where the pointer is relative to the centre, where 1 is exactly on an edge.
+  // Measuring from the edge outward is what lets the element react while the
+  // pointer is still approaching it, rather than only once it has arrived.
+  const nx = clamp((x - (rect.left + halfWidth)) / halfWidth, -OVERREACH, OVERREACH);
+  const ny = clamp((y - (rect.top + halfHeight)) / halfHeight, -OVERREACH, OVERREACH);
+
+  const tilt = maxTilt * amount;
+  const shift = maxShift * amount;
+  const height = lift * amount;
+
+  // The light stays on the face, so its position is clamped to the box.
+  const px = clamp((x - rect.left) / rect.width, 0, 1);
+  const py = clamp((y - rect.top) / rect.height, 0, 1);
+  node.style.setProperty('--mx', `${(px * 100).toFixed(2)}%`);
+  node.style.setProperty('--my', `${(py * 100).toFixed(2)}%`);
+
+  // Lean toward the pointer: right edge toward the viewer when it is to the
+  // right, top edge up when it is above, and both signs follow it.
+  springs.rotateY.set(nx * tilt);
+  springs.rotateX.set(-ny * tilt);
+  springs.shiftX.set(nx * shift);
+  springs.shiftY.set(ny * shift);
+  springs.rise.set(height);
+  springs.growth.set(1 + (scaleTo - 1) * amount);
+
+  if (!entry.lit) {
+    entry.lit = true;
+    node.style.setProperty('--on', '1');
+    // Lifted in the stack while it is the one answering, so it can never be
+    // clipped by or fight with a neighbour it leans toward.
+    stageOf(node).style.zIndex = '5';
+  }
+}
+
+function pick(x: number, y: number) {
+  let chosen: Entry | null = null;
+  let chosenRect: DOMRect | null = null;
+  let nearest = Infinity;
+
+  // All reads happen before any writes, so this cannot thrash layout.
+  for (const entry of registry) {
+    const rect = entry.node.getBoundingClientRect();
+    if (!rect.width || !rect.height) continue;
+    const near =
+      x >= rect.left - ENGAGE_PAD &&
+      x <= rect.right + ENGAGE_PAD &&
+      y >= rect.top - ENGAGE_PAD &&
+      y <= rect.bottom + ENGAGE_PAD;
+    if (!near) continue;
+    const dx = x - (rect.left + rect.width / 2);
+    const dy = y - (rect.top + rect.height / 2);
+    const distance = dx * dx + dy * dy;
+    if (distance < nearest) {
+      nearest = distance;
+      chosen = entry;
+      chosenRect = rect;
+    }
+  }
+
+  for (const entry of registry) if (entry !== chosen) park(entry);
+  if (chosen && chosenRect) drive(chosen, chosenRect, x, y);
+}
+
+function run() {
+  frame = 0;
+  if (!pending) return;
+  const { x, y } = pending;
+  pending = null;
+  pick(x, y);
+}
+
+function request() {
+  if (!frame) frame = requestAnimationFrame(run);
+}
+
+function onPointer(event: PointerEvent) {
+  if (settleTimer) {
+    clearTimeout(settleTimer);
+    settleTimer = null;
+  }
+  pending = { x: event.clientX, y: event.clientY };
+  if (event.pointerType === 'touch' && event.type === 'pointerup') {
+    settleTimer = setTimeout(() => {
+      settleTimer = null;
+      parkAll();
+    }, TOUCH_SETTLE);
+  }
+  request();
+}
+
+function recheck() {
+  if (pending) pending = { ...pending };
+  request();
+}
+
+function onEscape() {
+  parkAll();
+}
+
+function install() {
+  if (installed) return;
+  installed = true;
+  document.addEventListener('pointermove', onPointer, { passive: true });
+  document.addEventListener('pointerdown', onPointer, { passive: true });
+  document.addEventListener('pointerup', onPointer, { passive: true });
+  window.addEventListener('scroll', recheck, { passive: true, capture: true });
+  window.addEventListener('resize', recheck);
+  window.addEventListener('blur', onEscape);
+  // `pointerleave` does not bubble, but the root element is where the pointer
+  // leaves the window itself.
+  document.documentElement.addEventListener('pointerleave', onEscape);
+}
+
+function uninstall() {
+  if (!installed || registry.size > 0) return;
+  installed = false;
+  document.removeEventListener('pointermove', onPointer);
+  document.removeEventListener('pointerdown', onPointer);
+  document.removeEventListener('pointerup', onPointer);
+  window.removeEventListener('scroll', recheck, { capture: true } as EventListenerOptions);
+  window.removeEventListener('resize', recheck);
+  window.removeEventListener('blur', onEscape);
+  document.documentElement.removeEventListener('pointerleave', onEscape);
+  if (frame) cancelAnimationFrame(frame);
+  frame = 0;
+  pending = null;
+}
+
 export function usePointerFx({
-  /** Rotation, in degrees, when the pointer is at the element's edge. */
-  maxTilt = 16,
-  /** Pixels to shift toward the pointer, from its position inside the element. */
+  /** Lean, in degrees, when the pointer is on an edge of the element. */
+  maxTilt = 18,
+  /** Pixels to step toward the pointer. */
   maxShift = 8,
-  /** Pixels to rise toward the viewer while the pointer is inside. */
-  lift = 26,
-  /** Grow to this factor under the pointer. Set to 1 to disable. */
+  /** Pixels to rise toward the viewer while engaged. */
+  lift = 30,
+  /** Grow to this factor while engaged. Set to 1 to disable. */
   scaleTo = 1.05,
-  stiffness = 170,
-  damping = 16,
-  mass = 0.45,
+  /** A soft shadow that deepens as it rises. */
+  shadow = true,
+  /** Set false for a still element: it never joins the tracker at all. */
+  enabled = true,
+  stiffness = 160,
+  damping = 15,
+  mass = 0.5,
 }: {
   maxTilt?: number;
   maxShift?: number;
   lift?: number;
   scaleTo?: number;
+  shadow?: boolean;
+  enabled?: boolean;
   stiffness?: number;
   damping?: number;
   mass?: number;
@@ -87,14 +288,13 @@ export function usePointerFx({
   const ref = useRef<HTMLDivElement>(null);
   const tier = useDeviceTier();
 
-  // One gate only. Reduce-motion scales the movement, it does not remove it.
+  // `prefers-reduced-motion` halves the movement instead of removing it, and a
+  // device that merely looks modest gets a slightly gentler version.
   const amount = (tier.reducedMotion ? 0.5 : 1) * (tier.lowPower ? 0.85 : 1);
-  const tiltOn = tier.ready;
-  const spotlightOn = tier.ready;
 
-  // Every spring starts at its neutral value, which matters: a spring bound to
-  // `scale` that started at 0 rendered buttons at scale(0), invisible, until a
-  // pointer arrived. Neutral for scale is 1. Neutral for everything else is 0.
+  // Every spring starts at its neutral value. A spring bound to `scale` that
+  // started at 0 once rendered buttons at scale(0), invisible, until a pointer
+  // arrived. Neutral for scale is 1, and 0 for every rotation and offset.
   const rotateX = useSpring(0, { stiffness, damping, mass });
   const rotateY = useSpring(0, { stiffness, damping, mass });
   const shiftX = useSpring(0, { stiffness, damping, mass });
@@ -102,128 +302,62 @@ export function usePointerFx({
   const rise = useSpring(0, { stiffness, damping, mass });
   const growth = useSpring(1, { stiffness, damping, mass });
 
+  // The shadow follows the rise, so the depth reads as a real lift.
+  const elevation = useTransform(
+    rise,
+    [0, Math.max(1, lift)],
+    ['0 0 0 rgba(17, 17, 17, 0)', '0 16px 34px rgba(17, 17, 17, 0.34)']
+  );
+
+  // Read at drive time so changing a setting never needs a re-registration.
+  const settings = useRef<Settings>({ maxTilt, maxShift, lift, scaleTo, shadow });
+  settings.current = { maxTilt, maxShift, lift, scaleTo, shadow };
+  const amountRef = useRef(amount);
+  amountRef.current = amount;
+
   useEffect(() => {
-    if (!tier.ready) return;
+    if (!tier.ready || !enabled) return;
     const node = ref.current;
     if (!node) return;
 
-    const tiltLimit = maxTilt * amount;
-    const shiftLimit = maxShift * amount;
-    const liftLimit = lift * amount;
-    const growTo = 1 + (scaleTo - 1) * amount;
-
-    let frame = 0;
-    let latest: PointerEvent | null = null;
-
-    const apply = () => {
-      frame = 0;
-      const event = latest;
-      if (!event) return;
-      const rect = node.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-
-      // Where inside the element the pointer is, as a ratio. Clamped, because
-      // `pointermove` can report a coordinate outside the element and without
-      // this the rotation runs past its limit: a cursor 200px beyond the edge
-      // produced 21 degrees against a limit of 7.
-      const rawX = (event.clientX - rect.left) / rect.width;
-      const rawY = (event.clientY - rect.top) / rect.height;
-      const px = Math.min(1, Math.max(0, rawX));
-      const py = Math.min(1, Math.max(0, rawY));
-      const dx = px - 0.5;
-      const dy = py - 0.5;
-
-      // The light is written straight onto the node as custom properties, so it
-      // follows the pointer at full frame rate with no React render.
-      node.style.setProperty('--mx', `${(px * 100).toFixed(2)}%`);
-      node.style.setProperty('--my', `${(py * 100).toFixed(2)}%`);
-
-      // Left edge leans left, right edge leans right, top tips up, bottom tips
-      // down: the sign follows the pointer so the element turns to face it.
-      rotateY.set(dx * 2 * tiltLimit);
-      rotateX.set(-dy * 2 * tiltLimit);
-
-      // Follow: the element steps after the pointer, bounded by shiftLimit.
-      shiftX.set(dx * 2 * shiftLimit);
-      shiftY.set(dy * 2 * shiftLimit);
-
-      // And rises off the page while the pointer is on it. This is what reads
-      // as three dimensions rather than as a skew.
-      rise.set(liftLimit);
-      if (scaleTo !== 1) growth.set(growTo);
+    const entry: Entry = {
+      node,
+      springs: { rotateX, rotateY, shiftX, shiftY, rise, growth },
+      amount: amountRef.current,
+      settings: settings.current,
+      lit: false,
     };
-
-    const engage = (event: PointerEvent) => {
-      node.style.setProperty('--on', '1');
-      // The first position matters as much as the rest: without this the tilt
-      // waits for a movement, so a pointer that arrives and stops leaves the
-      // element flat and the effect looks dead at exactly the moment it is
-      // supposed to begin.
-      latest = event;
-      if (!frame) frame = requestAnimationFrame(apply);
-    };
-
-    const release = () => {
-      latest = null;
-      rotateX.set(0);
-      rotateY.set(0);
-      shiftX.set(0);
-      shiftY.set(0);
-      rise.set(0);
-      growth.set(1);
-      node.style.setProperty('--mx', '50%');
-      node.style.setProperty('--my', '50%');
-      node.style.setProperty('--on', '0');
-    };
-
-    const onMove = (event: PointerEvent) => {
-      // Touch is included on purpose: a finger resting on a button lights and
-      // tilts it. Passive, so this can never block a scroll.
-      latest = event;
-      if (!frame) frame = requestAnimationFrame(apply);
-    };
-
-    node.addEventListener('pointerenter', engage);
-    node.addEventListener('pointerover', engage);
-    node.addEventListener('pointerdown', onMove);
-    node.addEventListener('pointermove', onMove, { passive: true });
-    node.addEventListener('pointerleave', release);
-    node.addEventListener('pointercancel', release);
-    node.addEventListener('pointerup', release);
+    registry.add(entry);
+    install();
 
     return () => {
-      if (frame) cancelAnimationFrame(frame);
-      node.removeEventListener('pointerenter', engage);
-      node.removeEventListener('pointerover', engage);
-      node.removeEventListener('pointerdown', onMove);
-      node.removeEventListener('pointermove', onMove);
-      node.removeEventListener('pointerleave', release);
-      node.removeEventListener('pointercancel', release);
-      node.removeEventListener('pointerup', release);
+      park(entry);
+      registry.delete(entry);
+      uninstall();
     };
-  }, [tier.ready, tier.reducedMotion, tier.lowPower, amount, maxTilt, maxShift, lift, scaleTo, rotateX, rotateY, shiftX, shiftY, rise, growth]);
+  }, [tier.ready, enabled, rotateX, rotateY, shiftX, shiftY, rise, growth]);
 
-  const style = {
-    ...(tiltOn
-      ? {
-          rotateX,
-          rotateY,
-          x: shiftX,
-          y: shiftY,
-          z: rise,
-          ...(scaleTo !== 1 ? { scale: growth } : {}),
-        }
-      : {}),
-  } as {
-    rotateX?: MotionValue<number>;
-    rotateY?: MotionValue<number>;
-    x?: MotionValue<number>;
-    y?: MotionValue<number>;
-    z?: MotionValue<number>;
+  const style = (!enabled
+    ? {}
+    : {
+    rotateX,
+    rotateY,
+    x: shiftX,
+    y: shiftY,
+    z: rise,
+    ...(scaleTo !== 1 ? { scale: growth } : {}),
+    ...(shadow ? { boxShadow: elevation } : {}),
+  }) as {
+    rotateX: MotionValue<number>;
+    rotateY: MotionValue<number>;
+    x: MotionValue<number>;
+    y: MotionValue<number>;
+    z: MotionValue<number>;
     scale?: MotionValue<number>;
+    boxShadow?: MotionValue<string>;
   };
 
-  return { ref, spotlightOn, tiltOn, style };
+  return { ref, spotlightOn: tier.ready, tiltOn: tier.ready, style };
 }
 
 export default usePointerFx;
