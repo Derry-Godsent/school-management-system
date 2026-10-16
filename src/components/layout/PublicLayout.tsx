@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Menu, X, MapPin, Phone, Mail, Facebook, Youtube } from 'lucide-react';
+import { Menu, X, MapPin, Phone, Mail, Facebook, Youtube, GraduationCap, ShieldCheck, ArrowRight } from 'lucide-react';
 import { school } from '../../data';
 import { Portal, useScrollLock } from '../fx';
 import { InteractiveHoverButton, MagneticNavLink, ShimmerButton } from '../magic';
+import { usePointerFx } from '../magic/usePointerFx';
+import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -16,37 +18,129 @@ const NAV_LINKS = [
   { path: '/contact', label: 'Contact' },
 ];
 
-/** Dark utility bar: contact details and portal shortcuts. */
+/**
+ * PortalChip: the gateway to the Parent Portal or the School Admin.
+ *
+ * These two were previously small grey text links, which made the two halves of
+ * the product almost impossible to find. They are now solid colour chips with an
+ * icon, a label and an arrow, and they tilt and catch the light like every other
+ * interactive surface on the site.
+ *
+ * The fills are the deep forms of the brand colours. White text on a bright
+ * fill would only reach about 2.8:1; on these it is above 5:1.
+ */
+function PortalChip({
+  to,
+  label,
+  shortLabel,
+  icon: Icon,
+  tone,
+}: {
+  to: string;
+  label: string;
+  shortLabel: string;
+  icon: typeof GraduationCap;
+  tone: 'purple' | 'orange';
+}) {
+  const tier = useDeviceTier();
+  const allowed = useMotionAllowed(tier);
+  const { ref, active, style } = usePointerFx({ maxTilt: 10 });
+
+  const fill =
+    tone === 'purple'
+      ? 'bg-purple hover:shadow-[0_10px_30px_-8px_rgba(124,58,237,0.85)]'
+      : 'bg-gold-deep hover:shadow-[0_10px_30px_-8px_rgba(194,65,12,0.85)]';
+
+  const spot =
+    tone === 'purple'
+      ? 'var(--spot-purple)'
+      : 'var(--spot-orange)';
+
+  return (
+    <div className="tilt-stage inline-block">
+      <motion.div ref={ref} style={active ? style : undefined} className="tilt-plane inline-block">
+        <Link
+          to={to}
+          style={{ ['--spot' as string]: spot }}
+          className={`group relative inline-flex items-center gap-2 overflow-hidden px-3 py-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-white transition-shadow duration-300 ${fill}`}
+        >
+          <Icon size={13} className="relative z-10 shrink-0" aria-hidden="true" />
+          <span className="relative z-10 hidden sm:inline">{label}</span>
+          <span className="relative z-10 sm:hidden">{shortLabel}</span>
+          <ArrowRight
+            size={12}
+            className="relative z-10 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+          {allowed ? (
+            <span
+              aria-hidden="true"
+              className="spotlight-layer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 mix-blend-plus-lighter"
+            />
+          ) : null}
+        </Link>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * ContactBar: the thin strip above the navigation.
+ *
+ * It carries the school's telephone and email on the left and the two portal
+ * gateways on the right, over a near-black ground so it frames the header
+ * instead of competing with it. A soft orange gradient runs along its lower
+ * edge, which is what stops a black strip reading as a dead band.
+ */
 function ContactBar() {
   return (
-    <div className="bg-ink text-paper text-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 py-2.5">
-          <div className="flex items-center gap-5">
+    <div className="relative bg-ink text-xs text-white">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_140%_at_15%_0%,rgba(249,115,22,0.22),transparent_60%)]"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-between gap-2 py-2.5 sm:flex-row">
+          {/* Contact details */}
+          <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1">
             <a
               href={`tel:${school.phone.replace(/\s/g, '')}`}
-              className="inline-flex items-center gap-2 hover:text-gold transition-colors"
+              className="group inline-flex items-center gap-2 px-2 py-1 transition-colors hover:text-gold"
             >
-              <Phone size={12} aria-hidden="true" />
-              <span>{school.phone}</span>
+              <Phone size={13} className="shrink-0 text-gold" aria-hidden="true" />
+              <span className="font-medium tracking-wide">{school.phone}</span>
             </a>
-            <span className="hidden sm:inline text-gold">|</span>
+            <span aria-hidden="true" className="hidden h-3.5 w-px bg-white/25 sm:block" />
             <a
               href={`mailto:${school.email}`}
-              className="inline-flex items-center gap-2 hover:text-gold transition-colors"
+              className="group inline-flex items-center gap-2 px-2 py-1 transition-colors hover:text-gold"
             >
-              <Mail size={12} aria-hidden="true" />
-              <span>{school.email}</span>
+              <Mail size={13} className="shrink-0 text-gold" aria-hidden="true" />
+              <span className="tracking-wide">{school.email}</span>
             </a>
           </div>
-          <div className="flex items-center gap-4">
-            <Link to="/parent" className="hover:text-gold transition-colors">
-              Parent Portal
-            </Link>
-            <span className="text-gold">|</span>
-            <Link to="/admin" className="hover:text-gold transition-colors">
-              School Admin
-            </Link>
+
+          {/* Portal gateways */}
+          <div className="flex items-center gap-2">
+            <PortalChip
+              to="/parent"
+              label="Parent Portal"
+              shortLabel="Parents"
+              icon={GraduationCap}
+              tone="purple"
+            />
+            <PortalChip
+              to="/admin"
+              label="School Admin"
+              shortLabel="Admin"
+              icon={ShieldCheck}
+              tone="orange"
+            />
           </div>
         </div>
       </div>
@@ -56,6 +150,8 @@ function ContactBar() {
 
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [hoveredDrawer, setHoveredDrawer] = useState<string | null>(null);
   const location = useLocation();
   const isHome = location.pathname === '/';
 
@@ -71,9 +167,10 @@ function Navigation() {
   const barHeight = useTransform(scrollY, [0, 120], [80, 64]);
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
-  // Close on route change.
+  // Close on route change, and drop any hovered row with it.
   useEffect(() => {
     setIsOpen(false);
+    setHoveredDrawer(null);
   }, [location.pathname]);
 
   // Close on Escape.
@@ -116,16 +213,24 @@ function Navigation() {
 
             {/* Desktop nav. Each link chases the pointer and slides its label on
                 hover, with a gold marker tracking the current page. */}
-            <div className="hidden lg:flex items-center gap-7">
-              {NAV_LINKS.map(link => (
-                <MagneticNavLink
-                  key={link.path}
-                  to={link.path}
-                  active={location.pathname === link.path}
-                >
-                  {link.label}
-                </MagneticNavLink>
-              ))}
+            <div
+              className="hidden items-center gap-1 lg:flex"
+              onMouseLeave={() => setHoveredNav(null)}
+            >
+              {NAV_LINKS.map(link => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <MagneticNavLink
+                    key={link.path}
+                    to={link.path}
+                    active={isActive}
+                    lit={hoveredNav ? hoveredNav === link.path : isActive}
+                    onEnter={() => setHoveredNav(link.path)}
+                  >
+                    {link.label}
+                  </MagneticNavLink>
+                );
+              })}
             </div>
 
             <div className="flex items-center gap-3">
@@ -216,7 +321,7 @@ function Navigation() {
                   </button>
                 </div>
 
-                <nav className="px-5 py-4 flex-1">
+                <nav className="flex-1 px-5 py-4" onMouseLeave={() => setHoveredDrawer(null)}>
                   {/* Each row slides in behind the one above it, and the gold rule
                       under the label grows from the left on hover or press. */}
                   {NAV_LINKS.map((link, i) => {
@@ -236,27 +341,35 @@ function Navigation() {
                           to={link.path}
                           onClick={() => setIsOpen(false)}
                           aria-current={active ? 'page' : undefined}
-                          className="group relative flex items-center justify-between min-h-[56px] font-display text-lg"
+                          onMouseEnter={() => setHoveredDrawer(link.path)}
+                          onFocus={() => setHoveredDrawer(link.path)}
+                          className="group relative flex min-h-[56px] items-center justify-between px-3 font-display text-lg"
                         >
+                          {/* The same gliding highlight as the desktop menu, on
+                              its own layout id so the two never share one. */}
+                          {(hoveredDrawer ? hoveredDrawer === link.path : active) ? (
+                            <motion.span
+                              layoutId="drawer-highlight"
+                              aria-hidden="true"
+                              className="absolute inset-0 bg-ink"
+                              transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.7 }}
+                            />
+                          ) : null}
                           <span
-                            className={`transition-transform duration-300 group-hover:translate-x-1 ${
-                              active ? 'text-gold-deep' : 'text-ink'
+                            className={`relative z-10 transition-transform duration-300 group-hover:translate-x-1 ${
+                              (hoveredDrawer ? hoveredDrawer === link.path : active)
+                                ? 'text-paper'
+                                : 'text-ink'
                             }`}
                           >
                             {link.label}
                           </span>
                           <span
                             aria-hidden="true"
-                            className={`h-1.5 w-1.5 transition-transform duration-300 ${
+                            className={`relative z-10 h-1.5 w-1.5 transition-all duration-300 ${
                               active
                                 ? 'scale-100 bg-gold'
                                 : 'scale-0 bg-gold group-hover:scale-100'
-                            }`}
-                          />
-                          <span
-                            aria-hidden="true"
-                            className={`absolute bottom-0 left-0 h-[2px] bg-gold transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                              active ? 'w-full' : 'w-0 group-hover:w-full'
                             }`}
                           />
                         </Link>

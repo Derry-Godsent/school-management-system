@@ -170,22 +170,18 @@ export function Hero3D() {
                   {slide.text}
                 </p>
                 <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-                  {/* These two never chase the pointer. They sit 12px apart, close
-                      enough that any shared movement reads as them colliding, so
-                      they keep the flood, the arrow and the shimmer and stay put. */}
+                  {/* These two tilt and catch the light under the cursor, but
+                      never translate. Rotation leaves their layout boxes exactly
+                      12px apart, so they cannot be brought together however the
+                      cursor moves. */}
                   <InteractiveHoverButton
                     tone="gold"
-                    magnetic={false}
                     onClick={() => navigate(slide.to)}
                     className="text-xs sm:text-sm"
                   >
                     {slide.cta}
                   </InteractiveHoverButton>
-                  <ShimmerButton
-                    magnetic={false}
-                    onClick={() => navigate('/admissions')}
-                    className="text-xs sm:text-sm"
-                  >
+                  <ShimmerButton onClick={() => navigate('/admissions')} className="text-xs sm:text-sm">
                     Apply Now
                   </ShimmerButton>
                 </div>

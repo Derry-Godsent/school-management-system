@@ -465,3 +465,46 @@ html.lenis body {
     stroke-dasharray: 1000 1000 !important;
   }
 }
+
+
+/* ==========================================================================
+   Pointer effects
+   ========================================================================== */
+
+:root {
+  /* The colour of the light that follows the cursor. A near-white reads on the
+     dark fills, and a warm or violet tint reads on the coloured ones. */
+  --spot-white: rgba(255, 255, 255, 0.34);
+  --spot-orange: rgba(253, 186, 116, 0.6);
+  --spot-purple: rgba(196, 181, 253, 0.6);
+}
+
+/* A pool of light that follows the cursor across an element's face.
+   `--mx` and `--my` are written onto the parent by usePointerFx on every
+   frame, so this needs no React work and no re-render. `--spot` lets each
+   surface choose its own colour: white light reads on dark fills, a warm
+   tint reads on white ones. */
+.spotlight-layer {
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    var(--spot, rgba(255, 255, 255, 0.32)),
+    transparent 62%
+  );
+}
+
+/* The tilt needs a perspective on the parent to have any depth. */
+.tilt-stage {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.tilt-plane {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Anything that should sit above the spotlight. */
+.above-spot {
+  position: relative;
+  z-index: 1;
+}
