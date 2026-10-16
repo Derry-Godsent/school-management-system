@@ -74,7 +74,7 @@ function LoginPage() {
             <span className="text-white font-bold text-sm">MG</span>
           </div>
           <h1 className="text-2xl font-bold text-ink">Parent Portal</h1>
-          <p className="text-sm text-ink-mute/80 mt-1">{school.name}</p>
+          <p className="text-sm text-ink mt-1">{school.name}</p>
         </div>
 
         <div className="bg-paper border p-8">
@@ -106,14 +106,14 @@ function LoginPage() {
             </div>
             <button
               type="submit"
-              className="w-full py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors"
+              className="w-full py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors"
             >
               Sign In
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-ink-mute/80 text-center mb-2">Demo Credentials</p>
+            <p className="text-xs text-ink text-center mb-2">Demo Credentials</p>
             <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
               <p><span className="font-medium">Email:</span> parent@demo.com</p>
               <p><span className="font-medium">Password:</span> demo123</p>
@@ -122,7 +122,7 @@ function LoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-ink-mute/80 hover:text-ink-mute">
+          <Link to="/" className="text-sm text-ink hover:text-ink-mute">
             ← Back to school website
           </Link>
         </div>
@@ -178,7 +178,7 @@ function ParentLayout({ children }: { children: React.ReactNode }) {
               <span className="text-sm text-ink-mute hidden sm:block">{guardian?.name}</span>
               <button
                 onClick={() => { logout(); navigate('/'); }}
-                className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute"
+                className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute"
               >
                 <LogOut size={16} />
                 <span className="hidden sm:block">Sign Out</span>
@@ -226,7 +226,7 @@ function ParentLayout({ children }: { children: React.ReactNode }) {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute py-2">
+              <Link to="/" className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
@@ -261,7 +261,7 @@ function ChildSelector({ selectedChild, onSelect }: { selectedChild: string; onS
             onClick={() => onSelect(child.id)}
             className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors min-h-[44px] ${
               selectedChild === child.id
-                ? 'bg-gold text-white'
+                ? 'bg-gold text-ink'
                 : 'bg-paper border border-rule text-ink-mute hover:border-gold/30 active:bg-cream'
             }`}
           >
@@ -297,7 +297,7 @@ function ParentDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Dashboard</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">{academicYear.terms.find(t => t.id === academicYear.currentTerm)?.name} • {academicYear.name}</p>
+          <p className="text-sm text-ink mt-0.5">{academicYear.terms.find(t => t.id === academicYear.currentTerm)?.name} • {academicYear.name}</p>
         </div>
         <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
       </div>
@@ -311,7 +311,7 @@ function ParentDashboard() {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-ink">{student.name}</h2>
-              <p className="text-sm text-ink-mute/80">{cls?.name} • {student.studentId} • {student.programme}</p>
+              <p className="text-sm text-ink">{cls?.name} • {student.studentId} • {student.programme}</p>
             </div>
           </div>
         </div>
@@ -324,40 +324,40 @@ function ParentDashboard() {
             <div className="w-9 h-9 bg-blue-50 flex items-center justify-center">
               <TrendingUp size={16} className="text-blue-600" />
             </div>
-            <span className="text-xs font-medium text-ink-mute/80 uppercase">Average Score</span>
+            <span className="text-xs font-medium text-ink uppercase">Average Score</span>
           </div>
           <p className="text-2xl font-bold text-ink">{averageScore}%</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Term 1, 2025/2026</p>
+          <p className="text-xs text-ink mt-1">Term 1, 2025/2026</p>
         </div>
         <div className="bg-paper border p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 bg-green-50 flex items-center justify-center">
               <Check size={16} className="text-green-600" />
             </div>
-            <span className="text-xs font-medium text-ink-mute/80 uppercase">Attendance</span>
+            <span className="text-xs font-medium text-ink uppercase">Attendance</span>
           </div>
           <p className="text-2xl font-bold text-ink">{attendanceStats.percentage}%</p>
-          <p className="text-xs text-ink-mute/80 mt-1">{attendanceStats.absent} absence(s) recorded</p>
+          <p className="text-xs text-ink mt-1">{attendanceStats.absent} absence(s) recorded</p>
         </div>
         <div className="bg-paper border p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 bg-orange-50 flex items-center justify-center">
               <CreditCard size={16} className="text-gold-deep" />
             </div>
-            <span className="text-xs font-medium text-ink-mute/80 uppercase">Fee Balance</span>
+            <span className="text-xs font-medium text-ink uppercase">Fee Balance</span>
           </div>
           <p className="text-2xl font-bold text-ink">{formatCurrency(feeSummary.totalBalance)}</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Term 2 outstanding</p>
+          <p className="text-xs text-ink mt-1">Term 2 outstanding</p>
         </div>
         <div className="bg-paper border p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 bg-purple-50 flex items-center justify-center">
               <Bell size={16} className="text-purple-600" />
             </div>
-            <span className="text-xs font-medium text-ink-mute/80 uppercase">Announcements</span>
+            <span className="text-xs font-medium text-ink uppercase">Announcements</span>
           </div>
           <p className="text-2xl font-bold text-ink">{announcements.length}</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Active notices</p>
+          <p className="text-xs text-ink mt-1">Active notices</p>
         </div>
       </div>
 
@@ -408,7 +408,7 @@ function ParentDashboard() {
               </div>
               <div>
                 <p className="text-sm font-medium text-ink">{event.title}</p>
-                <p className="text-xs text-ink-mute/80">{event.time}</p>
+                <p className="text-xs text-ink">{event.time}</p>
               </div>
             </div>
           ))}
@@ -436,7 +436,7 @@ function ResultsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Academic Results</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Term 1, 2025/2026 Academic Year</p>
+          <p className="text-sm text-ink mt-0.5">Term 1, 2025/2026 Academic Year</p>
         </div>
         <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
       </div>
@@ -446,7 +446,7 @@ function ResultsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-ink">Subject Results</h3>
-              <p className="text-sm text-ink-mute/80 mt-0.5">Overall Average: <span className="font-medium text-ink">{average}%</span></p>
+              <p className="text-sm text-ink mt-0.5">Overall Average: <span className="font-medium text-ink">{average}%</span></p>
             </div>
           </div>
         </div>
@@ -454,12 +454,12 @@ function ResultsPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Subject</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Score</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Grade</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Position</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Class Avg</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden md:table-cell">Comment</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Subject</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Score</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Grade</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Position</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Class Avg</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase hidden md:table-cell">Comment</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -510,7 +510,7 @@ function AttendancePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Attendance</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Attendance record and summary</p>
+          <p className="text-sm text-ink mt-0.5">Attendance record and summary</p>
         </div>
         <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
       </div>
@@ -519,19 +519,19 @@ function AttendancePage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-paper border p-5 text-center">
           <p className="text-3xl font-bold text-green-600">{stats.percentage}%</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Attendance Rate</p>
+          <p className="text-xs text-ink mt-1">Attendance Rate</p>
         </div>
         <div className="bg-paper border p-5 text-center">
           <p className="text-3xl font-bold text-ink">{stats.present}</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Days Present</p>
+          <p className="text-xs text-ink mt-1">Days Present</p>
         </div>
         <div className="bg-paper border p-5 text-center">
           <p className="text-3xl font-bold text-yellow-600">{stats.late}</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Days Late</p>
+          <p className="text-xs text-ink mt-1">Days Late</p>
         </div>
         <div className="bg-paper border p-5 text-center">
           <p className="text-3xl font-bold text-red-600">{stats.absent}</p>
-          <p className="text-xs text-ink-mute/80 mt-1">Days Absent</p>
+          <p className="text-xs text-ink mt-1">Days Absent</p>
         </div>
       </div>
 
@@ -580,7 +580,7 @@ function FeesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Fees & Payments</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Term 2, 2025/2026</p>
+          <p className="text-sm text-ink mt-0.5">Term 2, 2025/2026</p>
         </div>
         <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
       </div>
@@ -588,15 +588,15 @@ function FeesPage() {
       {/* Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-paper border p-5">
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-2">Total Charged</p>
+          <p className="text-xs font-medium text-ink uppercase mb-2">Total Charged</p>
           <p className="text-xl font-bold text-ink">{formatCurrency(feeSummary.totalCharged)}</p>
         </div>
         <div className="bg-paper border p-5">
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-2">Total Paid</p>
+          <p className="text-xs font-medium text-ink uppercase mb-2">Total Paid</p>
           <p className="text-xl font-bold text-green-600">{formatCurrency(feeSummary.totalPaid)}</p>
         </div>
         <div className={`border p-5 ${feeSummary.totalBalance > 0 ? 'bg-red-50 border-red-100' : 'bg-paper'}`}>
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-2">Outstanding Balance</p>
+          <p className="text-xs font-medium text-ink uppercase mb-2">Outstanding Balance</p>
           <p className={`text-xl font-bold ${feeSummary.totalBalance > 0 ? 'text-red-600' : 'text-green-600'}`}>
             {formatCurrency(feeSummary.totalBalance)}
           </p>
@@ -612,11 +612,11 @@ function FeesPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Category</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Charged</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Paid</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Balance</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Category</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Charged</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Paid</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Balance</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -652,7 +652,7 @@ function FeesPage() {
             <div key={payment.id} className="flex items-center justify-between px-5 py-3">
               <div>
                 <p className="text-sm font-medium text-ink">{payment.category}</p>
-                <p className="text-xs text-ink-mute/80">{new Date(payment.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} • {payment.method} • Ref: {payment.reference}</p>
+                <p className="text-xs text-ink">{new Date(payment.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} • {payment.method} • Ref: {payment.reference}</p>
               </div>
               <span className="text-sm font-medium text-green-600">{formatCurrency(payment.amount)}</span>
             </div>
@@ -680,7 +680,7 @@ function TimetablePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Timetable</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Weekly class schedule</p>
+          <p className="text-sm text-ink mt-0.5">Weekly class schedule</p>
         </div>
         <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
       </div>
@@ -691,10 +691,10 @@ function TimetablePage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-cream">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-ink-mute/80 uppercase">Day</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-ink-mute/80 uppercase">Time</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-ink-mute/80 uppercase">Subject</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden md:table-cell">Teacher</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-ink uppercase">Day</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-ink uppercase">Time</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-ink uppercase">Subject</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-ink uppercase hidden md:table-cell">Teacher</th>
                 </tr>
               </thead>
               <tbody>
@@ -706,7 +706,7 @@ function TimetablePage() {
                           {day.day}
                         </td>
                       )}
-                      <td className="px-4 py-2.5 text-xs text-ink-mute/80">{period.time}</td>
+                      <td className="px-4 py-2.5 text-xs text-ink">{period.time}</td>
                       <td className="px-4 py-2.5 text-sm font-medium text-ink">{period.subject}</td>
                       <td className="px-4 py-2.5 text-sm text-ink-mute hidden md:table-cell">{period.teacher}</td>
                     </tr>
@@ -718,8 +718,8 @@ function TimetablePage() {
         </div>
       ) : (
         <div className="bg-paper border p-8 text-center">
-          <Calendar size={32} className="text-paper/40 mx-auto mb-3" />
-          <p className="text-sm text-ink-mute/80">Timetable for this class will be displayed here once configured by the school.</p>
+          <Calendar size={32} className="text-paper mx-auto mb-3" />
+          <p className="text-sm text-ink">Timetable for this class will be displayed here once configured by the school.</p>
         </div>
       )}
     </div>
@@ -734,7 +734,7 @@ function AnnouncementsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ink">Announcements</h1>
-        <p className="text-sm text-ink-mute/80 mt-0.5">School notices and updates</p>
+        <p className="text-sm text-ink mt-0.5">School notices and updates</p>
       </div>
 
       <div className="space-y-4">
@@ -749,7 +749,7 @@ function AnnouncementsPage() {
                 <h3 className="font-semibold text-ink mb-1">{ann.title}</h3>
                 <p className="text-sm text-ink-mute">{ann.content}</p>
               </div>
-              <span className="text-xs text-ink-mute/60 shrink-0">
+              <span className="text-xs text-ink shrink-0">
                 {new Date(ann.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             </div>
@@ -781,11 +781,11 @@ function ReportCardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Report Card</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Term 1, 2025/2026</p>
+          <p className="text-sm text-ink mt-0.5">Term 1, 2025/2026</p>
         </div>
         <div className="flex items-center gap-3">
           <ChildSelector selectedChild={selectedChild} onSelect={setSelectedChild} />
-          <button className="flex items-center gap-2 px-4 py-2 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
             <Download size={14} />
             Download PDF
           </button>
@@ -800,8 +800,8 @@ function ReportCardPage() {
             <span className="text-white font-bold">MG</span>
           </div>
           <h2 className="text-xl font-bold text-ink">{school.name}</h2>
-          <p className="text-sm text-ink-mute/80">{school.address}</p>
-          <p className="text-sm text-ink-mute/80 mt-1">{school.motto}</p>
+          <p className="text-sm text-ink">{school.address}</p>
+          <p className="text-sm text-ink mt-1">{school.motto}</p>
           <div className="mt-4 inline-block px-4 py-1.5 bg-cream">
             <span className="text-sm font-medium text-ink-mute">TERMINAL REPORT CARD</span>
           </div>
@@ -810,19 +810,19 @@ function ReportCardPage() {
         {/* Student Info */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 p-4 bg-cream">
           <div>
-            <p className="text-xs text-ink-mute/80">Name</p>
+            <p className="text-xs text-ink">Name</p>
             <p className="text-sm font-medium text-ink">{student?.name}</p>
           </div>
           <div>
-            <p className="text-xs text-ink-mute/80">Student ID</p>
+            <p className="text-xs text-ink">Student ID</p>
             <p className="text-sm font-medium text-ink">{student?.studentId}</p>
           </div>
           <div>
-            <p className="text-xs text-ink-mute/80">Class</p>
+            <p className="text-xs text-ink">Class</p>
             <p className="text-sm font-medium text-ink">{cls?.name}</p>
           </div>
           <div>
-            <p className="text-xs text-ink-mute/80">Term</p>
+            <p className="text-xs text-ink">Term</p>
             <p className="text-sm font-medium text-ink">Term 1, 2025/2026</p>
           </div>
         </div>
@@ -831,11 +831,11 @@ function ReportCardPage() {
         <table className="w-full mb-6">
           <thead>
             <tr className="border-b-2 border-rule">
-              <th className="text-left py-2 text-xs font-medium text-ink-mute/80 uppercase">Subject</th>
-              <th className="text-center py-2 text-xs font-medium text-ink-mute/80 uppercase">Score</th>
-              <th className="text-center py-2 text-xs font-medium text-ink-mute/80 uppercase">Grade</th>
-              <th className="text-center py-2 text-xs font-medium text-ink-mute/80 uppercase">Position</th>
-              <th className="text-center py-2 text-xs font-medium text-ink-mute/80 uppercase">Class Avg</th>
+              <th className="text-left py-2 text-xs font-medium text-ink uppercase">Subject</th>
+              <th className="text-center py-2 text-xs font-medium text-ink uppercase">Score</th>
+              <th className="text-center py-2 text-xs font-medium text-ink uppercase">Grade</th>
+              <th className="text-center py-2 text-xs font-medium text-ink uppercase">Position</th>
+              <th className="text-center py-2 text-xs font-medium text-ink uppercase">Class Avg</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -856,7 +856,7 @@ function ReportCardPage() {
             <tr className="border-t-2 border-rule">
               <td className="py-3 text-sm font-semibold text-ink">Average</td>
               <td className="py-3 text-sm text-center font-bold text-gold-deep">{average}%</td>
-              <td colSpan={3} className="py-3 text-sm text-center text-ink-mute/80">
+              <td colSpan={3} className="py-3 text-sm text-center text-ink">
                 {average >= 80 ? 'Excellent' : average >= 70 ? 'Very Good' : average >= 60 ? 'Good' : 'Satisfactory'}
               </td>
             </tr>
@@ -866,11 +866,11 @@ function ReportCardPage() {
         {/* Additional Info */}
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
           <div className="p-4 bg-cream">
-            <p className="text-xs text-ink-mute/80 mb-1">Attendance</p>
+            <p className="text-xs text-ink mb-1">Attendance</p>
             <p className="text-sm font-medium text-ink">{stats.percentage}% ({stats.present} present out of {stats.total} days)</p>
           </div>
           <div className="p-4 bg-cream">
-            <p className="text-xs text-ink-mute/80 mb-1">Programme</p>
+            <p className="text-xs text-ink mb-1">Programme</p>
             <p className="text-sm font-medium text-ink">{student?.programme}</p>
           </div>
         </div>
@@ -878,13 +878,13 @@ function ReportCardPage() {
         {/* Comments */}
         <div className="space-y-4 border-t pt-6">
           <div>
-            <p className="text-xs text-ink-mute/80 mb-1">Class Teacher's Comment</p>
+            <p className="text-xs text-ink mb-1">Class Teacher's Comment</p>
             <p className="text-sm text-ink-mute italic">
               A hardworking student who shows great promise. Continue to put in the same effort and even greater results will follow.
             </p>
           </div>
           <div>
-            <p className="text-xs text-ink-mute/80 mb-1">Headteacher's Comment</p>
+            <p className="text-xs text-ink mb-1">Headteacher's Comment</p>
             <p className="text-sm text-ink-mute italic">
               Good performance overall. Keep up the good work and aim higher next term.
             </p>
@@ -892,7 +892,7 @@ function ReportCardPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 pt-6 border-t flex items-center justify-between text-xs text-ink-mute/60">
+        <div className="mt-8 pt-6 border-t flex items-center justify-between text-xs text-ink">
           <span>Issued: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
           <span>{school.name}</span>
         </div>

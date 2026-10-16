@@ -29,14 +29,14 @@ export default function NewsPage() {
                 className="flex flex-col sm:flex-row gap-6 pb-8 border-b border-rule last:border-b-0"
               >
                 <div className="w-full sm:w-48 h-36 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shrink-0">
-                  <Calendar size={24} className="text-ink-mute/60" aria-hidden="true" />
+                  <Calendar size={24} className="text-ink" aria-hidden="true" />
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <span className="text-xs font-medium text-gold-deep bg-orange-50 px-2 py-1 rounded">
                       {item.category}
                     </span>
-                    <time dateTime={item.date} className="text-xs text-ink-mute/60">
+                    <time dateTime={item.date} className="text-xs text-ink">
                       {new Date(item.date).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'long',

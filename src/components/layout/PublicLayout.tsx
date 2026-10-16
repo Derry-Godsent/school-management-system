@@ -19,7 +19,7 @@ const NAV_LINKS = [
 /** Dark utility bar: contact details and portal shortcuts. */
 function ContactBar() {
   return (
-    <div className="bg-ink text-paper/80 text-xs">
+    <div className="bg-ink text-paper text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 py-2.5">
           <div className="flex items-center gap-5">
@@ -30,7 +30,7 @@ function ContactBar() {
               <Phone size={12} aria-hidden="true" />
               <span>{school.phone}</span>
             </a>
-            <span className="hidden sm:inline text-paper/25">|</span>
+            <span className="hidden sm:inline text-gold">|</span>
             <a
               href={`mailto:${school.email}`}
               className="inline-flex items-center gap-2 hover:text-gold transition-colors"
@@ -43,7 +43,7 @@ function ContactBar() {
             <Link to="/parent" className="hover:text-gold transition-colors">
               Parent Portal
             </Link>
-            <span className="text-paper/25">|</span>
+            <span className="text-gold">|</span>
             <Link to="/admin" className="hover:text-gold transition-colors">
               School Admin
             </Link>
@@ -90,7 +90,7 @@ function Navigation() {
     <header ref={headerRef} className="sticky top-0 z-[100]">
       <nav
         data-lenis-prevent
-        className={`relative bg-paper/95 backdrop-blur-md border-b transition-colors ${
+        className={`relative bg-paper border-b transition-colors ${
           isHome ? 'border-transparent' : 'border-rule'
         }`}
       >
@@ -300,7 +300,7 @@ function Navigation() {
 
 function Footer() {
   return (
-    <footer className="bg-ink text-paper/70">
+    <footer className="bg-ink text-paper">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Crest + motto */}
@@ -311,7 +311,7 @@ function Footer() {
               </span>
               <span>
                 <span className="block font-display text-paper">Maple Grove</span>
-                <span className="block text-[0.625rem] tracking-[0.18em] uppercase text-gold">
+                <span className="block text-[0.625rem] tracking-[0.18em] uppercase text-gold-deep">
                   International School
                 </span>
               </span>

@@ -11,7 +11,7 @@ import { Reveal3D, Tilt3D, DepthImage } from '../fx';
  */
 export function MessagesSection() {
   return (
-    <section className="bg-cream py-20 sm:py-28">
+    <section className="bg-tint-warm py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl mb-16 sm:mb-24">
           <span className="eyebrow">Message from:</span>
@@ -78,7 +78,7 @@ export function MessagesSection() {
                     {person.body.map((paragraph, pIndex) => (
                       <p
                         key={pIndex}
-                        className={pIndex === 0 ? 'dropcap text-ink/85' : undefined}
+                        className={pIndex === 0 ? 'dropcap text-ink' : undefined}
                       >
                         {paragraph}
                       </p>

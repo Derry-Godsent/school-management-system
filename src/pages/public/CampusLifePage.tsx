@@ -71,7 +71,7 @@ export default function CampusLifePage() {
             {campusLifeProgrammes.map(item => (
               <li
                 key={item}
-                className="flex items-center gap-4 py-5 border-b border-paper/15 text-paper/85"
+                className="flex items-center gap-4 py-5 border-b border-paper/15 text-paper"
               >
                 <span className="w-1.5 h-1.5 bg-gold shrink-0" aria-hidden="true" />
                 {item}

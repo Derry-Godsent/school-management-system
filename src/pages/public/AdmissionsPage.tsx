@@ -114,7 +114,7 @@ export default function AdmissionsPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {PROCESS_STEPS.map(item => (
               <div key={item.step} className="relative p-6 bg-cream">
-                <span className="text-3xl font-bold text-gold-deep/20">{item.step}</span>
+                <span className="text-3xl font-bold text-gold-deep">{item.step}</span>
                 <h4 className="font-semibold text-ink mt-2 mb-2">{item.title}</h4>
                 <p className="text-sm text-ink-mute">{item.desc}</p>
               </div>
@@ -275,7 +275,7 @@ export default function AdmissionsPage() {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors"
             >
               Submit Application
             </button>

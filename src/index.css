@@ -11,29 +11,37 @@
 
 @theme {
   /* Palette
-     These are the school's own colours, not a scheme invented for the site:
-     the orange and the deep orange below are the two values the original
-     design used, and the ink and cream are its two neutrals.
+     Bright by default. Orange carries the identity, and the accent tints below
+     are what tell one section from another now that the separator lines are
+     gone. Nothing here is a grey: every background is either white or a warm
+     tint, so the page reads as light and colourful rather than cool.
 
-     The accent tokens are still named `gold`, `gold-deep` and `gold-pale` from
-     an earlier pass. The names are kept deliberately: Tailwind derives a utility
-     for each token, so renaming them would mean editing every `bg-gold` and
-     `text-gold-deep` on the site, and a single missed class would silently
-     render nothing rather than fail the build. Read them as `accent`,
-     `accent-deep` and `accent-pale`. */
-  --color-ink: #1a1a1a;
-  --color-ink-soft: #2a2a2a;
-  --color-ink-mute: #3d3d3d;
-  --color-gold: #e85d04;
-  --color-gold-deep: #dc4a03;
-  --color-gold-pale: #fdeee2;
-  --color-cream: #fafaf7;
+     Two oranges, deliberately. `gold` is the bright one and is only ever used
+     for fills and for orange on dark, where it has plenty of contrast.
+     `gold-deep` is the one used for orange text on a light background, because
+     bright orange text on white sits at about 2.9:1 and is hard to read.
+
+     The accent tokens keep the `gold` names from an earlier pass. Tailwind
+     derives a utility per token, so renaming them would mean editing every
+     bg-gold and text-gold across the site, and one missed class would silently
+     render nothing rather than fail a build. Read them as accent, accent-deep
+     and accent-pale. */
+  --color-ink: #111111;
+  --color-ink-soft: #2b2b2b;
+  --color-ink-mute: #333333;
+  --color-gold: #f97316;
+  --color-gold-deep: #c2410c;
+  --color-gold-pale: #fff1e3;
+  --color-cream: #fffaf3;
   --color-paper: #ffffff;
-  --color-rule: #e8e6e1;
+  --color-rule: #ece7e0;
 
-  /* Type */
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Section tints. Each one is a bright, clearly visible wash rather than a
+     shade of grey, so adjacent sections are told apart by hue. */
+  --color-tint-warm: #fff4e8;
+  --color-tint-amber: #fff8e5;
+  --color-tint-peach: #fff0e6;
+  --color-tint-mint: #e8fbf5;
 }
 
 /* --------------------------------------------------------------------------
@@ -191,9 +199,9 @@ h4,
 .scrim {
   background: linear-gradient(
     to top,
-    rgba(26, 26, 26, 0.9) 0%,
-    rgba(26, 26, 26, 0.45) 45%,
-    rgba(26, 26, 26, 0.15) 100%
+    rgba(17, 17, 17, 0.9) 0%,
+    rgba(17, 17, 17, 0.45) 45%,
+    rgba(17, 17, 17, 0.15) 100%
   );
 }
 
@@ -323,9 +331,9 @@ html.lenis body {
   background: linear-gradient(
     100deg,
     transparent 20%,
-    rgba(232, 93, 4, 0.16) 40%,
-    rgba(253, 238, 226, 0.5) 50%,
-    rgba(232, 93, 4, 0.16) 60%,
+    rgba(249, 115, 22, 0.16) 40%,
+    rgba(255, 241, 227, 0.5) 50%,
+    rgba(249, 115, 22, 0.16) 60%,
     transparent 80%
   );
   animation: shimmer-sweep 3.4s ease-in-out infinite;
@@ -392,8 +400,8 @@ html.lenis body {
   transform-origin: top center;
   background: linear-gradient(
     to bottom,
-    rgba(253, 238, 226, 0.34) 0%,
-    rgba(232, 93, 4, 0.12) 45%,
+    rgba(255, 241, 227, 0.34) 0%,
+    rgba(249, 115, 22, 0.12) 45%,
     transparent 100%
   );
   filter: blur(22px);

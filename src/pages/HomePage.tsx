@@ -60,7 +60,7 @@ function StatValue({ value, suffix }: { value: number; suffix?: string }) {
 
 function StatsBand() {
   return (
-    <section className="bg-cream">
+    <section className="bg-gold">
       <Reveal3D y={30} rotate={8}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <dl className="grid grid-cols-2 lg:grid-cols-4">
@@ -68,13 +68,13 @@ function StatsBand() {
             <div
               key={stat.label}
               className={`py-10 lg:py-14 lg:px-8 ${
-                i > 0 ? 'lg:border-l lg:border-rule' : ''
-              } ${i % 2 === 1 ? 'border-l border-rule pl-6 lg:pl-8' : 'pr-6 lg:pr-8'}`}
+                i > 0 ? 'lg:border-l lg:border-ink/20' : ''
+              } ${i % 2 === 1 ? 'border-l border-ink/20 pl-6 lg:pl-8' : 'pr-6 lg:pr-8'}`}
             >
               <dd>
                 <StatValue value={stat.value} suffix={stat.suffix} />
               </dd>
-              <dt className="mt-3 text-[0.6875rem] tracking-[0.2em] uppercase text-gold-deep">
+              <dt className="mt-3 text-[0.6875rem] tracking-[0.2em] uppercase text-ink">
                 {stat.label}
               </dt>
             </div>
@@ -116,7 +116,7 @@ function WelcomeBand() {
               Welcome to <Highlighter color="#e85d04">{school.name}</Highlighter>
             </h2>
             <div className="mt-8 space-y-5 text-ink-mute leading-relaxed">
-              <p className="dropcap text-ink/85">
+              <p className="dropcap text-ink">
                 On behalf of our school community, I welcome you. For seventeen years we have
                 been educating the children of Kumasi. Not merely to pass examinations, but to
                 think clearly, act honourably, and carry themselves with confidence into a world
@@ -190,7 +190,7 @@ function NewsBand() {
                   <span className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-gold-deep">
                     {lead.category}
                   </span>
-                  <span className="text-xs text-ink-mute/70">
+                  <span className="text-xs text-ink">
                     {new Date(lead.date).toLocaleDateString('en-GB', {
                       day: 'numeric',
                       month: 'long',
@@ -215,7 +215,7 @@ function NewsBand() {
                     <span className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-gold-deep">
                       {item.category}
                     </span>
-                    <span className="text-xs text-ink-mute/70">
+                    <span className="text-xs text-ink">
                       {new Date(item.date).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
@@ -245,7 +245,7 @@ function CampusStrip() {
   ];
 
   return (
-    <section className="bg-cream py-20 sm:py-28">
+    <section className="bg-tint-amber py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
@@ -297,7 +297,7 @@ function UpdatesBand() {
     new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <section className="bg-cream py-20 sm:py-28">
+    <section className="bg-paper py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
@@ -310,7 +310,7 @@ function UpdatesBand() {
             <ul>
               {upcomingEvents.map(event => (
                 <li key={event.id} className="flex items-center gap-6 py-5">
-                  <Calendar size={16} className="text-gold shrink-0" aria-hidden="true" />
+                  <Calendar size={16} className="text-gold-deep shrink-0" aria-hidden="true" />
                   <span className="flex-1 text-ink">{event.title}</span>
                   <span className="text-sm text-ink-mute">{formatDate(event.date)}</span>
                 </li>
@@ -352,11 +352,11 @@ function UpdatesBand() {
 function VisitBand() {
   const navigate = useNavigate();
   return (
-    <section className="bg-paper text-ink-mute">
+    <section className="bg-tint-peach text-ink">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <Clock size={20} className="text-gold mb-4" aria-hidden="true" />
+            <Clock size={20} className="text-gold-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               School Hours
             </h3>
@@ -367,33 +367,33 @@ function VisitBand() {
             </p>
           </div>
           <div>
-            <Phone size={20} className="text-gold mb-4" aria-hidden="true" />
+            <Phone size={20} className="text-gold-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Telephone
             </h3>
             <p className="text-sm leading-relaxed">
-              <a href={`tel:${school.phone.replace(/\s/g, '')}`} className="hover:text-gold">
+              <a href={`tel:${school.phone.replace(/\s/g, '')}`} className="hover:text-gold-deep">
                 {school.phone}
               </a>
               <br />
-              <a href={`tel:${school.phoneAlt.replace(/\s/g, '')}`} className="hover:text-gold">
+              <a href={`tel:${school.phoneAlt.replace(/\s/g, '')}`} className="hover:text-gold-deep">
                 {school.phoneAlt}
               </a>
             </p>
           </div>
           <div>
-            <Mail size={20} className="text-gold mb-4" aria-hidden="true" />
+            <Mail size={20} className="text-gold-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Email
             </h3>
             <p className="text-sm leading-relaxed">
-              <a href={`mailto:${school.email}`} className="hover:text-gold">
+              <a href={`mailto:${school.email}`} className="hover:text-gold-deep">
                 {school.email}
               </a>
             </p>
           </div>
           <div>
-            <MapPin size={20} className="text-gold mb-4" aria-hidden="true" />
+            <MapPin size={20} className="text-gold-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Address
             </h3>

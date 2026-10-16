@@ -74,7 +74,7 @@ function AdminLoginPage() {
             <span className="text-white font-bold text-sm">MG</span>
           </div>
           <h1 className="text-2xl font-bold text-white">School Management</h1>
-          <p className="text-sm text-ink-mute/60 mt-1">{school.name}</p>
+          <p className="text-sm text-ink mt-1">{school.name}</p>
         </div>
 
         <div className="bg-paper p-8">
@@ -100,12 +100,12 @@ function AdminLoginPage() {
                 className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
               />
             </div>
-            <button type="submit" className="w-full py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors">
+            <button type="submit" className="w-full py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors">
               Sign In
             </button>
           </form>
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-ink-mute/80 text-center mb-2">Demo Credentials</p>
+            <p className="text-xs text-ink text-center mb-2">Demo Credentials</p>
             <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
               <p><span className="font-medium">Email:</span> admin@demo.com</p>
               <p><span className="font-medium">Password:</span> demo123</p>
@@ -114,7 +114,7 @@ function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-ink-mute/80 hover:text-paper/40">← Back to school website</Link>
+          <Link to="/" className="text-sm text-ink hover:text-paper">← Back to school website</Link>
         </div>
       </div>
     </div>
@@ -170,11 +170,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-4">
               <div className="hidden sm:block text-right">
                 <p className="text-sm font-medium text-ink">{staffMember?.name}</p>
-                <p className="text-xs text-ink-mute/80">{staffMember?.title}</p>
+                <p className="text-xs text-ink">{staffMember?.title}</p>
               </div>
               <button
                 onClick={() => { logout(); navigate('/'); }}
-                className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute"
+                className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute"
               >
                 <LogOut size={16} />
               </button>
@@ -228,11 +228,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               ))}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute py-2">
+              <Link to="/" className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
-              <Link to="/parent" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute mt-3 py-2">
+              <Link to="/parent" className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute mt-3 py-2">
                 <ArrowLeft size={14} />
                 Parent Portal
               </Link>
@@ -272,7 +272,7 @@ function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ink">Attention Centre</h1>
-        <p className="text-sm text-ink-mute/80 mt-0.5">What needs your focus right now</p>
+        <p className="text-sm text-ink mt-0.5">What needs your focus right now</p>
       </div>
 
       {/* Attention Items */}
@@ -283,11 +283,11 @@ function AdminDashboard() {
               <ClipboardList size={14} className="sm:hidden text-red-600" />
               <ClipboardList size={16} className="hidden sm:block text-red-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Pending Admissions</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Pending Admissions</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{pendingApps.length}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">awaiting review</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">awaiting review</p>
           </div>
         </Link>
 
@@ -297,11 +297,11 @@ function AdminDashboard() {
               <DollarSign size={14} className="sm:hidden text-gold-deep" />
               <DollarSign size={16} className="hidden sm:block text-gold-deep" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Outstanding Fees</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Outstanding Fees</span>
           </div>
           <div>
             <p className="text-lg sm:text-2xl font-bold text-ink truncate">{formatCurrency(totalOutstanding)}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
           </div>
         </div>
 
@@ -311,11 +311,11 @@ function AdminDashboard() {
               <UserX size={14} className="sm:hidden text-yellow-600" />
               <UserX size={16} className="hidden sm:block text-yellow-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Attendance Issues</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Attendance Issues</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{attendanceIssues.length}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">2+ absences</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">2+ absences</p>
           </div>
         </div>
 
@@ -325,11 +325,11 @@ function AdminDashboard() {
               <UserCheck size={14} className="sm:hidden text-green-600" />
               <UserCheck size={16} className="hidden sm:block text-green-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Total Students</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Total Students</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{totalStudents}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">enrolled</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">enrolled</p>
           </div>
         </div>
       </div>
@@ -351,7 +351,7 @@ function AdminDashboard() {
                   <div className="w-2 h-2 bg-red-500" />
                   <span className="text-sm text-ink-mute">{pendingApps.length} admission applications pending review</span>
                 </div>
-                <ChevronRight size={14} className="text-ink-mute/60" />
+                <ChevronRight size={14} className="text-ink" />
               </Link>
             )}
             {studentsWithDebt.length > 0 && (
@@ -360,7 +360,7 @@ function AdminDashboard() {
                   <div className="w-2 h-2 bg-orange-500" />
                   <span className="text-sm text-ink-mute">{studentsWithDebt.length} students with outstanding fee balances</span>
                 </div>
-                <ChevronRight size={14} className="text-ink-mute/60" />
+                <ChevronRight size={14} className="text-ink" />
               </Link>
             )}
             {attendanceIssues.length > 0 && (
@@ -369,7 +369,7 @@ function AdminDashboard() {
                   <div className="w-2 h-2 bg-yellow-500" />
                   <span className="text-sm text-ink-mute">{attendanceIssues.length} students with attendance concerns</span>
                 </div>
-                <ChevronRight size={14} className="text-ink-mute/60" />
+                <ChevronRight size={14} className="text-ink" />
               </Link>
             )}
             <div className="flex items-center justify-between px-5 py-3 hover:bg-cream">
@@ -377,7 +377,7 @@ function AdminDashboard() {
                 <div className="w-2 h-2 bg-blue-500" />
                 <span className="text-sm text-ink-mute">PTA Meeting in 2 weeks (Feb 15)</span>
               </div>
-              <ChevronRight size={14} className="text-ink-mute/60" />
+              <ChevronRight size={14} className="text-ink" />
             </div>
           </div>
         </div>
@@ -394,7 +394,7 @@ function AdminDashboard() {
                 <div key={payment.id} className="flex items-center justify-between px-5 py-3">
                   <div>
                     <p className="text-sm font-medium text-ink">{student?.name}</p>
-                    <p className="text-xs text-ink-mute/80">{payment.category} • {payment.method}</p>
+                    <p className="text-xs text-ink">{payment.category} • {payment.method}</p>
                   </div>
                   <span className="text-sm font-medium text-green-600">{formatCurrency(payment.amount)}</span>
                 </div>
@@ -410,19 +410,19 @@ function AdminDashboard() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="text-center p-4 bg-cream">
             <p className="text-xl font-bold text-ink">{classes.length}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Classes</p>
+            <p className="text-xs text-ink mt-1">Classes</p>
           </div>
           <div className="text-center p-4 bg-cream">
             <p className="text-xl font-bold text-ink">{staff.filter(s => s.role === 'Teacher').length}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Teachers</p>
+            <p className="text-xs text-ink mt-1">Teachers</p>
           </div>
           <div className="text-center p-4 bg-cream">
             <p className="text-xl font-bold text-ink">{academicYear.terms.find(t => t.id === academicYear.currentTerm)?.name}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Current Term</p>
+            <p className="text-xs text-ink mt-1">Current Term</p>
           </div>
           <div className="text-center p-4 bg-cream">
             <p className="text-xl font-bold text-ink">{events.filter(e => new Date(e.date) > new Date()).length}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Upcoming Events</p>
+            <p className="text-xs text-ink mt-1">Upcoming Events</p>
           </div>
         </div>
       </div>
@@ -449,9 +449,9 @@ function StudentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Students</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">{students.length} students enrolled</p>
+          <p className="text-sm text-ink mt-0.5">{students.length} students enrolled</p>
         </div>
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
           <Plus size={16} />
           Add Student
         </button>
@@ -460,7 +460,7 @@ function StudentsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute/60" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink" />
           <input
             type="text"
             value={searchTerm}
@@ -487,12 +487,12 @@ function StudentsPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Student</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">ID</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Class</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden md:table-cell">Programme</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden lg:table-cell">Guardian</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Student</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">ID</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Class</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase hidden md:table-cell">Programme</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase hidden lg:table-cell">Guardian</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -558,7 +558,7 @@ function AdmissionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Admissions</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">{admissionApplications.length} total applications</p>
+          <p className="text-sm text-ink mt-0.5">{admissionApplications.length} total applications</p>
         </div>
       </div>
 
@@ -575,7 +575,7 @@ function AdmissionsPage() {
             onClick={() => setFilter(tab.value)}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               filter === tab.value
-                ? 'bg-gold text-white'
+                ? 'bg-gold text-ink'
                 : 'bg-paper border border-rule text-ink-mute hover:border-gold/30'
             }`}
           >
@@ -610,7 +610,7 @@ function AdmissionsPage() {
                   <p>Submitted: {new Date(app.date).toLocaleDateString('en-GB')}</p>
                 </div>
                 {app.notes && (
-                  <p className="text-sm text-ink-mute/80 mt-2 italic">Note: {app.notes}</p>
+                  <p className="text-sm text-ink mt-2 italic">Note: {app.notes}</p>
                 )}
               </div>
               {app.status === 'pending' && (
@@ -655,9 +655,9 @@ function AdminFeesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Fee Management</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Term 2, 2025/2026</p>
+          <p className="text-sm text-ink mt-0.5">Term 2, 2025/2026</p>
         </div>
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
           <Plus size={16} />
           Record Payment
         </button>
@@ -666,22 +666,22 @@ function AdminFeesPage() {
       {/* Summary */}
       <div className="grid sm:grid-cols-3 gap-4">
         <div className="bg-paper border p-5">
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-1">Total Billed</p>
+          <p className="text-xs font-medium text-ink uppercase mb-1">Total Billed</p>
           <p className="text-xl font-bold text-ink">{formatCurrency(totalCharged)}</p>
         </div>
         <div className="bg-paper border p-5">
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-1">Total Collected</p>
+          <p className="text-xs font-medium text-ink uppercase mb-1">Total Collected</p>
           <p className="text-xl font-bold text-green-600">{formatCurrency(totalPaid)}</p>
         </div>
         <div className="bg-paper border p-5">
-          <p className="text-xs font-medium text-ink-mute/80 uppercase mb-1">Total Outstanding</p>
+          <p className="text-xs font-medium text-ink uppercase mb-1">Total Outstanding</p>
           <p className="text-xl font-bold text-red-600">{formatCurrency(totalBalance)}</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute/60" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink" />
         <input
           type="text"
           value={searchTerm}
@@ -697,12 +697,12 @@ function AdminFeesPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Student</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Class</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Charged</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Paid</th>
-                <th className="text-right px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Balance</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Student</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Class</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Charged</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Paid</th>
+                <th className="text-right px-5 py-3 text-xs font-medium text-ink uppercase">Balance</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -748,7 +748,7 @@ function AdminResultsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Results Management</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Enter and manage student results</p>
+          <p className="text-sm text-ink mt-0.5">Enter and manage student results</p>
         </div>
         <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors">
           <Check size={16} />
@@ -758,14 +758,14 @@ function AdminResultsPage() {
 
       {/* Class Selector */}
       <div className="flex items-center gap-3 flex-wrap">
-        <span className="text-sm text-ink-mute/80">Class:</span>
+        <span className="text-sm text-ink">Class:</span>
         {classes.filter(c => c.department === 'jhs' || c.department === 'primary').slice(0, 6).map(cls => (
           <button
             key={cls.id}
             onClick={() => setSelectedClass(cls.id)}
             className={`px-3 py-1.5 text-sm font-medium transition-colors ${
               selectedClass === cls.id
-                ? 'bg-gold text-white'
+                ? 'bg-gold text-ink'
                 : 'bg-paper border border-rule text-ink-mute hover:border-gold/30'
             }`}
           >
@@ -778,17 +778,17 @@ function AdminResultsPage() {
       <div className="bg-paper border overflow-hidden">
         <div className="p-5 border-b">
           <h3 className="font-semibold text-ink">Term 1 Results - {getClassById(selectedClass)?.name}</h3>
-          <p className="text-sm text-ink-mute/80 mt-0.5">Enter scores for each student and subject</p>
+          <p className="text-sm text-ink mt-0.5">Enter scores for each student and subject</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-4 py-3 text-xs font-medium text-ink-mute/80 uppercase sticky left-0 bg-cream">Student</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-ink uppercase sticky left-0 bg-cream">Student</th>
                 {subjectList.map(sub => (
-                  <th key={sub} className="text-center px-3 py-3 text-xs font-medium text-ink-mute/80 uppercase min-w-[80px]">{sub.slice(0, 4)}</th>
+                  <th key={sub} className="text-center px-3 py-3 text-xs font-medium text-ink uppercase min-w-[80px]">{sub.slice(0, 4)}</th>
                 ))}
-                <th className="text-center px-3 py-3 text-xs font-medium text-ink-mute/80 uppercase">Avg</th>
+                <th className="text-center px-3 py-3 text-xs font-medium text-ink uppercase">Avg</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -850,7 +850,7 @@ function AdminAttendancePage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ink">Attendance</h1>
-        <p className="text-sm text-ink-mute/80 mt-0.5">Record and manage daily attendance</p>
+        <p className="text-sm text-ink mt-0.5">Record and manage daily attendance</p>
       </div>
 
       {/* Controls */}
@@ -870,7 +870,7 @@ function AdminAttendancePage() {
           onChange={e => setSelectedDate(e.target.value)}
           className="px-4 py-2.5 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
         />
-        <button className="px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+        <button className="px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
           Save Attendance
         </button>
       </div>
@@ -902,7 +902,7 @@ function AdminAttendancePage() {
                             s === 'late' ? 'bg-yellow-100 text-yellow-700' :
                             s === 'absent' ? 'bg-red-100 text-red-700' :
                             'bg-blue-100 text-blue-700'
-                          : 'bg-cream text-ink-mute/80 hover:bg-cream'
+                          : 'bg-cream text-ink hover:bg-cream'
                       }`}
                     >
                       {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -928,7 +928,7 @@ function CommunicationsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ink">Communications</h1>
-        <p className="text-sm text-ink-mute/80 mt-0.5">Manage announcements, news and events</p>
+        <p className="text-sm text-ink mt-0.5">Manage announcements, news and events</p>
       </div>
 
       {/* Tabs */}
@@ -943,7 +943,7 @@ function CommunicationsPage() {
             onClick={() => setTab(t.value)}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               tab === t.value
-                ? 'bg-gold text-white'
+                ? 'bg-gold text-ink'
                 : 'bg-paper border border-rule text-ink-mute hover:border-gold/30'
             }`}
           >
@@ -955,7 +955,7 @@ function CommunicationsPage() {
       {/* Content */}
       {tab === 'announcements' && (
         <div className="space-y-4">
-          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
             <Plus size={16} />
             New Announcement
           </button>
@@ -965,7 +965,7 @@ function CommunicationsPage() {
                 <div>
                   <h3 className="font-semibold text-ink mb-1">{ann.title}</h3>
                   <p className="text-sm text-ink-mute">{ann.content}</p>
-                  <p className="text-xs text-ink-mute/60 mt-2">Audience: {ann.audience} • {new Date(ann.date).toLocaleDateString('en-GB')}</p>
+                  <p className="text-xs text-ink mt-2">Audience: {ann.audience} • {new Date(ann.date).toLocaleDateString('en-GB')}</p>
                 </div>
               </div>
             </div>
@@ -975,7 +975,7 @@ function CommunicationsPage() {
 
       {tab === 'news' && (
         <div className="space-y-4">
-          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
             <Plus size={16} />
             New Article
           </button>
@@ -983,7 +983,7 @@ function CommunicationsPage() {
             <div key={article.id} className="bg-paper border p-5">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-medium text-gold-deep bg-orange-50 px-2 py-0.5 rounded">{article.category}</span>
-                <span className="text-xs text-ink-mute/60">{new Date(article.date).toLocaleDateString('en-GB')}</span>
+                <span className="text-xs text-ink">{new Date(article.date).toLocaleDateString('en-GB')}</span>
               </div>
               <h3 className="font-semibold text-ink mb-1">{article.title}</h3>
               <p className="text-sm text-ink-mute line-clamp-2">{article.excerpt}</p>
@@ -994,7 +994,7 @@ function CommunicationsPage() {
 
       {tab === 'events' && (
         <div className="space-y-4">
-          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
             <Plus size={16} />
             New Event
           </button>
@@ -1010,7 +1010,7 @@ function CommunicationsPage() {
               </div>
               <div>
                 <h3 className="font-medium text-ink">{event.title}</h3>
-                <p className="text-sm text-ink-mute/80">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
+                <p className="text-sm text-ink">{event.time}{event.location ? ` • ${event.location}` : ''}</p>
               </div>
             </div>
           ))}

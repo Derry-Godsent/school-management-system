@@ -61,7 +61,7 @@ export default function GalleryPage() {
                   <PixelImage src={image.src} alt={image.alt} aspect="4/3" rows={4} cols={6} />
                   <div className="mt-3">
                     <h3 className="font-medium text-ink">{album.title}</h3>
-                    <p className="text-sm text-ink-mute/80 mt-0.5">
+                    <p className="text-sm text-ink mt-0.5">
                       {album.imageCount} photos •{' '}
                       {new Date(album.date).toLocaleDateString('en-GB', {
                         month: 'long',

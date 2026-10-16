@@ -91,7 +91,7 @@ export default function AboutPage() {
             ].map(person => (
               <div key={person.name} className="text-center">
                 <div className="w-24 h-24 bg-rule mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl text-ink-mute/60">
+                  <span className="text-2xl text-ink">
                     {person.name
                       .split(' ')
                       .map(n => n[0])

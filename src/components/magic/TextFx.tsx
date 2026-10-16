@@ -72,12 +72,12 @@ export function Highlighter({
             stroke={isUnderline ? color : 'none'}
             strokeWidth={isUnderline ? 1.6 : 0}
             strokeLinecap="round"
-            opacity={isUnderline ? 1 : 0.28}
+            opacity={isUnderline ? 1 : 0.5}
             style={{
               strokeDasharray: 200,
               strokeDashoffset: inView ? 0 : 200,
               transition: `stroke-dashoffset 900ms cubic-bezier(0.22,1,0.36,1) ${delay}s, opacity 400ms ease ${delay}s`,
-              opacity: inView ? (isUnderline ? 1 : 0.28) : 0,
+              opacity: inView ? (isUnderline ? 1 : 0.5) : 0,
             }}
           />
         </svg>

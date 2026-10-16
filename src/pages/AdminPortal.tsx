@@ -72,7 +72,7 @@ function AdminLoginPage() {
             <span className="text-white font-bold text-sm">MG</span>
           </div>
           <h1 className="text-2xl font-bold text-white">School Management</h1>
-          <p className="text-sm text-ink-mute/60 mt-1">{school.name}</p>
+          <p className="text-sm text-ink mt-1">{school.name}</p>
         </div>
 
         <div className="bg-paper p-8">
@@ -98,12 +98,12 @@ function AdminLoginPage() {
                 className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
               />
             </div>
-            <button type="submit" className="w-full py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors">
+            <button type="submit" className="w-full py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors">
               Sign In
             </button>
           </form>
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-ink-mute/80 text-center mb-2">Demo Credentials</p>
+            <p className="text-xs text-ink text-center mb-2">Demo Credentials</p>
             <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
               <p><span className="font-medium">Email:</span> admin@demo.com</p>
               <p><span className="font-medium">Password:</span> demo123</p>
@@ -112,7 +112,7 @@ function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-ink-mute/80 hover:text-paper/40">← Back to school website</Link>
+          <Link to="/" className="text-sm text-ink hover:text-paper">← Back to school website</Link>
         </div>
       </div>
     </div>
@@ -171,11 +171,11 @@ function AdminLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-4">
               <div className="hidden sm:block text-right">
                 <p className="text-sm font-medium text-ink">{staffMember?.name}</p>
-                <p className="text-xs text-ink-mute/80">{staffMember?.title}</p>
+                <p className="text-xs text-ink">{staffMember?.title}</p>
               </div>
               <button
                 onClick={() => { logout(); navigate('/'); }}
-                className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute"
+                className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute"
               >
                 <LogOut size={16} />
               </button>
@@ -218,7 +218,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                       key={item.path}
                       aria-disabled="true"
                       title="Not built yet"
-                      className="flex cursor-not-allowed items-center justify-between px-3 py-3 text-sm font-medium text-ink-mute/45"
+                      className="flex cursor-not-allowed items-center justify-between px-3 py-3 text-sm font-medium text-ink"
                     >
                       {body}
                     </span>
@@ -242,11 +242,11 @@ function AdminLayout({ children }: { children: ReactNode }) {
               })}
             </nav>
             <div className="mt-8 pt-6 border-t">
-              <Link to="/" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute py-2">
+              <Link to="/" className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute py-2">
                 <ArrowLeft size={14} />
                 School Website
               </Link>
-              <Link to="/parent" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute mt-3 py-2">
+              <Link to="/parent" className="flex items-center gap-2 text-sm text-ink hover:text-ink-mute mt-3 py-2">
                 <ArrowLeft size={14} />
                 Parent Portal
               </Link>
@@ -282,7 +282,7 @@ function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ink">Attention Centre</h1>
-        <p className="text-sm text-ink-mute/80 mt-0.5">What needs your focus right now</p>
+        <p className="text-sm text-ink mt-0.5">What needs your focus right now</p>
       </div>
 
       {/* Attention Items */}
@@ -293,11 +293,11 @@ function AdminDashboard() {
               <ClipboardList size={14} className="sm:hidden text-red-600" />
               <ClipboardList size={16} className="hidden sm:block text-red-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Pending Admissions</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Pending Admissions</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{pendingApps.length}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">awaiting review</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">awaiting review</p>
           </div>
         </Link>
 
@@ -307,11 +307,11 @@ function AdminDashboard() {
               <DollarSign size={14} className="sm:hidden text-gold-deep" />
               <DollarSign size={16} className="hidden sm:block text-gold-deep" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Outstanding Fees</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Outstanding Fees</span>
           </div>
           <div>
             <p className="text-lg sm:text-2xl font-bold text-ink truncate">{formatCurrency(totalOutstanding)}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">{studentsWithDebt.length} student(s)</p>
           </div>
         </div>
 
@@ -321,11 +321,11 @@ function AdminDashboard() {
               <UserX size={14} className="sm:hidden text-yellow-600" />
               <UserX size={16} className="hidden sm:block text-yellow-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Attendance Issues</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Attendance Issues</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{attendanceIssues.length}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">2+ absences</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">2+ absences</p>
           </div>
         </div>
 
@@ -335,11 +335,11 @@ function AdminDashboard() {
               <UserCheck size={14} className="sm:hidden text-green-600" />
               <UserCheck size={16} className="hidden sm:block text-green-600" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium text-ink-mute/80 uppercase leading-tight">Total Students</span>
+            <span className="text-[10px] sm:text-xs font-medium text-ink uppercase leading-tight">Total Students</span>
           </div>
           <div>
             <p className="text-xl sm:text-2xl font-bold text-ink">{totalStudents}</p>
-            <p className="text-[10px] sm:text-xs text-ink-mute/80 mt-0.5 sm:mt-1">enrolled</p>
+            <p className="text-[10px] sm:text-xs text-ink mt-0.5 sm:mt-1">enrolled</p>
           </div>
         </div>
       </div>
@@ -356,7 +356,7 @@ function AdminDashboard() {
               <div key={payment.id} className="flex items-center justify-between px-5 py-3">
                 <div>
                   <p className="text-sm font-medium text-ink">{student?.name}</p>
-                  <p className="text-xs text-ink-mute/80">{payment.category} • {payment.method}</p>
+                  <p className="text-xs text-ink">{payment.category} • {payment.method}</p>
                 </div>
                 <span className="text-sm font-medium text-green-600">{formatCurrency(payment.amount)}</span>
               </div>
@@ -384,16 +384,16 @@ function StudentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-ink">Students</h1>
-          <p className="text-sm text-ink-mute/80 mt-0.5">{students.length} students enrolled</p>
+          <p className="text-sm text-ink mt-0.5">{students.length} students enrolled</p>
         </div>
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-white text-sm font-medium hover:bg-gold-deep transition-colors">
+        <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-pale transition-colors">
           <Plus size={16} />
           Add Student
         </button>
       </div>
 
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute/60" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink" />
         <input
           type="text"
           value={searchTerm}
@@ -408,11 +408,11 @@ function StudentsPage() {
           <table className="w-full">
             <thead>
               <tr className="bg-cream">
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Student</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">ID</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Class</th>
-                <th className="text-left px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase hidden md:table-cell">Programme</th>
-                <th className="text-center px-5 py-3 text-xs font-medium text-ink-mute/80 uppercase">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Student</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">ID</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase">Class</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-ink uppercase hidden md:table-cell">Programme</th>
+                <th className="text-center px-5 py-3 text-xs font-medium text-ink uppercase">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y">

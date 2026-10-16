@@ -54,7 +54,7 @@ export function PageLoader() {
                 transition={{ duration: 0.3 }}
               />
             </div>
-            <div className="text-xs text-ink-mute/60 mt-2 font-mono">
+            <div className="text-xs text-ink mt-2 font-mono">
               {Math.min(Math.round(progress), 100)}%
             </div>
           </motion.div>

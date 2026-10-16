@@ -74,7 +74,7 @@ function LoginPage() {
             <span className="text-white font-bold text-xl">MG</span>
           </div>
           <h1 className="text-2xl font-bold text-ink">Parent Portal</h1>
-          <p className="text-sm text-ink-mute/80 mt-1">{school.name}</p>
+          <p className="text-sm text-ink mt-1">{school.name}</p>
         </div>
 
         <div className="bg-paper border border-rule p-8">
@@ -106,14 +106,14 @@ function LoginPage() {
             </div>
             <button
               type="submit"
-              className="w-full py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors shadow-orange-500/20"
+              className="w-full py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors shadow-orange-500/20"
             >
               Sign In
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-ink-mute/80 text-center mb-2">Demo Credentials</p>
+            <p className="text-xs text-ink text-center mb-2">Demo Credentials</p>
             <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
               <p><span className="font-medium">Email:</span> parent@demo.com</p>
               <p><span className="font-medium">Password:</span> demo123</p>
@@ -122,7 +122,7 @@ function LoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-ink-mute/80 hover:text-ink-mute">
+          <Link to="/" className="text-sm text-ink hover:text-ink-mute">
             ← Back to school website
           </Link>
         </div>
@@ -157,7 +157,7 @@ function BottomNav() {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-                isActive ? 'text-gold-deep' : 'text-ink-mute/60'
+                isActive ? 'text-gold-deep' : 'text-ink'
               }`}
             >
               <Icon size={22} className={isActive ? 'scale-110' : ''} />
@@ -223,7 +223,7 @@ function ChildSelector({ selectedChild, onSelect }: { selectedChild: string; onS
           onClick={() => onSelect(child.id)}
           className={`flex-shrink-0 px-4 py-2 text-sm font-medium transition-all ${
             selectedChild === child.id
-              ? 'bg-gold text-white shadow-orange-500/20'
+              ? 'bg-gold text-ink shadow-orange-500/20'
               : 'bg-cream text-ink-mute hover:bg-rule'
           }`}
         >
@@ -268,8 +268,8 @@ function ParentDashboard() {
               </div>
               <div>
                 <h2 className="text-xl font-bold">{student.name}</h2>
-                <p className="text-sm text-white/80">{student.className} • {student.studentId}</p>
-                <p className="text-xs text-white/60 mt-1">{student.programme}</p>
+                <p className="text-sm text-white">{student.className} • {student.studentId}</p>
+                <p className="text-xs text-white mt-1">{student.programme}</p>
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@ function ParentDashboard() {
               <div className="w-8 h-8 bg-cream flex items-center justify-center">
                 <TrendingUp size={16} className="text-gold-deep" />
               </div>
-              <span className="text-xs font-medium text-ink-mute/80">Average</span>
+              <span className="text-xs font-medium text-ink">Average</span>
             </div>
             <p className="text-2xl font-bold text-ink">{averageScore}%</p>
           </div>
@@ -292,7 +292,7 @@ function ParentDashboard() {
               <div className="w-8 h-8 bg-cream flex items-center justify-center">
                 <Check size={16} className="text-gold-deep" />
               </div>
-              <span className="text-xs font-medium text-ink-mute/80">Attendance</span>
+              <span className="text-xs font-medium text-ink">Attendance</span>
             </div>
             <p className="text-2xl font-bold text-ink">{attendanceStats.percentage}%</p>
           </div>
@@ -302,7 +302,7 @@ function ParentDashboard() {
               <div className="w-8 h-8 bg-cream flex items-center justify-center">
                 <CreditCard size={16} className="text-gold-deep" />
               </div>
-              <span className="text-xs font-medium text-ink-mute/80">Balance</span>
+              <span className="text-xs font-medium text-ink">Balance</span>
             </div>
             <p className="text-lg font-bold text-ink">{formatCurrency(feeSummary.totalBalance)}</p>
           </div>
@@ -312,7 +312,7 @@ function ParentDashboard() {
               <div className="w-8 h-8 bg-cream flex items-center justify-center">
                 <Bell size={16} className="text-gold-deep" />
               </div>
-              <span className="text-xs font-medium text-ink-mute/80">News</span>
+              <span className="text-xs font-medium text-ink">News</span>
             </div>
             <p className="text-2xl font-bold text-ink">{announcements.length}</p>
           </div>
@@ -367,7 +367,7 @@ function ParentDashboard() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-ink">{event.title}</p>
-                  <p className="text-xs text-ink-mute/80">{event.time}</p>
+                  <p className="text-xs text-ink">{event.time}</p>
                 </div>
               </div>
             ))}
@@ -403,7 +403,7 @@ function ResultsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-ink">Subject Results</h3>
-                <p className="text-sm text-ink-mute/80 mt-0.5">Overall Average: <span className="font-medium text-ink">{average}%</span></p>
+                <p className="text-sm text-ink mt-0.5">Overall Average: <span className="font-medium text-ink">{average}%</span></p>
               </div>
             </div>
           </div>
@@ -426,7 +426,7 @@ function ResultsPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-ink-mute/80">
+                  <div className="flex items-center gap-4 text-xs text-ink">
                     <span>Position: {result.position}</span>
                     <span>Class Avg: {result.classAverage}%</span>
                   </div>
@@ -464,19 +464,19 @@ function AttendancePage() {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-paper p-4 border border-rule">
             <p className="text-3xl font-bold text-green-600">{stats.percentage}%</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Attendance Rate</p>
+            <p className="text-xs text-ink mt-1">Attendance Rate</p>
           </div>
           <div className="bg-paper p-4 border border-rule">
             <p className="text-3xl font-bold text-ink">{stats.present}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Days Present</p>
+            <p className="text-xs text-ink mt-1">Days Present</p>
           </div>
           <div className="bg-paper p-4 border border-rule">
             <p className="text-3xl font-bold text-yellow-600">{stats.late}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Days Late</p>
+            <p className="text-xs text-ink mt-1">Days Late</p>
           </div>
           <div className="bg-paper p-4 border border-rule">
             <p className="text-3xl font-bold text-red-600">{stats.absent}</p>
-            <p className="text-xs text-ink-mute/80 mt-1">Days Absent</p>
+            <p className="text-xs text-ink mt-1">Days Absent</p>
           </div>
         </div>
 
@@ -530,15 +530,15 @@ function FeesPage() {
 
         {/* Summary */}
         <div className="bg-gradient-to-br from-gold to-gold-deep p-6 text-white shadow-orange-500/20">
-          <p className="text-sm text-white/80 mb-2">Outstanding Balance</p>
+          <p className="text-sm text-white mb-2">Outstanding Balance</p>
           <p className="text-3xl font-bold">{formatCurrency(feeSummary.totalBalance)}</p>
           <div className="flex items-center gap-4 mt-4 text-sm">
             <div>
-              <p className="text-white/60">Charged</p>
+              <p className="text-white">Charged</p>
               <p className="font-semibold">{formatCurrency(feeSummary.totalCharged)}</p>
             </div>
             <div>
-              <p className="text-white/60">Paid</p>
+              <p className="text-white">Paid</p>
               <p className="font-semibold">{formatCurrency(feeSummary.totalPaid)}</p>
             </div>
           </div>
@@ -563,8 +563,8 @@ function FeesPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-ink-mute/80">Charged: {formatCurrency(record.charged)}</span>
-                  <span className="text-ink-mute/80">Paid: {formatCurrency(record.paid)}</span>
+                  <span className="text-ink">Charged: {formatCurrency(record.charged)}</span>
+                  <span className="text-ink">Paid: {formatCurrency(record.paid)}</span>
                 </div>
                 {record.balance > 0 && (
                   <p className="text-sm text-red-600 font-medium mt-1">Balance: {formatCurrency(record.balance)}</p>
@@ -586,10 +586,10 @@ function FeesPage() {
                   <span className="text-sm font-medium text-ink">{payment.category}</span>
                   <span className="text-sm font-bold text-green-600">{formatCurrency(payment.amount)}</span>
                 </div>
-                <p className="text-xs text-ink-mute/80">
+                <p className="text-xs text-ink">
                   {new Date(payment.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} • {payment.method}
                 </p>
-                <p className="text-xs text-ink-mute/60 mt-1">Ref: {payment.reference}</p>
+                <p className="text-xs text-ink mt-1">Ref: {payment.reference}</p>
               </div>
             ))}
           </div>
@@ -620,7 +620,7 @@ function AnnouncementsPage() {
                   {ann.audience === 'all' ? 'All Parents' : ann.audience.toUpperCase()}
                 </span>
               </div>
-              <span className="text-xs text-ink-mute/60">
+              <span className="text-xs text-ink">
                 {new Date(ann.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </span>
             </div>

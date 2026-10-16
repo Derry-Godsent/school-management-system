@@ -178,7 +178,7 @@ export function Hero3D() {
                 <h1 className="mt-6 font-display text-[2.15rem] leading-[1.08] sm:text-5xl lg:text-6xl font-bold text-paper">
                   {slide.title}
                 </h1>
-                <p className="mt-5 text-base sm:text-xl text-paper/85 leading-relaxed max-w-2xl">
+                <p className="mt-5 text-base sm:text-xl text-paper leading-relaxed max-w-2xl">
                   {slide.text}
                 </p>
                 <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
@@ -224,7 +224,7 @@ export function Hero3D() {
                 />
                 <span
                   className={`hidden sm:block mt-3 text-[0.6875rem] tracking-[0.18em] uppercase transition-colors ${
-                    i === index ? 'text-gold' : 'text-paper/45'
+                    i === index ? 'text-gold' : 'text-paper'
                   }`}
                 >
                   {s.eyebrow}

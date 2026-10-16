@@ -26,8 +26,8 @@ export function Ecosystem() {
   const adminRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative overflow-hidden bg-paper py-20 sm:py-28">
-      <Floating3DParticles quantity={70} opacity={0.18} depth={0.9} color="#e85d04" />
+    <section className="relative overflow-hidden bg-tint-mint py-20 sm:py-28">
+      <Floating3DParticles quantity={70} opacity={0.22} depth={0.9} color="#f97316" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 lg:items-center">
@@ -164,7 +164,7 @@ export function Ecosystem() {
                 {/* Ward */}
                 <div className="mt-3 bg-ink p-3">
                   <p className="font-display text-sm text-paper">Adwoa Boateng</p>
-                  <p className="text-[0.625rem] text-paper/70">JHS 2 • MG/2024/014</p>
+                  <p className="text-[0.625rem] text-paper">JHS 2 • MG/2024/014</p>
                 </div>
 
                 {/* Quick figures */}

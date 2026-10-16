@@ -57,7 +57,7 @@ export default function ContactPage() {
                       {item.icon}
                     </div>
                     <div>
-                      <div className="text-sm text-ink-mute/80">{item.label}</div>
+                      <div className="text-sm text-ink">{item.label}</div>
                       <div className="text-sm font-medium text-ink mt-0.5">{item.value}</div>
                     </div>
                   </div>
@@ -65,8 +65,8 @@ export default function ContactPage() {
               </div>
               <div className="mt-10 overflow-hidden h-48 bg-cream flex items-center justify-center">
                 <div className="text-center">
-                  <MapPin size={24} className="text-ink-mute/60 mx-auto mb-2" aria-hidden="true" />
-                  <p className="text-sm text-ink-mute/80">{school.address}</p>
+                  <MapPin size={24} className="text-ink mx-auto mb-2" aria-hidden="true" />
+                  <p className="text-sm text-ink">{school.address}</p>
                 </div>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function ContactPage() {
                   </div>
                   <button
                     type="submit"
-                    className="px-8 py-3.5 bg-gold text-white font-medium hover:bg-gold-deep transition-colors"
+                    className="px-8 py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors"
                   >
                     Send Message
                   </button>
