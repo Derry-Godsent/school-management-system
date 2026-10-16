@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react';
  * and degrades to the safest value before measurement runs.
  */
 export interface DeviceTier {
-  /** Measurement has run — before this, assume the safest values. */
+  /** Measurement has run, before this, assume the safest values. */
   ready: boolean;
   /** Coarse pointer (finger) rather than a mouse. */
   isTouch: boolean;
-  /** Narrow viewport — treat as a phone. */
+  /** Narrow viewport, treat as a phone. */
   isMobile: boolean;
   /** A fine pointer exists, so hover and cursor effects are meaningful. */
   canHover: boolean;
@@ -61,8 +61,11 @@ export function useDeviceTier(): DeviceTier {
         isMobile,
         canHover,
         reducedMotion,
-        // Any of these suggests we should avoid decorative GPU work.
-        lowPower: saveData || onSlowLink || cores <= 4 || memory <= 4,
+        // Any of these suggests we should do *lighter* decorative work, not
+        // none. The thresholds are deliberately low: `hardwareConcurrency` is
+        // capped at 4 on most iPhones and Safari never reports `deviceMemory`
+        // at all, so a `<= 4` core test flags ordinary modern phones.
+        lowPower: saveData || onSlowLink || cores <= 2 || memory <= 2,
       });
     };
 
@@ -89,9 +92,19 @@ export function useDeviceTier(): DeviceTier {
 }
 
 /**
- * Convenience flag: should decorative 3D motion run at all?
- * False before measurement, for reduced-motion users, and on weak devices.
+ * Should decorative 3D motion run at all?
+ *
+ * Only an explicit accessibility preference switches it off. A device that
+ * merely looks modest gets lighter effects instead, scaled by each effect from
+ * `tier.lowPower` (fewer particles, a gentler plane).
+ *
+ * This distinction matters: folding `lowPower` into a hard stop meant every
+ * animation on this site silently disabled itself on hardware reporting four
+ * or fewer cores, which is most iPhones, so the motion was invisible on exactly
+ * the device most of these visitors are using.
+ *
+ * False before measurement has run, so nothing animates on the first paint.
  */
 export function useMotionAllowed(tier: DeviceTier): boolean {
-  return tier.ready && !tier.reducedMotion && !tier.lowPower;
+  return tier.ready && !tier.reducedMotion;
 }

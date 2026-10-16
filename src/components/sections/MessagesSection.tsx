@@ -1,8 +1,8 @@
 import { leadershipMessages } from '../../data';
-import { Reveal3D, Tilt3D, DepthImage } from '../fx';
+import { Reveal3D, Tilt3D, DepthImage, ScrollStage, SectionEdge } from '../fx';
 
 /**
- * MessagesSection — portraits paired with a written message from each of the
+ * MessagesSection: portraits paired with a written message from each of the
  * school's heads, including the School Prefect.
  *
  * Layout follows the Ghanaian institutional convention: alternating
@@ -11,7 +11,10 @@ import { Reveal3D, Tilt3D, DepthImage } from '../fx';
  */
 export function MessagesSection() {
   return (
-    <section className="bg-cream py-20 sm:py-28">
+    <ScrollStage className="bg-cream" tilt="up" depth={0.9}>
+      <section className="bg-cream">
+        <SectionEdge from="paper" to="cream" direction="right" rule={false} />
+        <div className="py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl mb-16 sm:mb-24">
           <span className="eyebrow">Message from:</span>
@@ -20,8 +23,8 @@ export function MessagesSection() {
           </h2>
           <p className="text-lg text-ink-mute mt-6 leading-relaxed">
             Ours is a school run by people who teach. Each term, our leadership team writes
-            directly to parents and students — about the work, the standard, and what we are
-            asking of one another.
+            directly to parents and students. They write about the work, the standard, and what we
+            are asking of one another.
           </p>
         </header>
 
@@ -98,7 +101,9 @@ export function MessagesSection() {
           })}
         </div>
       </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 

@@ -14,7 +14,7 @@ interface Tilt3DProps {
 }
 
 /**
- * Tilt3D — gives a plane real perspective depth.
+ * Tilt3D: gives a plane real perspective depth.
  *
  * Two input paths so it is alive on every device:
  *  - Fine pointer: the plane follows the cursor.

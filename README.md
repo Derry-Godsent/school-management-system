@@ -1,7 +1,7 @@
 # school-management-system
 Ghana School Digital Ecosystem
 
-## AI tooling — MCP servers
+## AI tooling, MCP servers
 
 This repo ships project-scoped [Model Context Protocol](https://modelcontextprotocol.io)
 config so editors and CLI agents pick up the same tooling automatically.
@@ -9,7 +9,7 @@ config so editors and CLI agents pick up the same tooling automatically.
 ### Magic UI (`magicuidesign-mcp`)
 
 Provides design-time access to the [Magic UI](https://magicui.design) component
-registry — animated React/Tailwind components used for polished dashboards,
+registry, animated React/Tailwind components used for polished dashboards,
 marketing pages and data surfaces.
 
 Package: [`@magicuidesign/mcp`](https://www.npmjs.com/package/@magicuidesign/mcp) (current: `2.0.0`)
@@ -44,7 +44,7 @@ Each declares the same server:
 ```
 
 > VS Code uses a `servers` key instead of `mcpServers`, and requires
-> `"type": "stdio"` on each entry — see `.vscode/mcp.json`.
+> `"type": "stdio"` on each entry, see `.vscode/mcp.json`.
 
 #### Requirements
 
@@ -68,9 +68,9 @@ Each declares the same server:
 #### After editing config
 
 Reload the MCP server in your client:
-- **Claude Code** — restart the session, then `/mcp` to confirm it connected.
-- **Cursor** — Settings → MCP, toggle the server off/on.
-- **VS Code** — run `MCP: List Servers`, then restart the server.
+- **Claude Code**, restart the session, then `/mcp` to confirm it connected.
+- **Cursor**, Settings → MCP, toggle the server off/on.
+- **VS Code**, run `MCP: List Servers`, then restart the server.
 
 ### Fallback when the registry is unreachable
 

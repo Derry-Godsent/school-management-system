@@ -3,7 +3,7 @@ import { ArrowRight, Calendar, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { MessagesSection } from '../components/sections/MessagesSection';
 import { Hero3D } from '../components/sections/Hero3D';
 import { Ecosystem } from '../components/sections/Ecosystem';
-import { Reveal3D, DepthImage } from '../components/fx';
+import { Reveal3D, DepthImage, ScrollStage, SectionEdge } from '../components/fx';
 import {
   Highlighter,
   InteractiveHoverButton,
@@ -42,7 +42,7 @@ const SLIDES = [
     image: '/images/campus-life.jpg',
     eyebrow: 'Campus Life',
     title: 'Where character is built',
-    text: 'Cultural festivals, house sports, cadet corps and clubs — learning that reaches past the classroom.',
+    text: 'Cultural festivals, house sports, the cadet corps and clubs. Learning that reaches past the classroom.',
     to: '/campus-life',
     cta: 'Explore Campus',
   },
@@ -91,8 +91,10 @@ function WelcomeBand() {
   const director = leadershipMessages[0];
 
   return (
-    <section className="bg-paper py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ScrollStage className="bg-paper" tilt="up">
+      <section className="bg-paper">
+        <SectionEdge from="ink" to="paper" direction="right" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <figure className="lg:col-span-5 relative">
             <Reveal3D axis="y" rotate={10}>
@@ -118,7 +120,7 @@ function WelcomeBand() {
             <div className="mt-8 space-y-5 text-ink-mute leading-relaxed">
               <p className="dropcap text-ink/85">
                 On behalf of our school community, I welcome you. For seventeen years we have
-                been educating the children of Kumasi — not merely to pass examinations, but to
+                been educating the children of Kumasi. Not merely to pass examinations, but to
                 think clearly, act honourably, and carry themselves with confidence into a world
                 that will ask a great deal of them.
               </p>
@@ -142,8 +144,9 @@ function WelcomeBand() {
             </Reveal3D>
           </div>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 
@@ -154,8 +157,10 @@ function NewsBand() {
   const recent = rest.slice(0, 3);
 
   return (
-    <section className="bg-cream py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ScrollStage className="bg-paper" tilt="down" depth={0.85}>
+      <section className="bg-paper">
+        <SectionEdge from="cream" to="paper" direction="left" rule={false} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <Reveal3D y={36}>
         <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
           <div>
@@ -206,7 +211,7 @@ function NewsBand() {
             </Link>
           </article>
 
-          {/* Secondary list — hairlines, not cards */}
+          {/* Secondary list, hairlines, not cards */}
           <div className="lg:col-span-5">
             <div className="divide-y divide-rule border-t border-rule">
               {recent.map(item => (
@@ -231,8 +236,9 @@ function NewsBand() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 
@@ -245,8 +251,10 @@ function CampusStrip() {
   ];
 
   return (
-    <section className="bg-paper py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ScrollStage className="bg-cream" tilt="up">
+      <section className="bg-cream">
+        <SectionEdge from="paper" to="cream" direction="right" rule={false} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
           <span className="eyebrow">Campus Life</span>
@@ -255,7 +263,7 @@ function CampusStrip() {
           </h2>
           <p className="mt-6 text-ink-mute leading-relaxed">
             Cultural festivals and drumming, house sports, science exhibitions, reading week and
-            the cadet corps. Our co-curricular programme is not an afterthought — it is where
+            the cadet corps. Our co-curricular programme is not an afterthought. It is where
             much of a child&apos;s character is formed.
           </p>
         </div>
@@ -287,8 +295,9 @@ function CampusStrip() {
             Explore Campus Life
           </InteractiveHoverButton>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 
@@ -297,8 +306,10 @@ function UpdatesBand() {
     new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <section className="bg-cream py-20 sm:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ScrollStage className="bg-paper" tilt="down" depth={0.85}>
+      <section className="bg-paper">
+        <SectionEdge from="ink" to="paper" direction="left" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <Reveal3D y={36}>
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
           {/* Updates */}
@@ -344,16 +355,19 @@ function UpdatesBand() {
           </div>
         </div>
         </Reveal3D>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 
 function VisitBand() {
   const navigate = useNavigate();
   return (
-    <section className="bg-ink text-paper/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <ScrollStage className="bg-ink" tilt="up" depth={0.7}>
+      <section className="bg-ink text-paper/80">
+        <SectionEdge from="paper" to="ink" direction="right" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Clock size={20} className="text-gold mb-4" aria-hidden="true" />
@@ -363,7 +377,7 @@ function VisitBand() {
             <p className="text-sm leading-relaxed">
               Monday to Friday
               <br />
-              6:30am – 3:30pm
+              6:30am to 3:30pm
             </p>
           </div>
           <div>
@@ -409,8 +423,9 @@ function VisitBand() {
             Book a Visit
           </InteractiveHoverButton>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </ScrollStage>
   );
 }
 

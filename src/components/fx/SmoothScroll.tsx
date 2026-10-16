@@ -4,7 +4,7 @@ import Lenis from 'lenis';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 /**
- * SmoothScroll — momentum scrolling for the whole document.
+ * SmoothScroll: momentum scrolling for the whole document.
  *
  * Deliberately does NOT hijack touch. `syncTouch: false` leaves native iOS and
  * Android inertia untouched, which is both faster and far more familiar on a
@@ -22,7 +22,7 @@ export function SmoothScroll() {
 
     const lenis = new Lenis({
       duration: 1.05,
-      // easeOutExpo — the standard "premium site" deceleration curve.
+      // easeOutExpo: the standard "premium site" deceleration curve.
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       syncTouch: false,

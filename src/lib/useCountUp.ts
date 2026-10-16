@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * useCountUp — animates a number from 0 to `target` once the element scrolls
+ * useCountUp: animates a number from 0 to `target` once the element scrolls
  * into view. Respects prefers-reduced-motion by jumping straight to the value.
  *
  * Returns a ref to attach to the element and the current display string.

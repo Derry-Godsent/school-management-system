@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 /* -------------------------------------------------------------------------
-   Floating3DParticles — a slow drift of depth-sorted motes on a canvas.
+   Floating3DParticles, a slow drift of depth-sorted motes on a canvas.
 
    Particles carry a `z` between 0 and 1 which scales their size, opacity and
    parallax response, so a flat canvas reads as a volume. Density is chosen by
@@ -175,7 +175,7 @@ export function Floating3DParticles({
 }
 
 /* -------------------------------------------------------------------------
-   LightRays — soft beams falling from above. Pure CSS transforms on a small
+   LightRays, soft beams falling from above. Pure CSS transforms on a small
    number of blurred elements, so it costs almost nothing.
    ------------------------------------------------------------------------- */
 export function LightRays({ className = '', intensity = 1 }: { className?: string; intensity?: number }) {

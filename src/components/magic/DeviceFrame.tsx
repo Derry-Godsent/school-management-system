@@ -13,7 +13,7 @@ interface DeviceFrameProps {
 }
 
 /**
- * DeviceFrame — a phone shell for showing the portals on a small screen.
+ * DeviceFrame: a phone shell for showing the portals on a small screen.
  *
  * Used with a real interface inside rather than a video, so what a school owner
  * sees in the frame is the product itself. The optional auto-scroll drifts the

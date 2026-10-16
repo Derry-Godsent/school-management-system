@@ -621,7 +621,7 @@ export const leadershipMessages: LeadershipMessage[] = [
     body: [
       'When we opened our gates in 2008 with two classrooms, a borrowed chalkboard and forty-one pupils, we had a single conviction: that children in Kumasi deserved an education that was both rooted in Ghanaian values and equal to the best available anywhere in the world.',
       'Seventeen years later, that conviction has not changed. We have grown to over twelve hundred students, three departments and a staff of more than eighty. What has not changed is the standard. Every child who walks through our gates is known by name, tracked by progress, and expected to achieve.',
-      'We do not measure ourselves by the awards on our wall, welcome as they are. We measure ourselves by what happens after our students leave us — at senior high school, at university, and in the workplaces and communities where they eventually serve. That is the only verdict that matters.',
+      'We do not measure ourselves by the awards on our wall, welcome as they are. We measure ourselves by what happens after our students leave us: at senior high school, at university, and in the workplaces and communities where they eventually serve. That is the only verdict that matters.',
       'To every parent who has entrusted us with a child: thank you. We do not take that trust lightly, and we will not waste it.',
     ],
   },
@@ -633,7 +633,7 @@ export const leadershipMessages: LeadershipMessage[] = [
     quote:
       'Good teaching is relentless attention to a single question: has this child actually understood?',
     body: [
-      'Teaching is easy to do badly and very difficult to do well. My work, and the work of our department heads, is to make sure that every lesson in this school moves a child forward — not merely fills an hour.',
+      'Teaching is easy to do badly and very difficult to do well. My work, and the work of our department heads, is to make sure that every lesson in this school moves a child forward, and not merely fills an hour.',
       'We insist on small class sizes, on regular and honest assessment, and on feedback that reaches parents before problems become habits. When a pupil is struggling, we want to know within the week, not at the end of the term.',
       'Our teachers are given time to plan together and to keep learning themselves. A school whose staff have stopped learning cannot honestly ask its students to keep learning either.',
       'To our parents: you are the first teachers. Read with your children, ask them what they learned, and tell us early when something worries you. We would far rather hear from you twice a term than once a year.',
@@ -643,14 +643,14 @@ export const leadershipMessages: LeadershipMessage[] = [
     id: 'administration',
     name: 'Mrs. Abena Mensah',
     role: 'Head of Administration',
-    image: '/images/headteacher.jpg',
+    image: '/images/administrator.jpg',
     quote:
       'Administration is invisible when it is done well, and it is never neutral. Behind every smooth term is a great deal of quiet work.',
     body: [
       'A school runs on small details: fee statements that are clear and accurate, transport that arrives on time, records that can be found when a student transfers, and staff who are paid correctly and on schedule.',
       'My office is responsible for making sure that the practical side of school life never becomes a source of anxiety for parents. Where something can be explained more simply, we try to explain it more simply.',
       'We keep our fee structure transparent and we publish it in full. Families should never have to guess what they owe or what it covers. Statements are always available in the Parent Portal, and my office is open to any parent who would rather speak to someone directly.',
-      'If you have not received a clear answer from us, please persist. That is not trouble — that is accountability, and we welcome it.',
+      'If you have not received a clear answer from us, please persist. That is not trouble. That is accountability, and we welcome it.',
     ],
   },
   {
@@ -661,7 +661,7 @@ export const leadershipMessages: LeadershipMessage[] = [
     quote:
       'A prefect is not a title you wear. It is a responsibility to the student standing next to you.',
     body: [
-      'When I was made School Prefect, I understood quickly that the role is not about privilege. It is about being answerable — to the teachers who trust us, and to the students who look to us to speak for them.',
+      'When I was made School Prefect, I understood quickly that the role is not about privilege. It is about being answerable. Answerable to the teachers who trust us, and to the students who look to us to speak for them.',
       'My work is practical. I sit with the student council each week. We take up concerns about the dining hall, about study time, about the condition of the playing field. Some of what we raise is small. Some of it has changed how things are done.',
       'The thing I have learned at Maple Grove is that a school is better when students are treated as participants rather than as guests. Our opinions are asked for, and they are acted on.',
       'To my fellow students: the standard we set in these years is the standard we will carry into senior high school and beyond. Let us set it deliberately and set it high.',

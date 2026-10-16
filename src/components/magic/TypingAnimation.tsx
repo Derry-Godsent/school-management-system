@@ -19,7 +19,7 @@ interface TypingAnimationProps {
 }
 
 /**
- * TypingAnimation — types a word, holds it, deletes it, moves to the next.
+ * TypingAnimation: types a word, holds it, deletes it, moves to the next.
  *
  * Uses a timeout chain rather than a single interval so the hold and delete
  * phases can differ. Reduced-motion users get the first word, static.
@@ -73,7 +73,7 @@ export function TypingAnimation({
         setDisplay(word.slice(0, length.current));
 
         if (length.current >= word.length) {
-          // Word complete — hold, then delete. Unless this is a one-shot run
+          // Word complete, hold, then delete. Unless this is a one-shot run
           // that has finished its last word.
           if (!loop && wordIndex.current === list.length - 1) return;
           timer.current = setTimeout(() => {

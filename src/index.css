@@ -5,7 +5,7 @@
 /* ==========================================================================
    Maple Grove design system
    Inspired by the Ghanaian institutional-school idiom: deep ink, ribbon gold,
-   serif display type and full-bleed photography. Deliberately card-free —
+   serif display type and full-bleed photography. Deliberately card-free -
    structure comes from rules, spacing and imagery, never floating boxes.
    ========================================================================== */
 
@@ -101,7 +101,7 @@ h4,
    Institutional components
    -------------------------------------------------------------------------- */
 
-/* Section eyebrow — small gold rule + tracked label above a heading. */
+/* Section eyebrow, small gold rule + tracked label above a heading. */
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -120,7 +120,7 @@ h4,
   background: var(--color-gold);
 }
 
-/* Gold ribbon bar — echoes the school crest's ribbon. */
+/* Gold ribbon bar, echoes the school crest's ribbon. */
 .ribbon {
   position: relative;
   display: inline-block;
@@ -133,7 +133,7 @@ h4,
   text-transform: uppercase;
 }
 
-/* Underline that draws in on hover — used sparingly on text links. */
+/* Underline that draws in on hover, used sparingly on text links. */
 .line-draw {
   position: relative;
 }
@@ -204,7 +204,7 @@ h4,
 }
 
 /* ==========================================================================
-   Motion layer — smooth scroll + 3D depth
+   Motion layer, smooth scroll + 3D depth
    ========================================================================== */
 
 /* --- Lenis ---------------------------------------------------------------
@@ -246,7 +246,7 @@ html.lenis body {
 }
 
 /* Promote elements that animate continuously, so they get their own layer and
-   stay off the main paint path. Used sparingly — each one costs GPU memory. */
+   stay off the main paint path. Used sparingly, each one costs GPU memory. */
 .gpu {
   transform: translateZ(0);
   backface-visibility: hidden;
@@ -410,5 +410,32 @@ html.lenis body {
   .beam-draw {
     opacity: 1 !important;
     stroke-dasharray: 1000 1000 !important;
+  }
+}
+
+
+/* ==========================================================================
+   Scroll stage
+   ========================================================================== */
+
+/* The frame each section rides in. `perspective` has to sit on the direct
+   parent of the rotating element, so it lives here rather than on <main>. */
+.scroll-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+/* The rotating plane. `preserve-3d` lets its own children keep their depth.
+   There is deliberately no `will-change: transform` here: with a stage per
+   section that would promote seven viewport-height layers at once, which is
+   how a phone runs out of GPU memory. Framer Motion already promotes a layer
+   while it is actually animating. */
+.scroll-stage > * {
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-stage > * {
+    transform: none !important;
   }
 }

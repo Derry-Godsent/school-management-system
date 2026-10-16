@@ -3,7 +3,7 @@ import { cn } from '../../lib/cn';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 /* -------------------------------------------------------------------------
-   Highlighter — a marker stroke that draws itself in behind, or under, text.
+   Highlighter, a marker stroke that draws itself in behind, or under, text.
 
    The stroke is an SVG path sized to the text box, revealed with a
    stroke-dashoffset animation once the words are on screen.
@@ -87,7 +87,7 @@ export function Highlighter({
 }
 
 /* -------------------------------------------------------------------------
-   DiaTextReveal — cycles phrases through a masked sweep, so one word swaps
+   DiaTextReveal, cycles phrases through a masked sweep, so one word swaps
    into the next like a projector changing slide.
    ------------------------------------------------------------------------- */
 export function DiaTextReveal({
@@ -137,7 +137,7 @@ export function DiaTextReveal({
 }
 
 /* -------------------------------------------------------------------------
-   PixelImage — the photograph assembles from a grid of tiles on scroll-in.
+   PixelImage, the photograph assembles from a grid of tiles on scroll-in.
    ------------------------------------------------------------------------- */
 export function PixelImage({
   src,

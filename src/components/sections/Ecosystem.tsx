@@ -8,11 +8,11 @@ import {
   DiaTextReveal,
   Floating3DParticles,
 } from '../magic';
-import { Reveal3D } from '../fx';
+import { Reveal3D, ScrollStage, SectionEdge } from '../fx';
 import { ROLES } from '../magic/EcosystemPortals';
 
 /**
- * Ecosystem — the one section of the site that argues for the product rather
+ * Ecosystem: the one section of the site that argues for the product rather
  * than the school. It shows the four portals wired together and the parent
  * experience rendered on a phone, so a school owner can see what they would
  * actually be buying.
@@ -26,23 +26,29 @@ export function Ecosystem() {
   const adminRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-      <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
+    <ScrollStage className="bg-ink" tilt="up" depth={0.9}>
+      <section className="relative overflow-hidden bg-ink">
+        <SectionEdge from="cream" to="ink" direction="right" />
+        <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 lg:items-center">
           {/* ---- Left: the copy and the wiring diagram ---- */}
           <div>
             <Reveal3D y={36}>
               <span className="eyebrow">One system</span>
               <h2 className="mt-6 font-display text-3xl font-bold leading-tight text-paper sm:text-4xl">
-                The website, the parents and the office — finally on speaking terms
+                One place for the marks, the fees and the notices
               </h2>
               <p className="mt-6 leading-relaxed text-paper/70">
-                Every part of the school already produces information. The portal is what
-                stops it living in four different places: marks reach parents the day they
-                are entered, fees reconcile themselves, and the office stops answering the
-                same question forty times a term.
+                The school already keeps every record it needs. The trouble is where they
+                are kept. Marks sit in a teacher&apos;s book. Fees sit in the office ledger.
+                Notices go up on a board. So parents have to ask for each one.
+              </p>
+              <p className="mt-4 leading-relaxed text-paper/70">
+                With the portal, each thing is entered once. Parents then open their phone
+                and see it for themselves. No queue at the office, and no waiting until the
+                end of term to find out how their child is doing.
               </p>
             </Reveal3D>
 
@@ -116,7 +122,7 @@ export function Ecosystem() {
               <AnimatedGauge
                 value={100}
                 label="BECE Pass Rate"
-                sublabel="The figure parents see the moment it is entered"
+                sublabel="Parents see this as soon as it is entered"
               />
               <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {ROLES.map(role => (
@@ -132,7 +138,7 @@ export function Ecosystem() {
           {/* ---- Right: the parent experience on a phone ---- */}
           <Reveal3D axis="y" rotate={12} className="lg:pl-8">
             <p className="mb-6 text-center text-[0.6875rem] uppercase tracking-[0.22em] text-gold lg:text-left">
-              Parent Portal —{' '}
+              Parent Portal:{' '}
               <DiaTextReveal
                 text={[
                   'on the phone they already carry',
@@ -235,7 +241,8 @@ export function Ecosystem() {
           </Reveal3D>
         </div>
       </div>
-    </section>
+      </section>
+    </ScrollStage>
   );
 }
 

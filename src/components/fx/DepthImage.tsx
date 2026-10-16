@@ -15,7 +15,7 @@ interface DepthImageProps {
 }
 
 /**
- * DepthImage — an image that drifts and tilts on a perspective plane as it
+ * DepthImage: an image that drifts and tilts on a perspective plane as it
  * moves through the viewport, so photography reads as depth rather than a flat
  * rectangle.
  *

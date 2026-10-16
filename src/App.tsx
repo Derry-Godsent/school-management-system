@@ -40,7 +40,7 @@ export default function App() {
       <ScrollProgress />
       <ScrollToTop />
       <Routes>
-        {/* Public Website — every route shares one shell */}
+        {/* Public Website, every route shares one shell */}
         <Route
           path="/"
           element={

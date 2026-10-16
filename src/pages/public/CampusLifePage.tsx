@@ -15,7 +15,7 @@ export default function CampusLifePage() {
             <p className="text-lg text-ink-mute mt-6 leading-relaxed">
               Education does not stop at the classroom door. Throughout the year our students
               mark cultural days, compete in house sports, exhibit their science work, and serve
-              in the cadet corps — and much of who they become is formed in those hours.
+              in the cadet corps, and much of who they become is formed in those hours.
             </p>
           </div>
         </div>

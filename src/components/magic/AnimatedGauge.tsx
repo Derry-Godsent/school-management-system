@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 
 interface CircularProgressProps {
-  /** 0–100 */
+  /** 0 to 100 */
   value: number;
   size?: number;
   strokeWidth?: number;
@@ -14,7 +14,7 @@ interface CircularProgressProps {
 }
 
 /**
- * AnimatedGauge — a ring that fills to `value`, counting up alongside.
+ * AnimatedGauge: a ring that fills to `value`, counting up alongside.
  *
  * The arc is a single SVG circle driven by stroke-dashoffset, so it animates on
  * the compositor and stays smooth on a phone.

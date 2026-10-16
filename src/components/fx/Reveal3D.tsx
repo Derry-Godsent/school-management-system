@@ -16,7 +16,7 @@ interface Reveal3DProps {
 }
 
 /**
- * Reveal3D — content rotates up into place on a perspective plane as it
+ * Reveal3D: content rotates up into place on a perspective plane as it
  * scrolls into view.
  *
  * This is the effect that carries the impression on phones: it is driven purely

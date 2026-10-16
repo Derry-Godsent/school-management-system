@@ -23,7 +23,7 @@ interface AnimatedBeamProps {
 }
 
 /**
- * AnimatedBeam — draws a curve between two elements and sends a pulse along it.
+ * AnimatedBeam: draws a curve between two elements and sends a pulse along it.
  *
  * Positions are measured from the DOM rather than hard-coded, and re-measured
  * on resize, so the diagram survives any layout change. The pulse itself is an

@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /**
- * Portal — renders children into document.body.
+ * Portal: renders children into document.body.
  *
  * Needed because an ancestor with `backdrop-filter` (our blurred sticky nav)
  * becomes the containing block for `position: fixed` descendants. Anything

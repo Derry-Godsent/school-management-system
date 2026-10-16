@@ -26,14 +26,14 @@ const SLIDES = [
     image: '/images/campus-life.jpg',
     eyebrow: 'Campus Life',
     title: 'Where character is built',
-    text: 'Cultural festivals, house sports, cadet corps and clubs — learning that reaches past the classroom.',
+    text: 'Cultural festivals, house sports, the cadet corps and clubs. Learning that reaches past the classroom.',
     to: '/campus-life',
     cta: 'Explore Campus',
   },
 ];
 
 /**
- * Hero3D — the opening plane, built as three layers travelling at different
+ * Hero3D: the opening plane, built as three layers travelling at different
  * rates inside a shared perspective, with the copy block rotating toward the
  * pointer on desktop.
  *
@@ -103,7 +103,7 @@ export function Hero3D() {
       className="relative h-[88vh] min-h-[560px] overflow-hidden bg-ink"
       style={{ perspective: allowed ? 1200 : undefined }}
     >
-      {/* Layer 1 — photograph */}
+      {/* Layer 1, photograph */}
       <motion.div
         className="absolute inset-0"
         style={allowed ? { y: bgY, scale: bgScale, rotateX: bgRotateX, transformOrigin: '50% 100%' } : undefined}
@@ -126,7 +126,7 @@ export function Hero3D() {
       {/* Ambient light falling from above the fold */}
       <LightRays intensity={0.9} />
 
-      {/* Layer 2 — gold hairline frame, sitting between the photo and the copy */}
+      {/* Layer 2, gold hairline frame, sitting between the photo and the copy */}
       {allowed && (
         <motion.div
           aria-hidden="true"
@@ -135,7 +135,7 @@ export function Hero3D() {
         />
       )}
 
-      {/* Layer 3 — copy, on its own plane */}
+      {/* Layer 3, copy, on its own plane */}
       <div className="relative z-10 h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div

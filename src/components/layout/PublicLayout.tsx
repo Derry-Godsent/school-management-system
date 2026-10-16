@@ -1,9 +1,10 @@
-import { useState, useEffect, type ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Menu, X, MapPin, Phone, Mail, Facebook, Youtube } from 'lucide-react';
 import { school } from '../../data';
 import { Portal, useScrollLock } from '../fx';
+import { InteractiveHoverButton, MagneticNavLink, ShimmerButton } from '../magic';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -58,8 +59,17 @@ function Navigation() {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
+  const navigate = useNavigate();
+
   // Freeze the page behind the open drawer.
   useScrollLock(isOpen);
+
+  // The bar compresses once the page has moved, which is what makes it read as
+  // reacting to the reader rather than sitting there.
+  const headerRef = useRef<HTMLElement>(null);
+  const { scrollY, scrollYProgress } = useScroll();
+  const barHeight = useTransform(scrollY, [0, 120], [80, 64]);
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
   // Close on route change.
   useEffect(() => {
@@ -77,15 +87,18 @@ function Navigation() {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 z-[100]">
+    <header ref={headerRef} className="sticky top-0 z-[100]">
       <nav
         data-lenis-prevent
-        className={`bg-paper/95 backdrop-blur-md border-b transition-colors ${
+        className={`relative bg-paper/95 backdrop-blur-md border-b transition-colors ${
           isHome ? 'border-transparent' : 'border-rule'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <motion.div
+            style={{ height: barHeight }}
+            className="flex items-center justify-between"
+          >
             {/* Crest */}
             <Link to="/" className="flex items-center gap-3 group">
               <span className="w-11 h-11 bg-ink flex items-center justify-center group-hover:bg-gold-deep transition-colors">
@@ -101,34 +114,30 @@ function Navigation() {
               </span>
             </Link>
 
-            {/* Desktop nav */}
+            {/* Desktop nav. Each link chases the pointer and slides its label on
+                hover, with a gold marker tracking the current page. */}
             <div className="hidden lg:flex items-center gap-7">
-              {NAV_LINKS.map(link => {
-                const active = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    aria-current={active ? 'page' : undefined}
-                    className={`line-draw text-sm transition-colors ${
-                      active
-                        ? 'text-gold-deep font-medium active'
-                        : 'text-ink-mute hover:text-ink'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
+              {NAV_LINKS.map(link => (
+                <MagneticNavLink
+                  key={link.path}
+                  to={link.path}
+                  active={location.pathname === link.path}
+                >
+                  {link.label}
+                </MagneticNavLink>
+              ))}
             </div>
 
             <div className="flex items-center gap-3">
-              <Link
-                to="/admissions"
-                className="hidden sm:inline-flex items-center px-6 py-3 bg-gold text-ink text-xs font-semibold tracking-[0.14em] uppercase hover:bg-gold-deep hover:text-paper transition-colors"
-              >
-                Apply Now
-              </Link>
+              <div className="hidden sm:block">
+                <InteractiveHoverButton
+                  tone="gold"
+                  size="sm"
+                  onClick={() => navigate('/admissions')}
+                >
+                  Apply Now
+                </InteractiveHoverButton>
+              </div>
               <button
                 onClick={() => setIsOpen(true)}
                 aria-label="Open menu"
@@ -139,8 +148,15 @@ function Navigation() {
                 <Menu size={26} />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
+
+        {/* Reading progress, riding the bottom edge of the bar. */}
+        <motion.div
+          aria-hidden="true"
+          style={{ scaleX: progress }}
+          className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-gold"
+        />
       </nav>
 
       {/* The drawer is rendered through a portal into <body>.
@@ -201,36 +217,60 @@ function Navigation() {
                 </div>
 
                 <nav className="px-5 py-4 flex-1">
-                  {NAV_LINKS.map(link => {
+                  {/* Each row slides in behind the one above it, and the gold rule
+                      under the label grows from the left on hover or press. */}
+                  {NAV_LINKS.map((link, i) => {
                     const active = location.pathname === link.path;
                     return (
-                      <Link
+                      <motion.div
                         key={link.path}
-                        to={link.path}
-                        onClick={() => setIsOpen(false)}
-                        aria-current={active ? 'page' : undefined}
-                        className={`flex items-center justify-between min-h-[56px] border-b border-rule font-display text-lg transition-colors ${
-                          active ? 'text-gold-deep' : 'text-ink'
-                        }`}
+                        initial={{ opacity: 0, x: -22 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: 0.06 + i * 0.045,
+                          duration: 0.42,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                       >
-                        {link.label}
-                        <span
-                          className={`w-1.5 h-1.5 ${active ? 'bg-gold' : 'bg-transparent'}`}
-                          aria-hidden="true"
-                        />
-                      </Link>
+                        <Link
+                          to={link.path}
+                          onClick={() => setIsOpen(false)}
+                          aria-current={active ? 'page' : undefined}
+                          className="group relative flex items-center justify-between min-h-[56px] border-b border-rule font-display text-lg"
+                        >
+                          <span
+                            className={`transition-transform duration-300 group-hover:translate-x-1 ${
+                              active ? 'text-gold-deep' : 'text-ink'
+                            }`}
+                          >
+                            {link.label}
+                          </span>
+                          <span
+                            aria-hidden="true"
+                            className={`h-1.5 w-1.5 transition-transform duration-300 ${
+                              active
+                                ? 'scale-100 bg-gold'
+                                : 'scale-0 bg-gold group-hover:scale-100'
+                            }`}
+                          />
+                          <span
+                            aria-hidden="true"
+                            className={`absolute bottom-0 left-0 h-[2px] bg-gold transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                              active ? 'w-full' : 'w-0 group-hover:w-full'
+                            }`}
+                          />
+                        </Link>
+                      </motion.div>
                     );
                   })}
                 </nav>
 
                 <div className="px-5 pb-8 pt-2 shrink-0">
-                  <Link
-                    to="/admissions"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center min-h-[54px] bg-gold text-ink text-xs font-semibold tracking-[0.16em] uppercase"
-                  >
-                    Apply Now
-                  </Link>
+                  <div className="[&>div]:block [&_button]:w-full">
+                    <ShimmerButton onClick={() => { setIsOpen(false); navigate('/admissions'); }}>
+                      Apply Now
+                    </ShimmerButton>
+                  </div>
 
                   <div className="mt-6 pt-5 border-t border-rule">
                     <Link
@@ -319,8 +359,8 @@ function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                'Pre-School (KG 1 – KG 2)',
-                'Primary (P1 – P6)',
+                'Pre-School (KG 1 to KG 2)',
+                'Primary (P1 to P6)',
                 'Junior High School',
                 'Cambridge Enrichment',
               ].map(item => (
