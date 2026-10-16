@@ -193,7 +193,7 @@ function Navigation() {
                 className="fixed inset-y-0 left-0 z-[410] w-[86%] max-w-sm bg-paper lg:hidden overflow-y-auto overscroll-contain flex flex-col"
                 style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
               >
-                <div className="flex items-center justify-between h-20 px-5 border-b border-rule shrink-0">
+                <div className="flex items-center justify-between h-20 px-5 shrink-0">
                   <span className="flex items-center gap-3">
                     <span className="w-10 h-10 bg-ink flex items-center justify-center">
                       <span className="font-display text-paper font-bold text-sm">MG</span>
@@ -236,7 +236,7 @@ function Navigation() {
                           to={link.path}
                           onClick={() => setIsOpen(false)}
                           aria-current={active ? 'page' : undefined}
-                          className="group relative flex items-center justify-between min-h-[56px] border-b border-rule font-display text-lg"
+                          className="group relative flex items-center justify-between min-h-[56px] font-display text-lg"
                         >
                           <span
                             className={`transition-transform duration-300 group-hover:translate-x-1 ${
@@ -272,7 +272,7 @@ function Navigation() {
                     </ShimmerButton>
                   </div>
 
-                  <div className="mt-6 pt-5 border-t border-rule">
+                  <div className="mt-8">
                     <Link
                       to="/parent"
                       onClick={() => setIsOpen(false)}

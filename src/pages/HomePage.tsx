@@ -3,7 +3,7 @@ import { ArrowRight, Calendar, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { MessagesSection } from '../components/sections/MessagesSection';
 import { Hero3D } from '../components/sections/Hero3D';
 import { Ecosystem } from '../components/sections/Ecosystem';
-import { Reveal3D, DepthImage, SectionEdge } from '../components/fx';
+import { Reveal3D, DepthImage } from '../components/fx';
 import {
   Highlighter,
   InteractiveHoverButton,
@@ -60,10 +60,10 @@ function StatValue({ value, suffix }: { value: number; suffix?: string }) {
 
 function StatsBand() {
   return (
-    <section className="bg-ink border-t-4 border-gold">
+    <section className="bg-ink-soft">
       <Reveal3D y={30} rotate={8}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <dl className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-paper/10 lg:divide-y-0">
+        <dl className="grid grid-cols-2 lg:grid-cols-4">
           {schoolStats.map((stat, i) => (
             <div
               key={stat.label}
@@ -92,7 +92,6 @@ function WelcomeBand() {
 
   return (
     <section className="bg-paper py-20 sm:py-28">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <figure className="lg:col-span-5 relative">
@@ -156,7 +155,6 @@ function NewsBand() {
 
   return (
     <section className="bg-cream py-20 sm:py-28">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
@@ -210,7 +208,7 @@ function NewsBand() {
 
           {/* Secondary list, hairlines, not cards */}
           <div className="lg:col-span-5">
-            <div className="divide-y divide-rule border-t border-rule">
+            <div>
               {recent.map(item => (
                 <Link key={item.id} to="/news" className="group block py-7">
                   <div className="flex items-center gap-4">
@@ -248,7 +246,6 @@ function CampusStrip() {
 
   return (
     <section className="bg-paper py-20 sm:py-28">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
@@ -301,7 +298,6 @@ function UpdatesBand() {
 
   return (
     <section className="bg-cream py-20 sm:py-28">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20">
@@ -311,7 +307,7 @@ function UpdatesBand() {
             <h2 className="mt-6 font-display text-3xl font-bold text-ink mb-10">
               What&apos;s coming up
             </h2>
-            <ul className="divide-y divide-rule border-t border-rule">
+            <ul>
               {upcomingEvents.map(event => (
                 <li key={event.id} className="flex items-center gap-6 py-5">
                   <Calendar size={16} className="text-gold shrink-0" aria-hidden="true" />
@@ -357,7 +353,6 @@ function VisitBand() {
   const navigate = useNavigate();
   return (
     <section className="bg-ink text-paper/80">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
@@ -406,7 +401,7 @@ function VisitBand() {
           </div>
         </div>
 
-        <div className="mt-14 pt-10 border-t border-paper/15 flex flex-wrap items-center justify-between gap-6">
+        <div className="mt-16 flex flex-wrap items-center justify-between gap-6">
           <p className="font-display text-2xl sm:text-3xl text-paper">
             Come and see the school for yourself.
           </p>

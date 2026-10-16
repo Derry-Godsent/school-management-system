@@ -8,7 +8,7 @@ import {
   DiaTextReveal,
   Floating3DParticles,
 } from '../magic';
-import { Reveal3D, SectionEdge } from '../fx';
+import { Reveal3D } from '../fx';
 import { ROLES } from '../magic/EcosystemPortals';
 
 /**
@@ -27,7 +27,6 @@ export function Ecosystem() {
 
   return (
     <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-      <SectionEdge />
       <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -117,7 +116,7 @@ export function Ecosystem() {
               />
             </div>
 
-            <div className="mt-10 grid gap-10 border-t border-paper/15 pt-10 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-12">
+            <div className="mt-12 grid gap-10 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-12">
               <AnimatedGauge
                 value={100}
                 label="BECE Pass Rate"
@@ -152,7 +151,7 @@ export function Ecosystem() {
             <DeviceFrame>
               <div className="bg-cream p-4">
                 {/* Mini portal header */}
-                <div className="flex items-center justify-between border-b border-rule pb-3">
+                <div className="flex items-center justify-between pb-3">
                   <div>
                     <p className="font-display text-sm font-bold text-ink">Good morning</p>
                     <p className="text-[0.625rem] text-ink-mute">Mrs. Yaa Boateng</p>
@@ -174,7 +173,7 @@ export function Ecosystem() {
                     { label: 'Average', value: '82%' },
                     { label: 'Attendance', value: '96%' },
                   ].map(stat => (
-                    <div key={stat.label} className="border-t-2 border-gold pt-2">
+                    <div key={stat.label} className="bg-ink px-2 py-1.5">
                       <p className="text-[0.625rem] uppercase tracking-[0.14em] text-ink-mute">
                         {stat.label}
                       </p>
@@ -202,7 +201,7 @@ export function Ecosystem() {
                 <p className="mt-4 text-[0.625rem] uppercase tracking-[0.16em] text-gold-deep">
                   Recent results
                 </p>
-                <ul className="mt-2 divide-y divide-rule border-t border-rule">
+                <ul className="mt-2 space-y-0.5">
                   {[
                     ['Integrated Science', 'A1'],
                     ['Mathematics', 'B2'],

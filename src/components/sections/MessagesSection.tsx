@@ -1,5 +1,5 @@
 import { leadershipMessages } from '../../data';
-import { Reveal3D, Tilt3D, DepthImage, SectionEdge } from '../fx';
+import { Reveal3D, Tilt3D, DepthImage } from '../fx';
 
 /**
  * MessagesSection: portraits paired with a written message from each of the
@@ -12,7 +12,6 @@ import { Reveal3D, Tilt3D, DepthImage, SectionEdge } from '../fx';
 export function MessagesSection() {
   return (
     <section className="bg-cream py-20 sm:py-28">
-      <SectionEdge />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl mb-16 sm:mb-24">
           <span className="eyebrow">Message from:</span>
@@ -69,7 +68,7 @@ export function MessagesSection() {
                     imageFirst ? 'lg:order-2 lg:col-start-7' : 'lg:order-1 lg:col-start-1',
                   ].join(' ')}
                 >
-                  <blockquote className="border-t border-rule pt-8">
+                  <blockquote>
                     <p className="font-display text-2xl sm:text-3xl leading-snug text-ink italic">
                       &ldquo;{person.quote}&rdquo;
                     </p>
@@ -86,7 +85,7 @@ export function MessagesSection() {
                     ))}
                   </div>
 
-                  <p className="mt-8 pt-6 border-t border-rule font-display text-sm text-ink">
+                  <p className="mt-10 font-display text-sm text-ink">
                     {person.name}
                     <span className="block text-xs tracking-[0.14em] uppercase text-gold-deep mt-1">
                       {person.role}
