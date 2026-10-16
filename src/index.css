@@ -537,6 +537,13 @@ html.lenis body {
 .tilt-plane {
   transform-style: preserve-3d;
   will-change: transform;
+  /* A press inside a control must never start a text selection. Without this,
+     dragging even a pixel while pressing selected the label instead of firing
+     the click, so the button appeared to select itself before it opened. */
+  user-select: none;
+  -webkit-user-select: none;
+  /* Removes the 300ms tap delay and the double tap zoom on a control. */
+  touch-action: manipulation;
 }
 
 /* Anything that should sit above the spotlight. */

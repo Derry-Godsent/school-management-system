@@ -94,6 +94,8 @@ interface Entry {
 
 const registry = new Set<Entry>();
 let pending: { x: number; y: number } | null = null;
+/** True while a button is held down. See drive(): translation stops on press. */
+let pressed = false;
 let frame = 0;
 let settleTimer: ReturnType<typeof setTimeout> | null = null;
 let installed = false;
@@ -103,6 +105,19 @@ const clamp = (value: number, low: number, high: number) =>
 
 function stageOf(node: HTMLElement): HTMLElement {
   return (node.closest('.tilt-stage') as HTMLElement | null) ?? node;
+}
+
+/**
+ * While the pointer is pressed on an element, the element stops translating and
+ * holds still under the cursor. This was a genuine usability bug: the element
+ * stepped away from the pointer as the pointer approached, so the press landed
+ * where the element had been and the click did nothing, and a second attempt was
+ * needed. Rotation, lift and growth all keep the centre of the box where it is,
+ * and growth makes the target bigger, so only the translation has to stop.
+ */
+function holdStill(entry: Entry) {
+  entry.springs.shiftX.set(0);
+  entry.springs.shiftY.set(0);
 }
 
 function park(entry: Entry) {
@@ -137,7 +152,8 @@ function drive(entry: Entry, rect: DOMRect, x: number, y: number) {
   const ny = clamp((y - (rect.top + halfHeight)) / halfHeight, -OVERREACH, OVERREACH);
 
   const tilt = maxTilt * amount;
-  const shift = maxShift * amount;
+  // No translation at all while the pointer is pressed.
+  const shift = pressed ? 0 : maxShift * amount;
   const height = lift * amount;
 
   // The light stays on the face, so its position is clamped to the box.
@@ -210,6 +226,14 @@ function onPointer(event: PointerEvent) {
     clearTimeout(settleTimer);
     settleTimer = null;
   }
+  if (event.type === 'pointerdown') {
+    pressed = true;
+    // Settle the shift immediately rather than over a spring, so the element is
+    // already still by the time the press completes.
+    for (const entry of registry) if (entry.lit) holdStill(entry);
+  } else if (event.type === 'pointerup' || event.type === 'pointercancel') {
+    pressed = false;
+  }
   pending = { x: event.clientX, y: event.clientY };
   if (event.pointerType === 'touch' && event.type === 'pointerup') {
     settleTimer = setTimeout(() => {
@@ -235,6 +259,7 @@ function install() {
   document.addEventListener('pointermove', onPointer, { passive: true });
   document.addEventListener('pointerdown', onPointer, { passive: true });
   document.addEventListener('pointerup', onPointer, { passive: true });
+  document.addEventListener('pointercancel', onPointer, { passive: true });
   window.addEventListener('scroll', recheck, { passive: true, capture: true });
   window.addEventListener('resize', recheck);
   window.addEventListener('blur', onEscape);
@@ -249,6 +274,7 @@ function uninstall() {
   document.removeEventListener('pointermove', onPointer);
   document.removeEventListener('pointerdown', onPointer);
   document.removeEventListener('pointerup', onPointer);
+  document.removeEventListener('pointercancel', onPointer);
   window.removeEventListener('scroll', recheck, { capture: true } as EventListenerOptions);
   window.removeEventListener('resize', recheck);
   window.removeEventListener('blur', onEscape);
@@ -261,8 +287,12 @@ function uninstall() {
 export function usePointerFx({
   /** Lean, in degrees, when the pointer is on an edge of the element. */
   maxTilt = 18,
-  /** Pixels to step toward the pointer. */
-  maxShift = 8,
+  /**
+   * Pixels to step toward the pointer. Kept small on purpose: the lean, the
+   * lift and the growth carry the effect, and a large step makes the element
+   * awkward to aim at. It is also dropped to zero entirely while pressed.
+   */
+  maxShift = 5,
   /** Pixels to rise toward the viewer while engaged. */
   lift = 30,
   /** Grow to this factor while engaged. Set to 1 to disable. */

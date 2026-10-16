@@ -187,7 +187,10 @@ export function LoginScreen({
               </span>
             </label>
 
-            <InteractiveHoverButton type="submit" full tone="gold" className="w-full">
+            {/* Deliberately still: a button that moves while you aim at it is a
+                button people fail to press. The portal is where a parent signs
+                in, so it is the last place to be clever. */}
+            <InteractiveHoverButton type="submit" full tone="gold" magnetic={false} className="w-full">
               Sign in
             </InteractiveHoverButton>
           </form>

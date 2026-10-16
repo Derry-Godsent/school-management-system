@@ -126,7 +126,7 @@ export function InteractiveHoverButton({
           onClick={onClick}
           className={cn(
             'group relative inline-flex items-center justify-center gap-3 overflow-hidden',
-            'font-semibold tracking-[0.16em] uppercase transition-colors duration-500',
+            'select-none font-semibold tracking-[0.16em] uppercase transition-colors duration-500',
             SIZE[size],
             FILL[tone],
             hovered ? TEXT[tone].hover : TEXT[tone].rest
@@ -193,7 +193,7 @@ export function ShimmerButton({
           onClick={onClick}
           className={cn(
             'group relative inline-flex items-center justify-center overflow-hidden',
-            'bg-ink font-semibold tracking-[0.16em] uppercase text-paper',
+            'select-none bg-ink font-semibold tracking-[0.16em] uppercase text-paper',
             'transition-transform duration-300',
             SIZE[size]
           )}
@@ -265,7 +265,7 @@ export function MagneticNavLink({
         <Link
           to={to}
           aria-current={active ? 'page' : undefined}
-          className="relative block px-4 py-2 text-sm"
+          className="relative block select-none px-4 py-2 text-sm"
         >
           <span
             className={cn(

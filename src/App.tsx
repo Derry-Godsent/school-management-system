@@ -11,15 +11,18 @@ import NewsPage from './pages/public/NewsPage';
 import ContactPage from './pages/public/ContactPage';
 import CampusLifePage from './pages/public/CampusLifePage';
 import NotFoundPage from './pages/public/NotFoundPage';
-import {
-  AuthProvider,
-  ParentLayout,
-  ParentDashboard,
-  ResultsPage,
-  AttendancePage,
-  FeesPage,
-  AnnouncementsPage,
-} from './pages/ParentPortal';
+// Imported by full path on purpose. A legacy file called parent.tsx still sits
+// in src/pages, and it shadows the parent/ folder, so a bare './pages/parent'
+// would quietly import the old page instead of the portal.
+import { ParentAuthProvider } from './pages/parent/AuthContext';
+import { PortalShell } from './pages/parent/PortalShell';
+import HomeScreen from './pages/parent/screens/Home';
+import GradesScreen from './pages/parent/screens/Grades';
+import AttendanceScreen from './pages/parent/screens/Attendance';
+import FeesScreen from './pages/parent/screens/Fees';
+import NoticesScreen from './pages/parent/screens/Notices';
+import ClassListScreen from './pages/parent/screens/ClassList';
+import ProfileScreen from './pages/parent/screens/Profile';
 import {
   AdminAuthProvider,
   AdminLayout,
@@ -107,57 +110,25 @@ export default function App() {
           }
         />
 
-        {/* Parent Portal */}
+        {/* Parent Portal. One shell holds the app bar, the child switcher,
+            the rail and the tab bar, and the screens change inside it, which
+            is how an app behaves and keeps the chosen child between pages. */}
         <Route
           path="/parent"
           element={
-            <AuthProvider>
-              <ParentLayout>
-                <ParentDashboard />
-              </ParentLayout>
-            </AuthProvider>
+            <ParentAuthProvider>
+              <PortalShell />
+            </ParentAuthProvider>
           }
-        />
-        <Route
-          path="/parent/results"
-          element={
-            <AuthProvider>
-              <ParentLayout>
-                <ResultsPage />
-              </ParentLayout>
-            </AuthProvider>
-          }
-        />
-        <Route
-          path="/parent/attendance"
-          element={
-            <AuthProvider>
-              <ParentLayout>
-                <AttendancePage />
-              </ParentLayout>
-            </AuthProvider>
-          }
-        />
-        <Route
-          path="/parent/fees"
-          element={
-            <AuthProvider>
-              <ParentLayout>
-                <FeesPage />
-              </ParentLayout>
-            </AuthProvider>
-          }
-        />
-        <Route
-          path="/parent/announcements"
-          element={
-            <AuthProvider>
-              <ParentLayout>
-                <AnnouncementsPage />
-              </ParentLayout>
-            </AuthProvider>
-          }
-        />
+        >
+          <Route index element={<HomeScreen />} />
+          <Route path="class" element={<ClassListScreen />} />
+          <Route path="results" element={<GradesScreen />} />
+          <Route path="attendance" element={<AttendanceScreen />} />
+          <Route path="fees" element={<FeesScreen />} />
+          <Route path="announcements" element={<NoticesScreen />} />
+          <Route path="profile" element={<ProfileScreen />} />
+        </Route>
 
         {/* Admin Portal */}
         <Route
