@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { usePointerFx } from './usePointerFx';
-import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
+import { useDeviceTier } from '../../lib/useDeviceTier';
 
 interface ButtonProps {
   children: ReactNode;
@@ -48,18 +48,31 @@ const FLOOD: Record<NonNullable<ButtonProps['tone']>, string> = {
 };
 
 /**
- * The pool of light that follows the cursor. Sits above the fill and below the
- * label, and fades in on hover.
+ * The light layer: a pool that follows the cursor, plus a sweep for touch
+ * devices, which have no cursor for a pool to follow.
+ *
+ * The pool's visibility is driven by a `--on` custom property rather than the
+ * `group-hover` class, because hover never fires on a touch screen and the
+ * effect has to work there too. usePointerFx sets `--on` on pointerenter,
+ * pointerover and pointerdown, so a tap lights the button as well.
  */
-function Spotlight({ className = '' }: { className?: string }) {
+function Spotlight({ sweep = false }: { sweep?: boolean }) {
   return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'spotlight-layer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100',
-        className
-      )}
-    />
+    <>
+      <span
+        aria-hidden="true"
+        className="spotlight-layer spot-soft-white pointer-events-none absolute inset-0 opacity-[var(--on,0)] transition-opacity duration-300 mix-blend-plus-lighter"
+        style={{ '--on': 0 } as React.CSSProperties}
+      />
+      {sweep ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-plus-lighter"
+        >
+          <span className="glow-sweep absolute inset-y-0 -left-1/3 w-1/3 bg-[radial-gradient(closest-side,rgba(255,255,255,0.5),transparent)]" />
+        </span>
+      ) : null}
+    </>
   );
 }
 
@@ -79,17 +92,21 @@ export function InteractiveHoverButton({
   size = 'md',
 }: ButtonProps) {
   const tier = useDeviceTier();
-  const allowed = useMotionAllowed(tier);
-  const { ref, active, style } = usePointerFx({ maxTilt: magnetic ? 7 : 0 });
+  const { ref, spotlightOn, style } = usePointerFx({
+    maxTilt: magnetic ? 14 : 0,
+    scaleTo: magnetic ? 1.04 : 1,
+  });
   const [hovered, setHovered] = useState(false);
+  // No cursor to follow, so the light sweeps across instead.
+  const needsSweep = tier.ready && !tier.canHover;
 
   return (
     <div className={cn('tilt-stage inline-block', className)}>
       <motion.div
         ref={ref}
-        style={active ? style : undefined}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        style={style}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
         className="tilt-plane inline-block"
       >
         <button
@@ -117,7 +134,7 @@ export function InteractiveHoverButton({
                 : { left: '0.75rem', width: '0.5rem', height: '0.5rem' }
             }
           />
-          {allowed ? <Spotlight className="mix-blend-plus-lighter" /> : null}
+          {spotlightOn ? <Spotlight sweep={needsSweep} /> : null}
           <span className="relative z-10 flex items-center gap-3">
             <span className="transition-transform duration-500 group-hover:-translate-x-1">
               {children}
@@ -145,12 +162,15 @@ export function ShimmerButton({
   size = 'md',
 }: ButtonProps) {
   const tier = useDeviceTier();
-  const allowed = useMotionAllowed(tier);
-  const { ref, active, style } = usePointerFx({ maxTilt: magnetic ? 6 : 0 });
+  const { ref, spotlightOn, style } = usePointerFx({
+    maxTilt: magnetic ? 10 : 0,
+    scaleTo: magnetic ? 1.03 : 1,
+  });
+  const needsSweep = tier.ready && !tier.canHover;
 
   return (
     <div className={cn('tilt-stage inline-block', className)}>
-      <motion.div ref={ref} style={active ? style : undefined} className="tilt-plane inline-block">
+      <motion.div ref={ref} style={style} className="tilt-plane inline-block">
         <button
           type="button"
           onClick={onClick}
@@ -167,7 +187,7 @@ export function ShimmerButton({
             className="absolute inset-0 border border-gold/0 transition-colors duration-500 group-hover:border-gold/70"
           />
           <span aria-hidden="true" className="shimmer-sweep pointer-events-none absolute inset-0" />
-          {allowed ? <Spotlight className="mix-blend-plus-lighter" /> : null}
+          {spotlightOn ? <Spotlight sweep={needsSweep} /> : null}
           <span className="relative z-10">{children}</span>
         </button>
       </motion.div>
@@ -202,14 +222,11 @@ export function MagneticNavLink({
   onEnter?: () => void;
   highlightId?: string;
 }) {
-  const tier = useDeviceTier();
-  const allowed = useMotionAllowed(tier);
-  const { ref, active: fxOn, style } = usePointerFx({ maxTilt: 6 });
-  void active;
+  const { ref, style } = usePointerFx({ maxTilt: 9 });
 
   return (
-    <span ref={ref} className="tilt-stage inline-block" onMouseEnter={onEnter}>
-      <motion.span style={fxOn ? style : undefined} className="tilt-plane relative inline-block">
+    <span ref={ref} className="tilt-stage inline-block" onPointerEnter={onEnter}>
+      <motion.span style={style} className="tilt-plane relative inline-block">
         {lit ? (
           <motion.span
             layoutId={highlightId}

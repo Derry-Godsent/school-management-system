@@ -43,8 +43,8 @@ function PortalChip({
   tone: 'purple' | 'orange';
 }) {
   const tier = useDeviceTier();
-  const allowed = useMotionAllowed(tier);
-  const { ref, active, style } = usePointerFx({ maxTilt: 10 });
+  const { ref, spotlightOn, style } = usePointerFx({ maxTilt: 16, scaleTo: 1.06 });
+  const needsSweep = tier.ready && !tier.canHover;
 
   const fill =
     tone === 'purple'
@@ -58,7 +58,7 @@ function PortalChip({
 
   return (
     <div className="tilt-stage inline-block">
-      <motion.div ref={ref} style={active ? style : undefined} className="tilt-plane inline-block">
+      <motion.div ref={ref} style={style} className="tilt-plane inline-block">
         <Link
           to={to}
           style={{ ['--spot' as string]: spot }}
@@ -72,11 +72,19 @@ function PortalChip({
             className="relative z-10 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
             aria-hidden="true"
           />
-          {allowed ? (
+          {spotlightOn ? (
             <span
               aria-hidden="true"
-              className="spotlight-layer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 mix-blend-plus-lighter"
+              className={`spotlight-layer pointer-events-none absolute inset-0 opacity-[var(--on,0)] transition-opacity duration-300 mix-blend-plus-lighter ${
+                tone === 'purple' ? 'spot-soft-purple' : 'spot-soft-orange'
+              }`}
+              style={{ '--on': 0 } as React.CSSProperties}
             />
+          ) : null}
+          {needsSweep ? (
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-plus-lighter">
+              <span className="glow-sweep absolute inset-y-0 -left-1/3 w-1/3 bg-[radial-gradient(closest-side,rgba(255,255,255,0.55),transparent)]" />
+            </span>
           ) : null}
         </Link>
       </motion.div>
