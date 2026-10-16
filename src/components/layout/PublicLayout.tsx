@@ -6,7 +6,7 @@ import { school } from '../../data';
 import { Portal, useScrollLock } from '../fx';
 import { InteractiveHoverButton, MagneticNavLink, ShimmerButton } from '../magic';
 import { usePointerFx } from '../magic/usePointerFx';
-import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
+import { useDeviceTier } from '../../lib/useDeviceTier';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -43,7 +43,7 @@ function PortalChip({
   tone: 'purple' | 'orange';
 }) {
   const tier = useDeviceTier();
-  const { ref, spotlightOn, style } = usePointerFx({ maxTilt: 16, scaleTo: 1.06 });
+  const { ref, spotlightOn, style } = usePointerFx({ maxTilt: 20, maxShift: 5, lift: 22, scaleTo: 1.03 });
   const needsSweep = tier.ready && !tier.canHover;
 
   const fill =
@@ -134,7 +134,7 @@ function ContactBar() {
           </div>
 
           {/* Portal gateways */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <PortalChip
               to="/parent"
               label="Parent Portal"

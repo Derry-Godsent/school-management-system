@@ -92,10 +92,14 @@ export function InteractiveHoverButton({
   size = 'md',
 }: ButtonProps) {
   const tier = useDeviceTier();
-  const { ref, spotlightOn, style } = usePointerFx({
-    maxTilt: magnetic ? 14 : 0,
-    scaleTo: magnetic ? 1.04 : 1,
-  });
+  // The strongest setting on the site: this is the button the user pointed at
+  // when asking for the effect, so it leads. `magnetic={false}` still means no
+  // movement at all, for any caller that needs a still button.
+  const { ref, spotlightOn, style } = usePointerFx(
+    magnetic
+      ? { maxTilt: 18, maxShift: 6, lift: 20, scaleTo: 1.04 }
+      : { maxTilt: 0, maxShift: 0, lift: 0, scaleTo: 1 }
+  );
   const [hovered, setHovered] = useState(false);
   // No cursor to follow, so the light sweeps across instead.
   const needsSweep = tier.ready && !tier.canHover;
@@ -162,10 +166,11 @@ export function ShimmerButton({
   size = 'md',
 }: ButtonProps) {
   const tier = useDeviceTier();
-  const { ref, spotlightOn, style } = usePointerFx({
-    maxTilt: magnetic ? 10 : 0,
-    scaleTo: magnetic ? 1.03 : 1,
-  });
+  const { ref, spotlightOn, style } = usePointerFx(
+    magnetic
+      ? { maxTilt: 16, maxShift: 6, lift: 18, scaleTo: 1.04 }
+      : { maxTilt: 0, maxShift: 0, lift: 0, scaleTo: 1 }
+  );
   const needsSweep = tier.ready && !tier.canHover;
 
   return (
@@ -222,7 +227,9 @@ export function MagneticNavLink({
   onEnter?: () => void;
   highlightId?: string;
 }) {
-  const { ref, style } = usePointerFx({ maxTilt: 9 });
+  // The gentle end of the range: a nav row is a tight cluster, so the tilt is
+  // visible but the shift stays under the gap between items.
+  const { ref, style } = usePointerFx({ maxTilt: 12, maxShift: 3, lift: 12, scaleTo: 1 });
 
   return (
     <span ref={ref} className="tilt-stage inline-block" onPointerEnter={onEnter}>

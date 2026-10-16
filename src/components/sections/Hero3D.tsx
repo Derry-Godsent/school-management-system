@@ -169,11 +169,12 @@ export function Hero3D() {
                 <p className="mt-5 text-base sm:text-xl text-paper leading-relaxed max-w-2xl">
                   {slide.text}
                 </p>
-                <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-                  {/* These two tilt and catch the light under the cursor, but
-                      never translate. Rotation leaves their layout boxes exactly
-                      12px apart, so they cannot be brought together however the
-                      cursor moves. */}
+                <div className="mt-9 flex flex-wrap items-center gap-4 sm:gap-5">
+                  {/* Both answer the pointer: they tilt toward it, step a few
+                      pixels after it, rise toward the viewer, and catch the
+                      light. Only the one under the pointer ever moves, and the
+                      gap here is wider than the furthest it can reach, so the
+                      two can never touch. See usePointerFx for the budget. */}
                   <InteractiveHoverButton
                     tone="gold"
                     onClick={() => navigate(slide.to)}
