@@ -10,17 +10,26 @@
    ========================================================================== */
 
 @theme {
-  /* Palette */
-  --color-ink: #101010;
-  --color-ink-soft: #1c1c1c;
+  /* Palette
+     These are the school's own colours, not a scheme invented for the site:
+     the orange and the deep orange below are the two values the original
+     design used, and the ink and cream are its two neutrals.
+
+     The accent tokens are still named `gold`, `gold-deep` and `gold-pale` from
+     an earlier pass. The names are kept deliberately: Tailwind derives a utility
+     for each token, so renaming them would mean editing every `bg-gold` and
+     `text-gold-deep` on the site, and a single missed class would silently
+     render nothing rather than fail the build. Read them as `accent`,
+     `accent-deep` and `accent-pale`. */
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #2a2a2a;
   --color-ink-mute: #3d3d3d;
-  --color-gold: #c9a227;
-  --color-gold-deep: #a8871b;
-  --color-gold-pale: #f3ead2;
-  --color-cream: #faf8f3;
+  --color-gold: #e85d04;
+  --color-gold-deep: #dc4a03;
+  --color-gold-pale: #fdeee2;
+  --color-cream: #fafaf7;
   --color-paper: #ffffff;
-  --color-rule: #e2ded4;
-  --color-brick: #8c3a1e;
+  --color-rule: #e8e6e1;
 
   /* Type */
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -182,9 +191,9 @@ h4,
 .scrim {
   background: linear-gradient(
     to top,
-    rgba(16, 16, 16, 0.9) 0%,
-    rgba(16, 16, 16, 0.45) 45%,
-    rgba(16, 16, 16, 0.15) 100%
+    rgba(26, 26, 26, 0.9) 0%,
+    rgba(26, 26, 26, 0.45) 45%,
+    rgba(26, 26, 26, 0.15) 100%
   );
 }
 
@@ -314,9 +323,9 @@ html.lenis body {
   background: linear-gradient(
     100deg,
     transparent 20%,
-    rgba(201, 162, 39, 0.16) 40%,
-    rgba(243, 234, 210, 0.5) 50%,
-    rgba(201, 162, 39, 0.16) 60%,
+    rgba(232, 93, 4, 0.16) 40%,
+    rgba(253, 238, 226, 0.5) 50%,
+    rgba(232, 93, 4, 0.16) 60%,
     transparent 80%
   );
   animation: shimmer-sweep 3.4s ease-in-out infinite;
@@ -383,8 +392,8 @@ html.lenis body {
   transform-origin: top center;
   background: linear-gradient(
     to bottom,
-    rgba(243, 234, 210, 0.34) 0%,
-    rgba(201, 162, 39, 0.12) 45%,
+    rgba(253, 238, 226, 0.34) 0%,
+    rgba(232, 93, 4, 0.12) 45%,
     transparent 100%
   );
   filter: blur(22px);

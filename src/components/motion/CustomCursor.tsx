@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /** Crest gold, matching the brand palette in index.css. */
-const GOLD = '#c9a227';
+const GOLD = '#e85d04';
 
 export function CustomCursor() {
   const cursorX = useMotionValue(-100);

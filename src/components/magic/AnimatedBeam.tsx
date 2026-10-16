@@ -39,8 +39,8 @@ export function AnimatedBeam({
   reverse = false,
   duration = 3,
   delay = 0,
-  gradientFrom = '#c9a227',
-  gradientTo = '#f3ead2',
+  gradientFrom = '#e85d04',
+  gradientTo = '#fdeee2',
 }: AnimatedBeamProps) {
   const tier = useDeviceTier();
   const allowed = useMotionAllowed(tier);
@@ -107,7 +107,7 @@ export function AnimatedBeam({
       </defs>
 
       {/* The track */}
-      <path d={path} stroke="#e2ded4" strokeWidth="1.5" strokeDasharray="5 5" />
+      <path d={path} stroke="#e8e6e1" strokeWidth="1.5" strokeDasharray="5 5" />
 
       {/* The lit run, revealed progressively */}
       <path

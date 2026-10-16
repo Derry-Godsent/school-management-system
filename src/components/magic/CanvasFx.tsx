@@ -20,7 +20,7 @@ interface Particle {
 
 export function Floating3DParticles({
   quantity = 120,
-  color = '#c9a227',
+  color = '#e85d04',
   className = '',
   /** 0 = flat, 1 = strong depth response */
   depth = 0.8,

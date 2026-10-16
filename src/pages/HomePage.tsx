@@ -114,7 +114,7 @@ function WelcomeBand() {
             <Reveal3D y={40} delay={0.1}>
             <span className="eyebrow">Welcome</span>
             <h2 className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-ink leading-tight">
-              Welcome to <Highlighter color="#c9a227">{school.name}</Highlighter>
+              Welcome to <Highlighter color="#e85d04">{school.name}</Highlighter>
             </h2>
             <div className="mt-8 space-y-5 text-ink-mute leading-relaxed">
               <p className="dropcap text-ink/85">

@@ -74,7 +74,7 @@ export function DeviceFrame({
   const shellTone =
     tone === 'silver'
       ? 'bg-gradient-to-b from-[#e9e9ea] to-[#c8c8cc] text-ink'
-      : 'bg-gradient-to-b from-[#2a2a2c] to-[#101010] text-paper';
+      : 'bg-gradient-to-b from-[#2a2a2c] to-[#1a1a1a] text-paper';
 
   return (
     <div className={cn('relative mx-auto w-full max-w-[280px]', className)}>

@@ -4,7 +4,7 @@ import { Sphere, MeshDistortMaterial, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 /** Crest gold, matching the brand palette in index.css. */
-const GOLD = '#c9a227';
+const GOLD = '#e85d04';
 
 function AnimatedSphere() {
   const meshRef = useRef<THREE.Mesh>(null);

@@ -11,7 +11,7 @@ import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 export function Highlighter({
   children,
   action = 'highlight',
-  color = '#c9a227',
+  color = '#e85d04',
   className = '',
   delay = 0,
 }: {
