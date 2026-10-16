@@ -134,14 +134,19 @@ function AdminLayout({ children }: { children: ReactNode }) {
 
   const staffMember = staff.find(s => s.id === auth.staffId);
 
+  // `built` marks the destinations that actually have a route. The rest are
+  // listed so the shape of the portal is visible, but they render as plain
+  // disabled rows rather than links. As links they pointed at paths no route
+  // matched, so clicking one fell through to the catch-all and quietly served
+  // the school's public homepage, which read as the portal being broken.
   const navItems = [
-    { path: '/admin', icon: Home, label: 'Dashboard' },
-    { path: '/admin/students', icon: Users, label: 'Students' },
-    { path: '/admin/admissions', icon: GraduationCap, label: 'Admissions' },
-    { path: '/admin/fees', icon: CreditCard, label: 'Fees' },
-    { path: '/admin/results', icon: FileText, label: 'Results' },
-    { path: '/admin/attendance', icon: Clock, label: 'Attendance' },
-    { path: '/admin/communications', icon: Bell, label: 'Communications' },
+    { path: '/admin', icon: Home, label: 'Dashboard', built: true },
+    { path: '/admin/students', icon: Users, label: 'Students', built: true },
+    { path: '/admin/admissions', icon: GraduationCap, label: 'Admissions', built: false },
+    { path: '/admin/fees', icon: CreditCard, label: 'Fees', built: false },
+    { path: '/admin/results', icon: FileText, label: 'Results', built: false },
+    { path: '/admin/attendance', icon: Clock, label: 'Attendance', built: false },
+    { path: '/admin/communications', icon: Bell, label: 'Communications', built: false },
   ];
 
   const pendingAdmissions = admissionApplications.filter(a => a.status === 'pending').length;
@@ -192,28 +197,49 @@ function AdminLayout({ children }: { children: ReactNode }) {
               </div>
             )}
             <nav className="space-y-1">
-              {navItems.map(item => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-3 text-sm font-medium transition-colors ${
-                    location.pathname === item.path
-                      ? 'bg-gold/10 text-gold-deep'
-                      : 'text-ink-mute hover:bg-cream'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon size={18} />
-                    {item.label}
-                  </div>
-                  {item.path === '/admin/admissions' && pendingAdmissions > 0 && (
-                    <span className="w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center">
-                      {pendingAdmissions}
+              {navItems.map(item => {
+                const body = (
+                  <>
+                    <div className="flex items-center gap-3">
+                      <item.icon size={18} />
+                      {item.label}
+                    </div>
+                    {item.path === '/admin/admissions' && pendingAdmissions > 0 && (
+                      <span className="w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center">
+                        {pendingAdmissions}
+                      </span>
+                    )}
+                  </>
+                );
+
+                if (!item.built) {
+                  return (
+                    <span
+                      key={item.path}
+                      aria-disabled="true"
+                      title="Not built yet"
+                      className="flex cursor-not-allowed items-center justify-between px-3 py-3 text-sm font-medium text-ink-mute/45"
+                    >
+                      {body}
                     </span>
-                  )}
-                </Link>
-              ))}
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-3 py-3 text-sm font-medium transition-colors ${
+                      location.pathname === item.path
+                        ? 'bg-gold/10 text-gold-deep'
+                        : 'text-ink-mute hover:bg-cream'
+                    }`}
+                  >
+                    {body}
+                  </Link>
+                );
+              })}
             </nav>
             <div className="mt-8 pt-6 border-t">
               <Link to="/" className="flex items-center gap-2 text-sm text-ink-mute/80 hover:text-ink-mute py-2">

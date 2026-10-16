@@ -10,6 +10,7 @@ import GalleryPage from './pages/public/GalleryPage';
 import NewsPage from './pages/public/NewsPage';
 import ContactPage from './pages/public/ContactPage';
 import CampusLifePage from './pages/public/CampusLifePage';
+import NotFoundPage from './pages/public/NotFoundPage';
 import {
   AuthProvider,
   ParentLayout,
@@ -186,7 +187,7 @@ export default function App() {
           path="*"
           element={
             <Public>
-              <HomePage />
+              <NotFoundPage />
             </Public>
           }
         />

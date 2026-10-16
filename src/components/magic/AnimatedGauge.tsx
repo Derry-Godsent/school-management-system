@@ -87,7 +87,7 @@ export function AnimatedGauge({
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-paper/15"
+          className="text-rule"
         />
         <circle
           cx={size / 2}
@@ -104,17 +104,17 @@ export function AnimatedGauge({
       </svg>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="font-display text-3xl font-bold text-paper">
+        <span className="font-display text-3xl font-bold text-ink">
           {Math.round(progress)}
           <span className="text-xl">%</span>
         </span>
         {label ? (
-          <span className="mt-1 text-[0.625rem] uppercase tracking-[0.18em] text-gold">
+          <span className="mt-1 text-[0.625rem] uppercase tracking-[0.18em] text-gold-deep">
             {label}
           </span>
         ) : null}
         {sublabel ? (
-          <span className="mt-1 max-w-[8rem] text-[0.625rem] leading-tight text-paper/60">
+          <span className="mt-1 max-w-[8rem] text-[0.625rem] leading-tight text-ink-mute">
             {sublabel}
           </span>
         ) : null}

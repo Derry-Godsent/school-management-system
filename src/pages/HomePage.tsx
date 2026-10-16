@@ -51,7 +51,7 @@ const SLIDES = [
 function StatValue({ value, suffix }: { value: number; suffix?: string }) {
   const { ref, display } = useCountUp(value);
   return (
-    <span ref={ref} className="font-display text-4xl sm:text-5xl font-bold text-paper">
+    <span ref={ref} className="font-display text-4xl sm:text-5xl font-bold text-ink">
       {display}
       {suffix}
     </span>
@@ -60,7 +60,7 @@ function StatValue({ value, suffix }: { value: number; suffix?: string }) {
 
 function StatsBand() {
   return (
-    <section className="bg-ink-soft">
+    <section className="bg-cream">
       <Reveal3D y={30} rotate={8}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <dl className="grid grid-cols-2 lg:grid-cols-4">
@@ -68,13 +68,13 @@ function StatsBand() {
             <div
               key={stat.label}
               className={`py-10 lg:py-14 lg:px-8 ${
-                i > 0 ? 'lg:border-l lg:border-paper/10' : ''
-              } ${i % 2 === 1 ? 'border-l border-paper/10 pl-6 lg:pl-8' : 'pr-6 lg:pr-8'}`}
+                i > 0 ? 'lg:border-l lg:border-rule' : ''
+              } ${i % 2 === 1 ? 'border-l border-rule pl-6 lg:pl-8' : 'pr-6 lg:pr-8'}`}
             >
               <dd>
                 <StatValue value={stat.value} suffix={stat.suffix} />
               </dd>
-              <dt className="mt-3 text-[0.6875rem] tracking-[0.2em] uppercase text-gold">
+              <dt className="mt-3 text-[0.6875rem] tracking-[0.2em] uppercase text-gold-deep">
                 {stat.label}
               </dt>
             </div>
@@ -154,7 +154,7 @@ function NewsBand() {
   const recent = rest.slice(0, 3);
 
   return (
-    <section className="bg-cream py-20 sm:py-28">
+    <section className="bg-paper py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
@@ -245,7 +245,7 @@ function CampusStrip() {
   ];
 
   return (
-    <section className="bg-paper py-20 sm:py-28">
+    <section className="bg-cream py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
@@ -352,12 +352,12 @@ function UpdatesBand() {
 function VisitBand() {
   const navigate = useNavigate();
   return (
-    <section className="bg-ink text-paper/80">
+    <section className="bg-paper text-ink-mute">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Clock size={20} className="text-gold mb-4" aria-hidden="true" />
-            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-paper mb-3">
+            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               School Hours
             </h3>
             <p className="text-sm leading-relaxed">
@@ -368,7 +368,7 @@ function VisitBand() {
           </div>
           <div>
             <Phone size={20} className="text-gold mb-4" aria-hidden="true" />
-            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-paper mb-3">
+            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Telephone
             </h3>
             <p className="text-sm leading-relaxed">
@@ -383,7 +383,7 @@ function VisitBand() {
           </div>
           <div>
             <Mail size={20} className="text-gold mb-4" aria-hidden="true" />
-            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-paper mb-3">
+            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Email
             </h3>
             <p className="text-sm leading-relaxed">
@@ -394,7 +394,7 @@ function VisitBand() {
           </div>
           <div>
             <MapPin size={20} className="text-gold mb-4" aria-hidden="true" />
-            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-paper mb-3">
+            <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Address
             </h3>
             <p className="text-sm leading-relaxed">{school.address}</p>
@@ -402,7 +402,7 @@ function VisitBand() {
         </div>
 
         <div className="mt-16 flex flex-wrap items-center justify-between gap-6">
-          <p className="font-display text-2xl sm:text-3xl text-paper">
+          <p className="font-display text-2xl sm:text-3xl text-ink">
             Come and see the school for yourself.
           </p>
           <InteractiveHoverButton tone="gold" onClick={() => navigate('/contact')}>

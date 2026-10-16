@@ -26,8 +26,8 @@ export function Ecosystem() {
   const adminRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
-      <Floating3DParticles quantity={110} opacity={0.5} depth={0.9} />
+    <section className="relative overflow-hidden bg-paper py-20 sm:py-28">
+      <Floating3DParticles quantity={70} opacity={0.18} depth={0.9} color="#e85d04" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 lg:items-center">
@@ -35,15 +35,15 @@ export function Ecosystem() {
           <div>
             <Reveal3D y={36}>
               <span className="eyebrow">One system</span>
-              <h2 className="mt-6 font-display text-3xl font-bold leading-tight text-paper sm:text-4xl">
+              <h2 className="mt-6 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
                 One place for the marks, the fees and the notices
               </h2>
-              <p className="mt-6 leading-relaxed text-paper/70">
+              <p className="mt-6 leading-relaxed text-ink-mute">
                 The school already keeps every record it needs. The trouble is where they
                 are kept. Marks sit in a teacher&apos;s book. Fees sit in the office ledger.
                 Notices go up on a board. So parents have to ask for each one.
               </p>
-              <p className="mt-4 leading-relaxed text-paper/70">
+              <p className="mt-4 leading-relaxed text-ink-mute">
                 With the portal, each thing is entered once. Parents then open their phone
                 and see it for themselves. No queue at the office, and no waiting until the
                 end of term to find out how their child is doing.
@@ -124,7 +124,7 @@ export function Ecosystem() {
               />
               <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {ROLES.map(role => (
-                  <li key={role} className="flex items-center gap-3 text-sm text-paper/70">
+                  <li key={role} className="flex items-center gap-3 text-sm text-ink-mute">
                     <span className="h-1.5 w-1.5 shrink-0 bg-gold" aria-hidden="true" />
                     {role}
                   </li>
@@ -135,7 +135,7 @@ export function Ecosystem() {
 
           {/* ---- Right: the parent experience on a phone ---- */}
           <Reveal3D axis="y" rotate={12} className="lg:pl-8">
-            <p className="mb-6 text-center text-[0.6875rem] uppercase tracking-[0.22em] text-gold lg:text-left">
+            <p className="mb-6 text-center text-[0.6875rem] uppercase tracking-[0.22em] text-gold-deep lg:text-left">
               Parent Portal:{' '}
               <DiaTextReveal
                 text={[

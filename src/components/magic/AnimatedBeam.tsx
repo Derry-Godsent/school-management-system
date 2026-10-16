@@ -161,7 +161,7 @@ export function BeamNode({
         ref={nodeRef as React.RefObject<HTMLDivElement>}
         className={cn(
           'relative z-10 flex items-center justify-center border-2 border-ink',
-          emphasis ? 'size-16 bg-gold' : 'size-12 bg-paper',
+          emphasis ? 'size-16 bg-gold' : 'size-12 bg-cream',
           allowed ? 'animate-node-float' : '',
           className
         )}
