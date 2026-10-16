@@ -10,6 +10,10 @@ interface ButtonProps {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  /** `submit` lets a real form handle Enter, for sign in and similar. */
+  type?: 'button' | 'submit';
+  /** Stretch to the width of the parent instead of shrinking to the label. */
+  full?: boolean;
   /** Set false to opt this button out of the pointer tilt and spotlight. */
   magnetic?: boolean;
   /** Colour scheme. */
@@ -87,6 +91,8 @@ export function InteractiveHoverButton({
   children,
   className = '',
   onClick,
+  type = 'button',
+  full = false,
   magnetic = true,
   tone = 'gold',
   size = 'md',
@@ -105,16 +111,16 @@ export function InteractiveHoverButton({
   const needsSweep = tier.ready && !tier.canHover;
 
   return (
-    <div className={cn('tilt-stage inline-block', className)}>
+    <div className={cn('tilt-stage', full ? 'block w-full' : 'inline-block', className)}>
       <motion.div
         ref={ref}
         style={style}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
-        className="tilt-plane inline-block"
+        className={cn('tilt-plane', full ? 'block w-full' : 'inline-block')}
       >
         <button
-          type="button"
+          type={type}
           onClick={onClick}
           className={cn(
             'group relative inline-flex items-center justify-center gap-3 overflow-hidden',
@@ -162,6 +168,8 @@ export function ShimmerButton({
   children,
   className = '',
   onClick,
+  type = 'button',
+  full = false,
   magnetic = true,
   size = 'md',
 }: ButtonProps) {
@@ -174,10 +182,10 @@ export function ShimmerButton({
   const needsSweep = tier.ready && !tier.canHover;
 
   return (
-    <div className={cn('tilt-stage inline-block', className)}>
-      <motion.div ref={ref} style={style} className="tilt-plane inline-block">
+    <div className={cn('tilt-stage', full ? 'block w-full' : 'inline-block', className)}>
+      <motion.div ref={ref} style={style} className={cn('tilt-plane', full ? 'block w-full' : 'inline-block')}>
         <button
-          type="button"
+          type={type}
           onClick={onClick}
           className={cn(
             'group relative inline-flex items-center justify-center overflow-hidden',

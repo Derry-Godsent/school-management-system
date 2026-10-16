@@ -154,6 +154,10 @@ h4,
   background: var(--eyebrow-accent, var(--color-gold));
 }
 
+/* On a dark ground the deep accents have no contrast left, so the marker and
+   the label step up to a bright hue. Used by the parent portal sign in. */
+.eyebrow--on-dark { --eyebrow-accent: var(--color-yellow); }
+
 /* Per-section eyebrow colours. */
 .eyebrow--yellow { --eyebrow-accent: var(--color-yellow-deep); }
 .eyebrow--green  { --eyebrow-accent: var(--color-green-deep); }

@@ -5,6 +5,7 @@ import {
   ChevronRight, TrendingUp, Clock, AlertCircle, Check, X,
   Download, ArrowLeft, Menu
 } from 'lucide-react';
+import { LoginScreen } from './parent/LoginScreen';
 import {
   school, students, guardians, demoUsers, results, attendance,
   feeRecords, paymentHistory, timetable, announcements, events,
@@ -49,86 +50,15 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
 // ============================================================================
 // LOGIN PAGE
+//
+// The surface itself lives in ./parent/LoginScreen, where it can use the site's
+// own design language without this file, which is mostly dashboard chrome,
+// having to grow to carry it. All that stays here is the wiring to the auth
+// context.
 // ============================================================================
 function LoginPage() {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('parent@demo.com');
-  const [password, setPassword] = useState('demo123');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (login(email, password)) {
-      navigate('/parent');
-    } else {
-      setError('Invalid credentials. Use the demo account shown below.');
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center px-4">
-      <div className="w-full max-w-md animate-fade-in">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gold flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-xl">MG</span>
-          </div>
-          <h1 className="text-2xl font-bold text-ink">Parent Portal</h1>
-          <p className="text-sm text-ink mt-1">{school.name}</p>
-        </div>
-
-        <div className="bg-paper border border-rule p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="p-3 bg-red-50 border border-red-100 text-sm text-red-700">
-                {error}
-              </div>
-            )}
-            <div>
-              <label className="block text-sm font-medium text-ink-mute mb-1.5">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                placeholder="your@email.com"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-ink-mute mb-1.5">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-rule text-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                placeholder="Enter password"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors shadow-orange-500/20"
-            >
-              Sign In
-            </button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-ink text-center mb-2">Demo Credentials</p>
-            <div className="bg-cream p-3 text-xs text-ink-mute space-y-1">
-              <p><span className="font-medium">Email:</span> parent@demo.com</p>
-              <p><span className="font-medium">Password:</span> demo123</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-ink hover:text-ink-mute">
-            ← Back to school website
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  return <LoginScreen onSignIn={login} />;
 }
 
 // ============================================================================
