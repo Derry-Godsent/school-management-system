@@ -11,7 +11,7 @@ import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 export function Highlighter({
   children,
   action = 'highlight',
-  color = '#e85d04',
+  color = '#f97316',
   className = '',
   delay = 0,
 }: {
@@ -72,12 +72,12 @@ export function Highlighter({
             stroke={isUnderline ? color : 'none'}
             strokeWidth={isUnderline ? 1.6 : 0}
             strokeLinecap="round"
-            opacity={isUnderline ? 1 : 0.5}
+            opacity={isUnderline ? 1 : 0.75}
             style={{
               strokeDasharray: 200,
               strokeDashoffset: inView ? 0 : 200,
               transition: `stroke-dashoffset 900ms cubic-bezier(0.22,1,0.36,1) ${delay}s, opacity 400ms ease ${delay}s`,
-              opacity: inView ? (isUnderline ? 1 : 0.5) : 0,
+              opacity: inView ? (isUnderline ? 1 : 0.75) : 0,
             }}
           />
         </svg>

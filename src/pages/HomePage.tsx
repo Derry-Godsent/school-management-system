@@ -113,7 +113,7 @@ function WelcomeBand() {
             <Reveal3D y={40} delay={0.1}>
             <span className="eyebrow">Welcome</span>
             <h2 className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-ink leading-tight">
-              Welcome to <Highlighter color="#e85d04">{school.name}</Highlighter>
+              Welcome to <Highlighter color="#facc15">{school.name}</Highlighter>
             </h2>
             <div className="mt-8 space-y-5 text-ink-mute leading-relaxed">
               <p className="dropcap text-ink">
@@ -245,11 +245,11 @@ function CampusStrip() {
   ];
 
   return (
-    <section className="bg-tint-amber py-20 sm:py-28">
+    <section className="bg-tint-green py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal3D y={36}>
         <div className="max-w-2xl mb-14">
-          <span className="eyebrow">Campus Life</span>
+          <span className="eyebrow eyebrow--green">Campus Life</span>
           <h2 className="mt-6 font-display text-3xl sm:text-4xl font-bold text-ink">
             A school day worth remembering
           </h2>
@@ -352,7 +352,7 @@ function UpdatesBand() {
 function VisitBand() {
   const navigate = useNavigate();
   return (
-    <section className="bg-tint-peach text-ink">
+    <section className="bg-tint-orange text-ink">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
@@ -367,7 +367,7 @@ function VisitBand() {
             </p>
           </div>
           <div>
-            <Phone size={20} className="text-gold-deep mb-4" aria-hidden="true" />
+            <Phone size={20} className="text-yellow-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Telephone
             </h3>
@@ -382,7 +382,7 @@ function VisitBand() {
             </p>
           </div>
           <div>
-            <Mail size={20} className="text-gold-deep mb-4" aria-hidden="true" />
+            <Mail size={20} className="text-green-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Email
             </h3>
@@ -393,7 +393,7 @@ function VisitBand() {
             </p>
           </div>
           <div>
-            <MapPin size={20} className="text-gold-deep mb-4" aria-hidden="true" />
+            <MapPin size={20} className="text-purple-deep mb-4" aria-hidden="true" />
             <h3 className="font-body text-xs tracking-[0.2em] uppercase text-ink mb-3">
               Address
             </h3>

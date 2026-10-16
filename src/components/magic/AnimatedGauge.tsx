@@ -94,7 +94,7 @@ export function AnimatedGauge({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#e85d04"
+          stroke="#7c3aed"
           strokeWidth={strokeWidth}
           strokeLinecap="butt"
           strokeDasharray={circumference}

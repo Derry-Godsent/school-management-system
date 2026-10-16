@@ -39,8 +39,8 @@ export function AnimatedBeam({
   reverse = false,
   duration = 3,
   delay = 0,
-  gradientFrom = '#e85d04',
-  gradientTo = '#fdeee2',
+  gradientFrom = '#7c3aed',
+  gradientTo = '#f5f3ff',
 }: AnimatedBeamProps) {
   const tier = useDeviceTier();
   const allowed = useMotionAllowed(tier);
@@ -107,7 +107,7 @@ export function AnimatedBeam({
       </defs>
 
       {/* The track */}
-      <path d={path} stroke="#e8e6e1" strokeWidth="1.5" strokeDasharray="5 5" />
+      <path d={path} stroke="#ece7e0" strokeWidth="1.5" strokeDasharray="5 5" />
 
       {/* The lit run, revealed progressively */}
       <path
@@ -161,7 +161,7 @@ export function BeamNode({
         ref={nodeRef as React.RefObject<HTMLDivElement>}
         className={cn(
           'relative z-10 flex items-center justify-center border-2 border-ink',
-          emphasis ? 'size-16 bg-gold' : 'size-12 bg-cream',
+          emphasis ? 'size-16 bg-gold' : 'size-12 bg-paper',
           allowed ? 'animate-node-float' : '',
           className
         )}

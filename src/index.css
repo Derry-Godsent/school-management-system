@@ -11,37 +11,52 @@
 
 @theme {
   /* Palette
-     Bright by default. Orange carries the identity, and the accent tints below
-     are what tell one section from another now that the separator lines are
-     gone. Nothing here is a grey: every background is either white or a warm
-     tint, so the page reads as light and colourful rather than cool.
+     Six colours, each with one job, so the page reads as colourful rather than
+     noisy:
 
-     Two oranges, deliberately. `gold` is the bright one and is only ever used
-     for fills and for orange on dark, where it has plenty of contrast.
-     `gold-deep` is the one used for orange text on a light background, because
-     bright orange text on white sits at about 2.9:1 and is hard to read.
+       black   structure. Text, the hero, the footer.
+       white   the ground. Most of the page sits on plain white.
+       orange  the brand. Calls to action, links, the one bold colour block.
+       yellow  emphasis. The marker behind the school name and highlight badges.
+       green   campus and the outdoors.
+       purple  the software section, so the portal reads as a different kind of
+               thing from the school around it.
 
-     The accent tokens keep the `gold` names from an earlier pass. Tailwind
-     derives a utility per token, so renaming them would mean editing every
-     bg-gold and text-gold across the site, and one missed class would silently
-     render nothing rather than fail a build. Read them as accent, accent-deep
-     and accent-pale. */
+     Red was the other option offered and is left out on purpose: on a school
+     site red reads as an error state, and there is nothing here that is one.
+
+     Every accent has two forms. The bright one is for fills, where black text
+     sits on it. The deep one is the same hue darkened until it passes 4.5:1 as
+     text on white, because bright orange text on white is only 2.8:1.
+
+     Names: the accent tokens kept the `gold` names from an earlier pass.
+     Tailwind derives a utility per token, so renaming them would mean editing
+     every bg-gold and text-gold across the site, and one missed class would
+     silently render nothing rather than fail a build. Read gold as orange. */
   --color-ink: #111111;
   --color-ink-soft: #2b2b2b;
   --color-ink-mute: #333333;
   --color-gold: #f97316;
   --color-gold-deep: #c2410c;
-  --color-gold-pale: #fff1e3;
+  --color-gold-pale: #fff7ed;
   --color-cream: #fffaf3;
   --color-paper: #ffffff;
   --color-rule: #ece7e0;
 
-  /* Section tints. Each one is a bright, clearly visible wash rather than a
-     shade of grey, so adjacent sections are told apart by hue. */
-  --color-tint-warm: #fff4e8;
-  --color-tint-amber: #fff8e5;
-  --color-tint-peach: #fff0e6;
-  --color-tint-mint: #e8fbf5;
+  /* Orange, yellow, green, purple: the bright fill and the readable text form. */
+  --color-yellow: #facc15;
+  --color-yellow-deep: #a16207;
+  --color-green: #16a34a;
+  --color-green-deep: #15803d;
+  --color-purple: #7c3aed;
+  --color-purple-deep: #6d28d9;
+
+  /* Section grounds. All very light, so the page stays bright, but each is a
+     clear hue rather than a shade of grey. */
+  --color-tint-orange: #fff7ed;
+  --color-tint-yellow: #fefce8;
+  --color-tint-green: #ecfdf5;
+  --color-tint-purple: #f5f3ff;
 }
 
 /* --------------------------------------------------------------------------
@@ -118,7 +133,9 @@ h4,
    Institutional components
    -------------------------------------------------------------------------- */
 
-/* Section eyebrow, small gold rule + tracked label above a heading. */
+/* Section eyebrow, a short rule plus a tracked label above a heading. The rule
+   picks up the colour of the section it belongs to, which is what makes the
+   palette feel intentional rather than scattered. */
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -127,15 +144,21 @@ h4,
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-gold-deep);
+  color: var(--eyebrow-accent, var(--color-gold-deep));
 }
 
 .eyebrow::before {
   content: '';
   width: 2.5rem;
   height: 2px;
-  background: var(--color-gold);
+  background: var(--eyebrow-accent, var(--color-gold));
 }
+
+/* Per-section eyebrow colours. */
+.eyebrow--yellow { --eyebrow-accent: var(--color-yellow-deep); }
+.eyebrow--green  { --eyebrow-accent: var(--color-green-deep); }
+.eyebrow--purple { --eyebrow-accent: var(--color-purple-deep); }
+.eyebrow--orange { --eyebrow-accent: var(--color-gold-deep); }
 
 /* Gold ribbon bar, echoes the school crest's ribbon. */
 .ribbon {
@@ -195,14 +218,27 @@ h4,
   color: var(--color-gold-deep);
 }
 
-/* Photo scrim for text placed over full-bleed imagery. */
+/* Photo scrim for text placed over full-bleed imagery.
+   Two gradients stacked, so their darkening multiplies rather than averaging.
+   The horizontal one is the important one: the hero copy is left-aligned, so
+   the left of the frame is held dark enough for white type at any size while
+   the right side stays open and shows the photograph. This darkens the image,
+   never the text. */
 .scrim {
-  background: linear-gradient(
-    to top,
-    rgba(17, 17, 17, 0.9) 0%,
-    rgba(17, 17, 17, 0.45) 45%,
-    rgba(17, 17, 17, 0.15) 100%
-  );
+  background:
+    linear-gradient(
+      to right,
+      rgba(17, 17, 17, 0.86) 0%,
+      rgba(17, 17, 17, 0.68) 40%,
+      rgba(17, 17, 17, 0.34) 72%,
+      rgba(17, 17, 17, 0.18) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(17, 17, 17, 0.82) 0%,
+      rgba(17, 17, 17, 0.4) 55%,
+      rgba(17, 17, 17, 0.12) 100%
+    );
 }
 
 @keyframes fade-in-up {

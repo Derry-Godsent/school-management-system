@@ -62,12 +62,12 @@ export function InteractiveHoverButton({
   tone = 'gold',
   size = 'md',
 }: ButtonProps) {
+  // No listener at all when magnetic is off, so a button can never drift.
   const { ref, style, active } = useChase({
-    strength: magnetic ? 0.18 : 0,
-    // Kept below half the 12px gap between the hero's two buttons, so a cursor
-    // resting between them moves neither.
-    grace: 4,
-    max: 14,
+    enabled: magnetic,
+    strength: 0.16,
+    grace: 2,
+    max: 4,
   });
   const [hovered, setHovered] = useState(false);
 
@@ -131,9 +131,10 @@ export function ShimmerButton({
   size = 'md',
 }: ButtonProps) {
   const { ref, style, active } = useChase({
-    strength: magnetic ? 0.15 : 0,
-    grace: 4,
-    max: 11,
+    enabled: magnetic,
+    strength: 0.14,
+    grace: 2,
+    max: 4,
   });
 
   return (
@@ -181,9 +182,9 @@ export function MagneticNavLink({
   active?: boolean;
   className?: string;
 }) {
-  // Very light: the nav is a row of links 28px apart, so anything stronger
-  // reads as the whole menu shifting at once.
-  const { ref, style, active: chaseOn } = useChase({ strength: 0.12, grace: 4, max: 6 });
+  // The nav is a row of links 28px apart, so movement is kept very small and
+  // the leeway at zero: a link can only respond while the cursor is on it.
+  const { ref, style, active: chaseOn } = useChase({ strength: 0.1, grace: 0, max: 3 });
 
   return (
     <motion.span

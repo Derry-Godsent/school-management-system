@@ -75,9 +75,6 @@ export function Hero3D() {
   // translate and rotation alone, and the section clips the copy as it leaves,
   // so the text can never be invisible while it is on screen.
   const railLift = useTransform(smooth, [0, 1], ['0%', '30%']);
-  // Hoisted out of JSX: calling a hook inside a conditional render expression
-  // would change the hook count between renders.
-  const frameY = useTransform(smooth, [0, 1], ['0%', '10%']);
 
   // Pointer follow for the copy plane (desktop only).
   const pointerX = useMotionValue(0.5);
@@ -133,15 +130,6 @@ export function Hero3D() {
       {/* Ambient light falling from above the fold */}
       <LightRays intensity={0.9} />
 
-      {/* Layer 2, gold hairline frame, sitting between the photo and the copy */}
-      {allowed && (
-        <motion.div
-          aria-hidden="true"
-          className="absolute inset-x-6 top-24 bottom-28 sm:inset-x-10 sm:top-28 sm:bottom-32 border border-gold/25 pointer-events-none"
-          style={{ y: frameY }}
-        />
-      )}
-
       {/* Layer 3, copy, on its own plane */}
       <div className="relative z-10 h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -182,14 +170,19 @@ export function Hero3D() {
                   {slide.text}
                 </p>
                 <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
+                  {/* These two never chase the pointer. They sit 12px apart, close
+                      enough that any shared movement reads as them colliding, so
+                      they keep the flood, the arrow and the shimmer and stay put. */}
                   <InteractiveHoverButton
                     tone="gold"
+                    magnetic={false}
                     onClick={() => navigate(slide.to)}
                     className="text-xs sm:text-sm"
                   >
                     {slide.cta}
                   </InteractiveHoverButton>
                   <ShimmerButton
+                    magnetic={false}
                     onClick={() => navigate('/admissions')}
                     className="text-xs sm:text-sm"
                   >

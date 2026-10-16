@@ -11,10 +11,10 @@ import { Reveal3D, Tilt3D, DepthImage } from '../fx';
  */
 export function MessagesSection() {
   return (
-    <section className="bg-tint-warm py-20 sm:py-28">
+    <section className="bg-tint-yellow py-20 sm:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="max-w-3xl mb-16 sm:mb-24">
-          <span className="eyebrow">Message from:</span>
+          <span className="eyebrow eyebrow--yellow">Message from:</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-ink mt-6 leading-tight">
             The people who lead this school
           </h2>

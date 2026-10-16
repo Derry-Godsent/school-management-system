@@ -22,10 +22,18 @@ import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 export function useChase({
   /** Fraction of the pointer's offset from the element's centre that it follows. */
   strength = 0.18,
-  /** Pixels of leeway outside the element's box that still attract. */
-  grace = 8,
-  /** Ceiling on displacement, in px, so nothing can slide far out of place. */
-  max = 14,
+  enabled = true,
+  /** Pixels of leeway outside the element's box. Kept under half the smallest gap. */
+  grace = 2,
+  /**
+   * Ceiling on displacement, in px.
+   *
+   * This is the safety limit that keeps neighbours apart. Two elements can each
+   * move `max` toward the other, so `2 * max` must stay below the smallest gap
+   * between any two elements that chase. The hero's two buttons sit 12px apart,
+   * so anything above 5 risks them touching. Kept at 4.
+   */
+  max = 4,
   /** Degrees of rotation toward the pointer. Needs a perspective parent. */
   tilt = 0,
   stiffness = 170,
@@ -36,6 +44,8 @@ export function useChase({
   grace?: number;
   max?: number;
   tilt?: number;
+  /** Set false to attach no listener and never move the element at all. */
+  enabled?: boolean;
   stiffness?: number;
   damping?: number;
   mass?: number;
@@ -43,7 +53,7 @@ export function useChase({
   const ref = useRef<HTMLDivElement>(null);
   const tier = useDeviceTier();
   const allowed = useMotionAllowed(tier);
-  const active = allowed && tier.canHover && !tier.isTouch;
+  const active = enabled && allowed && tier.canHover && !tier.isTouch;
 
   const x = useSpring(0, { stiffness, damping, mass });
   const y = useSpring(0, { stiffness, damping, mass });

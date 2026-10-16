@@ -26,7 +26,7 @@ export function Ecosystem() {
   const adminRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative overflow-hidden bg-tint-mint py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-tint-purple py-20 sm:py-28">
       <Floating3DParticles quantity={70} opacity={0.22} depth={0.9} color="#f97316" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,7 +34,7 @@ export function Ecosystem() {
           {/* ---- Left: the copy and the wiring diagram ---- */}
           <div>
             <Reveal3D y={36}>
-              <span className="eyebrow">One system</span>
+              <span className="eyebrow eyebrow--purple">One system</span>
               <h2 className="mt-6 font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
                 One place for the marks, the fees and the notices
               </h2>
