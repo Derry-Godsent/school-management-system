@@ -1,0 +1,282 @@
+import { useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { cn } from '../../lib/cn';
+import { usePointerFx } from './usePointerFx';
+import { useDeviceTier } from '../../lib/useDeviceTier';
+
+interface ButtonProps {
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+  /** `submit` lets a real form handle Enter, for sign in and similar. */
+  type?: 'button' | 'submit';
+  /** Stretch to the width of the parent instead of shrinking to the label. */
+  full?: boolean;
+  /** Set false to opt this button out of the pointer tilt and spotlight. */
+  magnetic?: boolean;
+  /** Colour scheme. */
+  tone?: 'gold' | 'ink' | 'outline' | 'paper';
+  /** `sm` suits the nav bar, where the bar itself is only 64px tall. */
+  size?: 'md' | 'sm';
+}
+
+const SIZE: Record<NonNullable<ButtonProps['size']>, string> = {
+  md: 'px-7 py-4 text-xs',
+  sm: 'px-6 py-3 text-[0.6875rem]',
+};
+
+// Fill and text colour are kept apart. `cn()` is a plain joiner rather than a
+// tailwind-merge, so emitting two conflicting colour utilities would leave the
+// winner down to stylesheet order.
+const FILL: Record<NonNullable<ButtonProps['tone']>, string> = {
+  gold: 'bg-gold',
+  ink: 'bg-ink',
+  paper: 'bg-paper',
+  outline: 'bg-transparent border border-paper/50',
+};
+
+const TEXT: Record<NonNullable<ButtonProps['tone']>, { rest: string; hover: string }> = {
+  gold: { rest: 'text-ink', hover: 'text-paper' },
+  ink: { rest: 'text-paper', hover: 'text-ink' },
+  paper: { rest: 'text-ink', hover: 'text-paper' },
+  outline: { rest: 'text-paper', hover: 'text-ink' },
+};
+
+const FLOOD: Record<NonNullable<ButtonProps['tone']>, string> = {
+  gold: 'bg-ink',
+  ink: 'bg-gold',
+  paper: 'bg-ink',
+  outline: 'bg-gold',
+};
+
+/**
+ * The light layer: a pool that follows the cursor, plus a sweep for touch
+ * devices, which have no cursor for a pool to follow.
+ *
+ * The pool's visibility is driven by a `--on` custom property rather than the
+ * `group-hover` class, because hover never fires on a touch screen and the
+ * effect has to work there too. usePointerFx sets `--on` on pointerenter,
+ * pointerover and pointerdown, so a tap lights the button as well.
+ */
+function Spotlight({ sweep = false }: { sweep?: boolean }) {
+  return (
+    <>
+      <span
+        aria-hidden="true"
+        className="spotlight-layer spot-soft-white pointer-events-none absolute inset-0 opacity-[var(--on,0)] transition-opacity duration-300 mix-blend-plus-lighter"
+        style={{ '--on': 0 } as React.CSSProperties}
+      />
+      {sweep ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-plus-lighter"
+        >
+          <span className="glow-sweep absolute inset-y-0 -left-1/3 w-1/3 bg-[radial-gradient(closest-side,rgba(255,255,255,0.5),transparent)]" />
+        </span>
+      ) : null}
+    </>
+  );
+}
+
+/**
+ * InteractiveHoverButton: a dot that floods the face, a light that follows the
+ * cursor, and a slight tilt toward it.
+ *
+ * The tilt is rotation only. The button's layout box never moves, which is what
+ * guarantees a row of buttons can never drift into one another.
+ */
+export function InteractiveHoverButton({
+  children,
+  className = '',
+  onClick,
+  type = 'button',
+  full = false,
+  magnetic = true,
+  tone = 'gold',
+  size = 'md',
+}: ButtonProps) {
+  const tier = useDeviceTier();
+  // The strongest setting on the site: this is the button the user pointed at
+  // when asking for the effect, so it leads. `magnetic={false}` still means no
+  // movement at all, for any caller that needs a still button.
+  const { ref, spotlightOn, style } = usePointerFx({
+    enabled: magnetic,
+    maxTilt: 20,
+    maxShift: 10,
+    lift: 40,
+    scaleTo: 1.05,
+  });
+  const [hovered, setHovered] = useState(false);
+  // No cursor to follow, so the light sweeps across instead.
+  const needsSweep = tier.ready && !tier.canHover;
+
+  return (
+    <div className={cn('tilt-stage', full ? 'block w-full' : 'inline-block', className)}>
+      <motion.div
+        ref={ref}
+        style={style}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+        className={cn('tilt-plane', full ? 'block w-full' : 'inline-block')}
+      >
+        <button
+          type={type}
+          onClick={onClick}
+          className={cn(
+            'group relative inline-flex items-center justify-center gap-3 overflow-hidden',
+            'select-none font-semibold tracking-[0.16em] uppercase transition-colors duration-500',
+            SIZE[size],
+            FILL[tone],
+            hovered ? TEXT[tone].hover : TEXT[tone].rest
+          )}
+        >
+          {/* The dot that floods the face. Geometry is inline so it cannot lose
+              a specificity race with the resting classes. */}
+          <span
+            aria-hidden="true"
+            className={cn(
+              'absolute top-1/2 -translate-y-1/2 rounded-full transition-all duration-500 ease-out',
+              FLOOD[tone]
+            )}
+            style={
+              hovered
+                ? { left: '-15%', width: '130%', height: '420%' }
+                : { left: '0.75rem', width: '0.5rem', height: '0.5rem' }
+            }
+          />
+          {spotlightOn ? <Spotlight sweep={needsSweep} /> : null}
+          <span className="relative z-10 flex items-center gap-3">
+            <span className="transition-transform duration-500 group-hover:-translate-x-1">
+              {children}
+            </span>
+            <ArrowRight
+              size={15}
+              className="translate-x-3 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100"
+            />
+          </span>
+        </button>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * ShimmerButton: a band of light sweeping the face, over the same tilt and
+ * cursor spotlight.
+ */
+export function ShimmerButton({
+  children,
+  className = '',
+  onClick,
+  type = 'button',
+  full = false,
+  magnetic = true,
+  size = 'md',
+}: ButtonProps) {
+  const tier = useDeviceTier();
+  const { ref, spotlightOn, style } = usePointerFx({
+    enabled: magnetic,
+    maxTilt: 18,
+    maxShift: 10,
+    lift: 36,
+    scaleTo: 1.05,
+  });
+  const needsSweep = tier.ready && !tier.canHover;
+
+  return (
+    <div className={cn('tilt-stage', full ? 'block w-full' : 'inline-block', className)}>
+      <motion.div ref={ref} style={style} className={cn('tilt-plane', full ? 'block w-full' : 'inline-block')}>
+        <button
+          type={type}
+          onClick={onClick}
+          className={cn(
+            'group relative inline-flex items-center justify-center overflow-hidden',
+            'select-none bg-ink font-semibold tracking-[0.16em] uppercase text-paper',
+            'transition-transform duration-300',
+            SIZE[size]
+          )}
+        >
+          {/* Orange hairline ring that lights up as the pointer arrives */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 border border-gold/0 transition-colors duration-500 group-hover:border-gold/70"
+          />
+          <span aria-hidden="true" className="shimmer-sweep pointer-events-none absolute inset-0" />
+          {spotlightOn ? <Spotlight sweep={needsSweep} /> : null}
+          <span className="relative z-10">{children}</span>
+        </button>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * MagneticNavLink: a nav item whose highlight is a single element shared across
+ * the whole menu.
+ *
+ * One `motion.span` carries the highlight, and because every item renders the
+ * same `layoutId`, Framer moves it from wherever it was to wherever it now is.
+ * The highlight therefore glides between links instead of cutting, which is the
+ * effect that makes a menu feel alive.
+ *
+ * It is lit by hover when the pointer is anywhere in the menu, and falls back to
+ * the current page when the pointer leaves, so the marker always has a home.
+ */
+export function MagneticNavLink({
+  children,
+  to,
+  active = false,
+  lit = false,
+  onEnter,
+  highlightId = 'nav-highlight',
+}: {
+  children: ReactNode;
+  to: string;
+  active?: boolean;
+  lit?: boolean;
+  onEnter?: () => void;
+  highlightId?: string;
+}) {
+  // The gentle end of the range: a nav row is a tight cluster, so the tilt is
+  // visible but the shift stays under the gap between items.
+  // A nav row is a tight cluster, so the lean is gentle, the step is small, and
+  // there is no shadow: a floating box around a nav item would read as wrong.
+  const { ref, style } = usePointerFx({
+    maxTilt: 12,
+    maxShift: 3,
+    lift: 16,
+    scaleTo: 1,
+    shadow: false,
+  });
+
+  return (
+    <span ref={ref} className="tilt-stage inline-block" onPointerEnter={onEnter}>
+      <motion.span style={style} className="tilt-plane relative inline-block">
+        {lit ? (
+          <motion.span
+            layoutId={highlightId}
+            aria-hidden="true"
+            className="absolute inset-0 bg-ink"
+            transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.7 }}
+          />
+        ) : null}
+        <Link
+          to={to}
+          aria-current={active ? 'page' : undefined}
+          className="relative block select-none px-4 py-2 text-sm"
+        >
+          <span
+            className={cn(
+              'relative z-10 block transition-colors duration-300',
+              lit ? 'font-medium text-paper' : 'text-ink-mute'
+            )}
+          >
+            {children}
+          </span>
+        </Link>
+      </motion.span>
+    </span>
+  );
+}

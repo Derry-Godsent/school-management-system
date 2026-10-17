@@ -1,0 +1,566 @@
+/* @import rules must precede all other rules, so the web fonts come first. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ==========================================================================
+   Maple Grove design system
+   Inspired by the Ghanaian institutional-school idiom: deep ink, ribbon gold,
+   serif display type and full-bleed photography. Deliberately card-free -
+   structure comes from rules, spacing and imagery, never floating boxes.
+   ========================================================================== */
+
+@theme {
+  /* Palette
+     Six colours, each with one job, so the page reads as colourful rather than
+     noisy:
+
+       black   structure. Text, the hero, the footer.
+       white   the ground. Most of the page sits on plain white.
+       orange  the brand. Calls to action, links, the one bold colour block.
+       yellow  emphasis. The marker behind the school name and highlight badges.
+       green   campus and the outdoors.
+       purple  the software section, so the portal reads as a different kind of
+               thing from the school around it.
+
+     Red was the other option offered and is left out on purpose: on a school
+     site red reads as an error state, and there is nothing here that is one.
+
+     Every accent has two forms. The bright one is for fills, where black text
+     sits on it. The deep one is the same hue darkened until it passes 4.5:1 as
+     text on white, because bright orange text on white is only 2.8:1.
+
+     Names: the accent tokens kept the `gold` names from an earlier pass.
+     Tailwind derives a utility per token, so renaming them would mean editing
+     every bg-gold and text-gold across the site, and one missed class would
+     silently render nothing rather than fail a build. Read gold as orange. */
+  --color-ink: #111111;
+  --color-ink-soft: #2b2b2b;
+  --color-ink-mute: #333333;
+  --color-gold: #f97316;
+  --color-gold-deep: #c2410c;
+  --color-gold-pale: #fff7ed;
+  --color-cream: #fffaf3;
+  --color-paper: #ffffff;
+  --color-rule: #ece7e0;
+
+  /* Orange, yellow, green, purple: the bright fill and the readable text form. */
+  --color-yellow: #facc15;
+  --color-yellow-deep: #a16207;
+  --color-green: #16a34a;
+  --color-green-deep: #15803d;
+  --color-purple: #7c3aed;
+  --color-purple-deep: #6d28d9;
+
+  /* Section grounds. All very light, so the page stays bright, but each is a
+     clear hue rather than a shade of grey. */
+  /* The ground a phone app sits on. White cards read as raised against it, which
+     is how a mobile app gets separation without a single heavy colour. */
+  --color-canvas: #f3f5f8;
+  --color-canvas-deep: #e9edf2;
+  --color-tint-orange: #fff7ed;
+  --color-tint-yellow: #fefce8;
+  --color-tint-green: #ecfdf5;
+  --color-tint-purple: #f5f3ff;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overscroll-behavior: none;
+  /* Rotated 3D planes can extend past the viewport edge, which would let a
+     phone scroll sideways. `clip` contains it without creating a scroll
+     container, so it does not break the sticky header the way `hidden` can. */
+  overflow-x: clip;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Safe area insets for mobile devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* App-like transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* --------------------------------------------------------------------------
+   Institutional components
+   -------------------------------------------------------------------------- */
+
+/* Section eyebrow, a short rule plus a tracked label above a heading. The rule
+   picks up the colour of the section it belongs to, which is what makes the
+   palette feel intentional rather than scattered. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-accent, var(--color-gold-deep));
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--eyebrow-accent, var(--color-gold));
+}
+
+/* On a dark ground the deep accents have no contrast left, so the marker and
+   the label step up to a bright hue. Used by the parent portal sign in. */
+.eyebrow--on-dark { --eyebrow-accent: var(--color-yellow); }
+
+/* Per-section eyebrow colours. */
+.eyebrow--yellow { --eyebrow-accent: var(--color-yellow-deep); }
+.eyebrow--green  { --eyebrow-accent: var(--color-green-deep); }
+.eyebrow--purple { --eyebrow-accent: var(--color-purple-deep); }
+.eyebrow--orange { --eyebrow-accent: var(--color-gold-deep); }
+
+/* Gold ribbon bar, echoes the school crest's ribbon. */
+.ribbon {
+  position: relative;
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  padding: 0.5rem 1.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Underline that draws in on hover, used sparingly on text links. */
+.line-draw {
+  position: relative;
+}
+
+.line-draw::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width 300ms ease;
+}
+
+.line-draw:hover::after,
+.line-draw.active::after {
+  width: 100%;
+}
+
+/* Thin gold rule used to separate content blocks instead of card borders. */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    var(--color-gold) 0%,
+    var(--color-gold) 4rem,
+    var(--color-rule) 4rem,
+    var(--color-rule) 100%
+  );
+}
+
+/* Drop cap for opening a welcome message, as in printed institutional writing. */
+.dropcap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.75rem;
+  line-height: 0.82;
+  font-weight: 700;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  color: var(--color-gold-deep);
+}
+
+/* Photo scrim for text placed over full-bleed imagery.
+   Two gradients stacked, so their darkening multiplies rather than averaging.
+   The horizontal one is the important one: the hero copy is left-aligned, so
+   the left of the frame is held dark enough for white type at any size while
+   the right side stays open and shows the photograph. This darkens the image,
+   never the text. */
+.scrim {
+  background:
+    linear-gradient(
+      to right,
+      rgba(17, 17, 17, 0.86) 0%,
+      rgba(17, 17, 17, 0.68) 40%,
+      rgba(17, 17, 17, 0.34) 72%,
+      rgba(17, 17, 17, 0.18) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(17, 17, 17, 0.82) 0%,
+      rgba(17, 17, 17, 0.4) 55%,
+      rgba(17, 17, 17, 0.12) 100%
+    );
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 500ms ease both;
+}
+
+/* ==========================================================================
+   Motion layer, smooth scroll + 3D depth
+   ========================================================================== */
+
+/* --- Lenis ---------------------------------------------------------------
+   Required Lenis rules. `scroll-behavior: auto` when Lenis is active, because
+   our `html { scroll-behavior: smooth }` would otherwise fight it frame by
+   frame and produce stutter. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Set by useScrollLock so Lenis halts behind open overlays. The JavaScript
+   also calls stop() on the scroller, because this rule alone does not stop a
+   transform driven scroller; it only stops the element scrolling. */
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* While an overlay is open the page beneath it is fixed in place. Both the
+   document and the body refuse to chain a scroll to anything behind. */
+html.overlay-open,
+html.overlay-open body {
+  overscroll-behavior: none;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* --- 3D planes -----------------------------------------------------------
+   Applied to wrappers that hold perspective-transformed children. */
+.scene-3d {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.plane-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Promote elements that animate continuously, so they get their own layer and
+   stay off the main paint path. Used sparingly, each one costs GPU memory. */
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Belt and braces: framer-motion already skips these, but any pure-CSS
+     animation should stop too. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Micro-interactions
+   ========================================================================== */
+
+/* Caret under the typed word in TypingAnimation. */
+@keyframes caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-caret-blink {
+  animation: caret-blink 1.05s steps(1, end) infinite;
+}
+
+/* Light band travelling across ShimmerButton. Deliberately slow and low
+   contrast so it reads as material, not as a special effect. */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-14deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(220%) skewX(-14deg);
+    opacity: 0;
+  }
+}
+
+.shimmer-sweep {
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(249, 115, 22, 0.16) 40%,
+    rgba(255, 241, 227, 0.5) 50%,
+    rgba(249, 115, 22, 0.16) 60%,
+    transparent 80%
+  );
+  animation: shimmer-sweep 3.4s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+/* The lit run on AnimatedBeam drawing itself between nodes. */
+@keyframes beam-draw {
+  0% {
+    stroke-dasharray: 0 1000;
+  }
+  55% {
+    stroke-dasharray: 1000 1000;
+  }
+  100% {
+    stroke-dasharray: 1000 1000;
+    opacity: 1;
+  }
+}
+
+.beam-draw {
+  opacity: 0;
+  animation: beam-draw 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Nodes breathe very slightly so the diagram feels alive. */
+@keyframes node-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-node-float {
+  animation: node-float 4.2s ease-in-out infinite;
+}
+
+/* Beams falling from above in LightRays. */
+@keyframes light-ray-fall {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(-12%) scaleY(0.85) rotate(var(--ray-tilt, 8deg));
+  }
+  35% {
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0.22;
+  }
+  100% {
+    transform: translateY(6%) scaleY(1.05) rotate(var(--ray-tilt, 8deg));
+  }
+}
+
+.light-ray {
+  position: absolute;
+  top: -20%;
+  height: 120%;
+  width: 7rem;
+  transform-origin: top center;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 241, 227, 0.34) 0%,
+    rgba(249, 115, 22, 0.12) 45%,
+    transparent 100%
+  );
+  filter: blur(22px);
+  opacity: 0;
+  animation: light-ray-fall 10s ease-in-out infinite;
+}
+
+/* Keep the ambient effects honest for anyone who has asked for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-caret-blink,
+  .shimmer-sweep,
+  .animate-node-float,
+  .light-ray,
+  .beam-draw {
+    animation: none !important;
+  }
+
+  .shimmer-sweep,
+  .light-ray {
+    opacity: 0 !important;
+  }
+
+  .beam-draw {
+    opacity: 1 !important;
+    stroke-dasharray: 1000 1000 !important;
+  }
+}
+
+
+/* ==========================================================================
+   Pointer effects
+   ========================================================================== */
+
+:root {
+  /* The colour of the light that follows the cursor. Brighter than it looks
+     written down: it is blended with `plus-lighter`, so it adds to whatever is
+     underneath rather than sitting on top of it. */
+  --spot-white: rgba(255, 255, 255, 0.55);
+  --spot-orange: rgba(254, 215, 170, 0.85);
+  --spot-purple: rgba(221, 214, 254, 0.85);
+}
+
+/* A pool of light that follows the cursor across an element's face.
+   `--mx` and `--my` are written onto the element by usePointerFx on every
+   frame, so this needs no React work and no re-render. `--spot` lets each
+   surface pick its colour: white light reads on dark fills, a warm tint reads
+   on white ones.
+
+   Two layers: a tight core that shows exactly where the cursor is, and a wider
+   halo so the effect is obvious without the core having to be blinding. */
+.spotlight-layer {
+  background:
+    radial-gradient(
+      60px circle at var(--mx, 50%) var(--my, 50%),
+      var(--spot, rgba(255, 255, 255, 0.55)),
+      transparent 70%
+    ),
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      var(--spot-soft, rgba(255, 255, 255, 0.22)),
+      transparent 70%
+    );
+}
+
+/* Touch devices have no cursor and no hover, so the light would never appear.
+   It sweeps across on its own instead, which keeps buttons from looking inert
+   on a phone. Pure transform, so it stays on the compositor. */
+@keyframes glow-sweep {
+  0%   { transform: translate3d(-130%, 0, 0) scale(0.9); opacity: 0; }
+  15%  { opacity: 0.85; }
+  60%  { opacity: 0.85; }
+  100% { transform: translate3d(430%, 0, 0) scale(1.1); opacity: 0; }
+}
+
+.glow-sweep {
+  animation: glow-sweep 4.8s ease-in-out infinite;
+}
+
+/* The halo half of the spotlight, kept dimmer. */
+.spot-soft-white  { --spot-soft: rgba(255, 255, 255, 0.24); }
+.spot-soft-orange { --spot-soft: rgba(254, 215, 170, 0.4); }
+.spot-soft-purple { --spot-soft: rgba(221, 214, 254, 0.4); }
+
+/* The lean needs a perspective on the parent to have any depth, and a
+   positioning context so the element that is answering the pointer can be
+   raised above its neighbours while it leans toward them. */
+.tilt-stage {
+  position: relative;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.tilt-plane {
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* A press inside a control must never start a text selection. Without this,
+     dragging even a pixel while pressing selected the label instead of firing
+     the click, so the button appeared to select itself before it opened. */
+  user-select: none;
+  -webkit-user-select: none;
+  /* Removes the 300ms tap delay and the double tap zoom on a control. */
+  touch-action: manipulation;
+}
+
+/* Anything that should sit above the spotlight. */
+.above-spot {
+  position: relative;
+  z-index: 1;
+}

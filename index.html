@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en-GH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Maple Grove International School, Kumasi. Quality education from Early Years through JHS with a blended Ghanaian and Cambridge curriculum."
+    />
+    <meta name="theme-color" content="#f97316" />
+    <title>Maple Grove International School | Kumasi, Ghana</title>
+
+    <!-- The card that appears when a parent forwards a link in WhatsApp or
+         posts it to Facebook. Crawlers read these tags without running any
+         JavaScript, and they will not resolve a relative image, so these have
+         to be absolute. __SITE_URL__ is replaced at build time with whatever
+         address this build is served from, which means the card is correct on
+         a preview deployment and on the live site without anyone editing it.
+         See siteAddress() in vite.config.js. -->
+    <link rel="canonical" href="__SITE_URL__/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Maple Grove International School" />
+    <meta property="og:locale" content="en_GH" />
+    <meta property="og:title" content="Maple Grove International School | Kumasi, Ghana" />
+    <meta
+      property="og:description"
+      content="Quality education from Early Years through JHS in Kumasi, blending the Ghanaian curriculum with Cambridge enrichment."
+    />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/images/hero-campus.jpg" />
+    <meta property="og:image:width" content="1584" />
+    <meta property="og:image:height" content="672" />
+    <meta property="og:image:alt" content="Pupils on the Maple Grove campus in Kumasi" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Maple Grove International School | Kumasi, Ghana" />
+    <meta
+      name="twitter:description"
+      content="Quality education from Early Years through JHS in Kumasi, blending the Ghanaian curriculum with Cambridge enrichment."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/images/hero-campus.jpg" />
+    <style>
+      /* Inline styles apply the theme colour before React mounts, avoiding a flash. */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      html.light,
+      html.light body {
+        background-color: #ffffff !important;
+        color: #000000;
+      }
+      html.dark,
+      html.dark body {
+        background-color: #111111 !important;
+        color: #ffffff;
+      }
+    </style>
+    <script>
+      // Apply the theme before React loads to avoid a flash of the wrong theme.
+      (function () {
+        const isInIframe = window.self !== window.top;
+
+        function applyThemeToDOM(theme) {
+          document.documentElement.classList.remove("light", "dark");
+          document.documentElement.classList.add(theme);
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+
+        if (isInIframe) {
+          // Listen for theme messages pushed by the parent window.
+          window.addEventListener("message", function (event) {
+            if (event.data && typeof event.data.theme === "string") {
+              const theme = event.data.theme;
+              if (theme === "light" || theme === "dark") {
+                applyThemeToDOM(theme);
+              }
+            }
+          });
+        } else {
+          // Outside an iframe, default to the light theme.
+          applyThemeToDOM("light");
+        }
+      })();
+    </script>
+    <script>
+      (function () {
+        if (window.self === window.top) return;
+        var reported = {};
+        window.addEventListener("error", function (event) {
+          // Resource-load failures carry no message, so only report JS runtime errors.
+          if (!event || !event.message) return;
+          var key =
+            event.message + "|" + (event.filename || "") + "|" + (event.lineno || 0);
+          if (reported[key]) return; // Report each distinct error once, to avoid spamming.
+          reported[key] = true;
+          try {
+            window.parent.postMessage(
+              {
+                type: "sandbox-runtime-error",
+                payload: {
+                  message: String(event.message).slice(0, 500),
+                  filename: event.filename || "",
+                  lineno: event.lineno || 0,
+                  colno: event.colno || 0,
+                  stack:
+                    event.error && event.error.stack
+                      ? String(event.error.stack).slice(0, 2000)
+                      : ""
+                }
+              },
+              "*"
+            );
+          } catch (e) {
+            /* Reporting failures must not break the page. */
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
