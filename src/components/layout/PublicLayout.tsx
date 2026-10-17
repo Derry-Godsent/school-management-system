@@ -10,6 +10,56 @@ import { usePointerFx } from '../magic/usePointerFx';
 import { useDeviceTier } from '../../lib/useDeviceTier';
 import { useCloseAbove } from '../../lib/useCloseAbove';
 
+/**
+ * The title and description for each public page.
+ *
+ * Every page used to share the homepage's title, so a reader with three tabs
+ * open saw three identical labels, and a bookmarked page said only the school
+ * name. The description is what a search engine shows under the link.
+ */
+const PAGE_META: Record<string, { title: string; description: string }> = {
+  '/': {
+    title: 'Maple Grove International School | Kumasi, Ghana',
+    description:
+      'Quality education from Early Years through JHS in Kumasi, blending the Ghanaian curriculum with Cambridge enrichment.',
+  },
+  '/about': {
+    title: 'Our Story | Maple Grove International School',
+    description:
+      'How Maple Grove began, what it stands for, and the people who teach here.',
+  },
+  '/academics': {
+    title: 'Our Academic Programmes | Maple Grove',
+    description:
+      'Early Years, Primary and Junior High, with the subjects taught at each level and how progress is reported.',
+  },
+  '/admissions': {
+    title: 'Admissions and Applications | Maple Grove',
+    description:
+      'Requirements, dates and the online application form. Applying takes about four minutes and costs nothing.',
+  },
+  '/campus-life': {
+    title: 'Life at Maple Grove | Campus and Houses',
+    description:
+      'Houses, clubs, sport and the everyday rhythm of the school day.',
+  },
+  '/news': {
+    title: 'News and Announcements | Maple Grove',
+    description:
+      'What the school has been doing, and what families need to know this term.',
+  },
+  '/gallery': {
+    title: 'School Life in Pictures | Maple Grove',
+    description:
+      'Classrooms, grounds and school days at Maple Grove International School.',
+  },
+  '/contact': {
+    title: 'Contact Us | Maple Grove International School',
+    description:
+      'Telephone, email, address and office hours for Maple Grove International School, Kumasi.',
+  },
+};
+
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
   { path: '/about', label: 'About' },
@@ -580,6 +630,24 @@ function Footer() {
  * footer and the portal call-out. Every public route renders inside this.
  */
 export function PublicLayout({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+
+  // The tab, the bookmark and the search result all read one of these.
+  useEffect(() => {
+    const meta = PAGE_META[pathname] ?? PAGE_META['/'];
+    document.title = meta.title;
+    const setMeta = (selector: string, value: string) => {
+      const tag = document.head.querySelector(selector);
+      if (tag) tag.setAttribute('content', value);
+    };
+    setMeta('meta[name="description"]', meta.description);
+    setMeta('meta[property="og:title"]', meta.title);
+    setMeta('meta[property="og:description"]', meta.description);
+    setMeta('meta[property="og:url"]', window.location.href);
+    setMeta('meta[name="twitter:title"]', meta.title);
+    setMeta('meta[name="twitter:description"]', meta.description);
+  }, [pathname]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <ContactBar />

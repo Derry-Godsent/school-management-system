@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   Bell, CalendarCheck, GraduationCap, Home, LogOut, Phone, UserCircle, Users, Wallet,
@@ -121,6 +121,19 @@ export function PortalShell() {
     };
   }, [activeId, guardian, wards, wardNames]);
 
+  // The browser tab names the screen, not just the school. Declared before the
+  // early return below, because a hook may not sit after one.
+  useEffect(() => {
+    if (!auth || !value) {
+      document.title = 'Parent sign in | Maple Grove';
+      return;
+    }
+    const current =
+      TABS.find(tab => (tab.end ? location.pathname === tab.to : location.pathname.startsWith(tab.to))) ??
+      SECONDARY.find(item => item.to === location.pathname);
+    document.title = `${current?.label ?? 'Home'} | Maple Grove parent portal`;
+  }, [location.pathname, auth, value]);
+
   if (!auth || !value) return <LoginScreen onSignIn={login} />;
 
   const pinned = notices.filter(
@@ -129,6 +142,7 @@ export function PortalShell() {
   const isActive = (to: string, end: boolean) => (end ? location.pathname === to : location.pathname.startsWith(to));
   const here = TABS.find(tab => isActive(tab.to, tab.end)) ?? SECONDARY.find(item => item.to === location.pathname);
   const screenTitle = here?.label ?? 'Home';
+
 
   return (
     <WardContext.Provider value={value}>

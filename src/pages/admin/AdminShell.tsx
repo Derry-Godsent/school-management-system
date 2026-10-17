@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   ArrowRightLeft, BookOpen, Building2, CalendarCheck, ClipboardList, FileBarChart2, GraduationCap,
@@ -124,6 +124,20 @@ export function AdminShell() {
 
   useCloseAbove('(min-width: 768px)', () => setMenuOpen(false));
 
+  // The browser tab names the screen. Declared before the early return below,
+  // because a hook may not sit after one.
+  useEffect(() => {
+    if (!auth) {
+      document.title = 'Staff sign in | Maple Grove';
+      return;
+    }
+    const current = modules.find(module =>
+      can(auth.role, module.id) &&
+      (module.id === 'overview' ? pathname === '/admin' : pathname.startsWith(`/admin/${module.id}`))
+    );
+    document.title = `${current?.label ?? 'Overview'} | Maple Grove staff console`;
+  }, [pathname, auth]);
+
   if (!auth) return <LoginScreen />;
 
   const role = roles.find(person => person.id === auth.role);
@@ -136,6 +150,7 @@ export function AdminShell() {
   );
   const tabs = tabsFor(auth.role).map(id => permitted.find(module => module.id === id)).filter(Boolean);
   const me = staffRoster.find(person => person.email === auth.email);
+
 
   return (
     <div className="min-h-screen bg-canvas">
