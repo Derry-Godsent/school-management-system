@@ -12,6 +12,7 @@ import {
 import { useParentAuth } from './AuthContext';
 import { LoginScreen } from './LoginScreen';
 import { Avatar, Sheet } from './ui';
+import { HistoryControls } from '../../components/layout/HistoryControls';
 
 type Student = (typeof students)[number];
 
@@ -149,17 +150,23 @@ export function PortalShell() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setMenuOpen(true)}
-              className="flex min-h-[2.75rem] items-center gap-2 rounded-full bg-canvas py-1.5 pl-1.5 pr-3 transition-transform active:scale-95"
-              aria-label="Your account"
-            >
-              <Avatar name={guardian?.name ?? 'Parent'} size="sm" tone="orange" />
-              <span className="hidden max-w-[8rem] truncate text-[0.8125rem] font-medium text-ink sm:block">
-                {guardian?.name.replace(/^Mr\. & Mrs\.\s*/, '')}
-              </span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              {/* Back and forward, the same pair the console and the website
+                  carry. A parent who has opened a class list can step back to
+                  where they were without the phone's own gesture. */}
+              <HistoryControls />
+              <button
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                className="flex min-h-[2.75rem] items-center gap-2 rounded-full bg-canvas py-1.5 pl-1.5 pr-3 transition-transform active:scale-95"
+                aria-label="Your account"
+              >
+                <Avatar name={guardian?.name ?? 'Parent'} size="sm" tone="orange" />
+                <span className="hidden max-w-[8rem] truncate text-[0.8125rem] font-medium text-ink sm:block">
+                  {guardian?.name.replace(/^Mr\. & Mrs\.\s*/, '')}
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* The child switcher, as pills. Only when there is more than one. */}
