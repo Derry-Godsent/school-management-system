@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Bell, CalendarDays, Pin, Users } from 'lucide-react';
 import { formatDate, formatLongDate, noticesFor, type Notice } from '../../../data/portal';
+import { asParentNotice, useLive } from '../../../data/live';
 import { useWard } from '../PortalShell';
 import { Card, CardPad, Chip, IconChip, ScreenTitle, Segmented, Sheet, StatCard } from '../ui';
 import type { Tone } from '../ui';
@@ -24,10 +25,16 @@ export function NoticesScreen() {
   const [filter, setFilter] = useState<Filter>('All');
   const [showAll, setShowAll] = useState(false);
   const [reading, setReading] = useState<Notice | null>(null);
+  const { sent } = useLive();
 
   if (!child || !profile || !klass) return null;
 
-  const all = noticesFor(profile.classId);
+  // What the school has sent since this session opened comes first, because it
+  // is the newest thing and the reason the app is worth opening.
+  const live = sent
+    .map(asParentNotice)
+    .filter(notice => !notice.classId || notice.classId === profile.classId);
+  const all = [...live, ...noticesFor(profile.classId)];
   const matching = filter === 'All' ? all : all.filter(notice => notice.audience === filter);
   const shown = showAll ? matching : matching.slice(0, 4);
   const hidden = matching.length - shown.length;
@@ -69,7 +76,9 @@ export function NoticesScreen() {
                         <div className="flex flex-wrap items-center gap-1.5">
                           <Chip tone={tone}>{notice.audience}</Chip>
                           {notice.pinned ? <Chip tone="plain" icon={Pin}>Pinned</Chip> : null}
-                          <span className="text-[0.75rem] text-ink-mute">{formatDate(notice.date)}</span>
+                          <span className="min-w-0 truncate text-[0.75rem] text-ink-mute">
+                            {notice.from} · {formatDate(notice.date)}
+                          </span>
                         </div>
                         <h2 className="mt-2 text-[0.9375rem] font-semibold leading-snug text-ink">{notice.title}</h2>
                         <p className="mt-1.5 line-clamp-2 text-[0.875rem] leading-relaxed text-ink-mute">

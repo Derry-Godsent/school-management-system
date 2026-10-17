@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency, getGrade } from '../../../data';
 import { formatDate, noticesFor, pendingWork } from '../../../data/portal';
+import { asParentNotice, useLive } from '../../../data/live';
 import { useWard } from '../PortalShell';
 import {
   ActionTile, Avatar, Card, CardPad, Chip, IconChip, Meter, Row, Rule, ScreenTitle, StatCard, gradeNote,
@@ -30,7 +31,11 @@ export function HomeScreen() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   const due = pendingWork(child.id);
-  const latest = noticesFor(profile.classId).slice(0, 2);
+  const { sent } = useLive();
+  const latest = [
+    ...sent.map(asParentNotice).filter(notice => !notice.classId || notice.classId === profile.classId),
+    ...noticesFor(profile.classId),
+  ].slice(0, 2);
   const grade = getGrade(average);
   const lastEight = profile.attendance.recent.slice(-8);
   const nextLesson = klass.todayLessons[0];

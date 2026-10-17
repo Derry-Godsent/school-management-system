@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { SmoothScroll, ScrollProgress } from './components/fx';
+import { LiveProvider } from './data/live';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/public/AboutPage';
 import AcademicsPage from './pages/public/AcademicsPage';
@@ -23,12 +24,22 @@ import FeesScreen from './pages/parent/screens/Fees';
 import NoticesScreen from './pages/parent/screens/Notices';
 import ClassListScreen from './pages/parent/screens/ClassList';
 import ProfileScreen from './pages/parent/screens/Profile';
-import {
-  AdminAuthProvider,
-  AdminLayout,
-  AdminDashboard,
-  StudentsPage,
-} from './pages/AdminPortal';
+// The staff console, imported by full path for the same reason as the parent
+// portal: a legacy admin file sits beside the folder and would shadow it.
+import { StaffAuthProvider } from './pages/admin/AuthContext';
+import { AdminShell } from './pages/admin/AdminShell';
+import OverviewScreen from './pages/admin/screens/Overview';
+import ConsoleAdmissions from './pages/admin/screens/Admissions';
+import ConsoleStudents from './pages/admin/screens/Students';
+import ConsoleStaff from './pages/admin/screens/Staff';
+import ConsoleClasses from './pages/admin/screens/Classes';
+import ConsoleAttendance from './pages/admin/screens/Attendance';
+import ConsoleAcademics from './pages/admin/screens/Academics';
+import ConsoleFinance from './pages/admin/screens/Finance';
+import ConsoleCommunications from './pages/admin/screens/Communications';
+import ConsoleReports from './pages/admin/screens/Reports';
+import ConsoleAccess from './pages/admin/screens/Access';
+import ConsoleSettings from './pages/admin/screens/Settings';
 
 /** Wraps a public marketing page in the shared navigation/footer shell. */
 function Public({ children }: { children: React.ReactNode }) {
@@ -38,6 +49,7 @@ function Public({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <LiveProvider>
       {/* Global motion layer. Each of these no-ops on reduced-motion and
           low-power devices rather than degrading them. */}
       <SmoothScroll />
@@ -130,27 +142,32 @@ export default function App() {
           <Route path="profile" element={<ProfileScreen />} />
         </Route>
 
-        {/* Admin Portal */}
+        {/* Staff console. One shell holds the rail, the top bar and the phone
+            tab bar, and the working area changes inside it. Every module is a
+            real route: a member of staff can bookmark the finance screen and
+            come back to it, and the gate is the permission table, not the
+            absence of a URL. */}
         <Route
           path="/admin"
           element={
-            <AdminAuthProvider>
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            </AdminAuthProvider>
+            <StaffAuthProvider>
+              <AdminShell />
+            </StaffAuthProvider>
           }
-        />
-        <Route
-          path="/admin/students"
-          element={
-            <AdminAuthProvider>
-              <AdminLayout>
-                <StudentsPage />
-              </AdminLayout>
-            </AdminAuthProvider>
-          }
-        />
+        >
+          <Route index element={<OverviewScreen />} />
+          <Route path="admissions" element={<ConsoleAdmissions />} />
+          <Route path="students" element={<ConsoleStudents />} />
+          <Route path="staff" element={<ConsoleStaff />} />
+          <Route path="classes" element={<ConsoleClasses />} />
+          <Route path="attendance" element={<ConsoleAttendance />} />
+          <Route path="academics" element={<ConsoleAcademics />} />
+          <Route path="finance" element={<ConsoleFinance />} />
+          <Route path="communications" element={<ConsoleCommunications />} />
+          <Route path="reports" element={<ConsoleReports />} />
+          <Route path="access" element={<ConsoleAccess />} />
+          <Route path="settings" element={<ConsoleSettings />} />
+        </Route>
 
         {/* Unknown paths fall back to the homepage for now. A dedicated 404
             route would be better than silently showing the home page. */}
@@ -163,6 +180,7 @@ export default function App() {
           }
         />
       </Routes>
+      </LiveProvider>
     </BrowserRouter>
   );
 }
