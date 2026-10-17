@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 import { CalendarCheck, CheckCircle2, Clock, Save, UserX, Users } from 'lucide-react';
 import { formatLongDate } from '../../../data/portal';
-import { DEMO_TODAY, attendanceToday, can, registerFor } from '../../../data/admin';
+import {
+  DEMO_TODAY, attendanceToday, can, classesInScope, registerFor, scopeFor,
+} from '../../../data/admin';
 import { useStaffAuth } from '../AuthContext';
 import {
   Avatar, Badge, Button, Card, CardHead, CardPad, Kpi, Meter, PageHead, SavedNote, Segmented,
@@ -29,15 +31,21 @@ const MARKS: { value: Mark; label: string; icon: typeof CheckCircle2; tone: stri
 
 export function AttendanceScreen() {
   const { auth } = useStaffAuth();
-  const [classId, setClassId] = useState<'jhs2' | 'p5'>('jhs2');
+  // A form teacher has one class, so the screen opens on it and there is no
+  // picker to misuse. Only a role that works across the school gets to choose.
+  const myClasses = auth ? classesInScope(auth.role) : [];
+  const [classId, setClassId] = useState<string>(myClasses[0]?.id ?? 'jhs2');
   const [session, setSession] = useState<'Morning' | 'Afternoon'>('Morning');
   const [saved, setSaved] = useState(false);
+  const [marks, setMarks] = useState<Record<string, Mark>>({});
 
   if (!auth) return null;
+  const scope = scopeFor(auth.role);
   const mayMark = can(auth.role, 'attendance', 'edit');
+  const canSwitch = scope.kind === 'school';
 
   const roster = useMemo(() => registerFor(classId), [classId]);
-  const [marks, setMarks] = useState<Record<string, Mark>>({});
+  const className = myClasses.find(klass => klass.id === classId)?.name ?? 'your class';
 
   const resolved = roster.map(pupil => ({ ...pupil, mark: marks[pupil.id] ?? (pupil.today as Mark) }));
   const present = resolved.filter(pupil => pupil.mark === 'present').length;
@@ -57,7 +65,7 @@ export function AttendanceScreen() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Kpi icon={Users} tone="purple" label="In school" value={total} note={`of ${all} on roll`} />
-        <Kpi icon={CheckCircle2} tone="green" label="Present here" value={present} note={`${classId === 'jhs2' ? 'JHS 2' : 'Primary 5'}, ${session.toLowerCase()}`} />
+        <Kpi icon={CheckCircle2} tone="green" label="Present here" value={present} note={`${className}, ${session.toLowerCase()}`} />
         <Kpi icon={Clock} tone="yellow" label="Late" value={late} note="Arrived after the bell" />
         <Kpi icon={UserX} tone="orange" label="Away" value={away} note={away ? 'Follow up today' : 'Nobody absent'} />
       </div>
@@ -65,13 +73,25 @@ export function AttendanceScreen() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Card>
           <CardHead
-            title={`${classId === 'jhs2' ? 'JHS 2' : 'Primary 5'} register`}
-            sub="Everyone starts present. Mark only the exceptions."
+            title={`${className} register`}
+            sub={canSwitch ? 'Everyone starts present. Mark only the exceptions.' : 'Your class. Everyone starts present, so mark only the exceptions.'}
             icon={CalendarCheck}
             tone="green"
+            action={!canSwitch ? <Badge tone="purple">Your class</Badge> : undefined}
           />
           <div className="flex flex-col gap-2 px-4 pb-3 sm:flex-row sm:items-center sm:px-5">
-            <Segmented options={['jhs2', 'p5'] as const} value={classId} onChange={setClassId} label="Choose a class" />
+            {canSwitch ? (
+              <Segmented
+                options={myClasses.map(klass => klass.id) as string[]}
+                value={classId}
+                onChange={setClassId}
+                label="Choose a class"
+              />
+            ) : (
+              <p className="text-[0.75rem] font-medium text-ink-mute">
+                {className} is the class you are assigned to.
+              </p>
+            )}
             <Segmented options={['Morning', 'Afternoon'] as const} value={session} onChange={setSession} label="Choose a session" />
           </div>
 
@@ -135,7 +155,12 @@ export function AttendanceScreen() {
           ) : null}
 
           <Card>
-            <CardHead title="The whole school" sub="Today, by class" icon={Users} tone="purple" />
+            <CardHead
+              title={canSwitch ? 'The whole school' : 'Against the school'}
+              sub="Today, by class"
+              icon={Users}
+              tone="purple"
+            />
             <div className="space-y-3 px-4 pb-4 sm:px-5">
               {attendanceToday.map(klass => (
                 <div key={klass.id}>

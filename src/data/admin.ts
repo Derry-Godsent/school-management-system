@@ -214,6 +214,104 @@ export const classSummary = CLASS_IDS.map(classId => {
 });
 
 // ---------------------------------------------------------------------------
+// What each person is assigned to
+// ---------------------------------------------------------------------------
+
+/**
+ * A teacher does not work on the whole school.
+ *
+ * A form teacher has one class: the one whose register they take and whose
+ * term remarks they write. A subject teacher has one subject in one class, or
+ * a handful of classes if they are senior, and not one pupil or mark outside
+ * that. Only the office roles work across the school, because that is the job.
+ *
+ * Every screen reads its scope from here rather than from a class picker, so a
+ * teacher cannot wander into another class by using the interface, and the
+ * figures they see are their own pupils rather than a school average they have
+ * no power over.
+ */
+export interface Scope {
+  kind: 'school' | 'class' | 'subject';
+  classIds: string[];
+  /** The subject pairs this person may mark. Empty for a form teacher. */
+  subjects: { classId: string; subject: string; outOf: number }[];
+  /** The line shown under their name in the rail. */
+  label: string;
+  detail: string;
+}
+
+const SCHOOL: Scope = {
+  kind: 'school',
+  classIds: ['jhs2', 'p5'],
+  subjects: [],
+  label: 'Whole school',
+  detail: 'Every class, every record',
+};
+
+export const scopeByRole: Record<RoleId, Scope> = {
+  director: SCHOOL,
+  head: { ...SCHOOL, label: 'Whole school', detail: 'Academic oversight' },
+  admin: { ...SCHOOL, label: 'Whole school', detail: 'Records and office' },
+  finance: { ...SCHOOL, label: 'Whole school', detail: 'Billing and receipts' },
+  form: {
+    kind: 'class',
+    classIds: ['jhs2'],
+    subjects: [],
+    label: 'JHS 2',
+    detail: 'Form teacher, one class',
+  },
+  subject: {
+    kind: 'subject',
+    classIds: ['jhs2'],
+    subjects: [{ classId: 'jhs2', subject: 'Mathematics', outOf: 24 }],
+    label: 'Mathematics, JHS 2',
+    detail: 'Subject teacher, one class',
+  },
+};
+
+export function scopeFor(role: RoleId): Scope {
+  return scopeByRole[role];
+}
+
+/** The classes this person may open. */
+export function classesInScope(role: RoleId) {
+  const scope = scopeFor(role);
+  return classSummary.filter(klass => scope.classIds.includes(klass.id));
+}
+
+/** The pupils this person may see. */
+export function pupilsInScope(role: RoleId) {
+  const scope = scopeFor(role);
+  return rollWithFees.filter(pupil => scope.classIds.includes(pupil.classId));
+}
+
+/** The subjects this person may mark, with the class they belong to. */
+export function subjectsInScope(role: RoleId) {
+  return scopeFor(role).subjects;
+}
+
+export function mayTeach(role: RoleId, classId: string): boolean {
+  return scopeFor(role).classIds.includes(classId);
+}
+
+/** The department a role sits in, which is what the rail is grouped by. */
+export interface Department {
+  id: 'leadership' | 'academic' | 'administration' | 'finance';
+  name: string;
+  /** What this department is responsible for, in one line. */
+  remit: string;
+}
+
+export const departmentOf: Record<RoleId, Department> = {
+  director: { id: 'leadership', name: 'Leadership', remit: 'The whole school, and what leaves it' },
+  head: { id: 'academic', name: 'Academic', remit: 'Teaching, results and the standard of work' },
+  form: { id: 'academic', name: 'Academic', remit: 'One class, every day' },
+  subject: { id: 'academic', name: 'Academic', remit: 'One subject, marked properly' },
+  admin: { id: 'administration', name: 'Administration', remit: 'Records, admissions and the office' },
+  finance: { id: 'finance', name: 'Bursary', remit: 'Bills, receipts and what is owed' },
+};
+
+// ---------------------------------------------------------------------------
 // Guardian and fee details for every pupil on roll
 // ---------------------------------------------------------------------------
 

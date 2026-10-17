@@ -8,8 +8,9 @@ import {
   DEMO_TODAY, can, feeByCategory, feePosition, recentPayments, rollWithFees,
 } from '../../../data/admin';
 import { useStaffAuth } from '../AuthContext';
+import { Bars, Donut, Ring } from '../charts';
 import {
-  Avatar, Badge, Button, Card, CardHead, CardPad, Drawer, Kpi, Meter, PageHead, SavedNote, SearchField, Segmented, Table, Td, Tr,
+  Avatar, Badge, Button, Card, CardHead, CardPad, Drawer, Hero, Kpi, Meter, SavedNote, SearchField, Segmented, Table, Td, Tr,
 } from '../ui';
 
 /**
@@ -48,24 +49,38 @@ export function FinanceScreen() {
 
   return (
     <div className="space-y-5">
-      <PageHead
+      <Hero
+        eyebrow={`Bursary · second term, as at ${formatLongDate(DEMO_TODAY)}`}
         title="Finance"
-        sub={`Second term, as at ${formatLongDate(DEMO_TODAY)}`}
+        sub="What has come in, what is still owed, and who to call. This is the same ledger the parent app reads from, line for line."
+        tone="yellow"
         actions={
           mayEdit ? (
-            <div className="flex gap-2">
+            <>
               <Button tone="plain" icon={Download} onClick={() => undefined}>
                 Export
               </Button>
               <Button icon={Bell} onClick={() => setReminded(arrears.length)}>
                 Remind everyone owing
               </Button>
-            </div>
+            </>
           ) : (
-            <Badge tone="plain">Finance oversights for your role</Badge>
+            <Badge tone="plain">Oversight only for your role</Badge>
           )
         }
-      />
+      >
+        <div className="flex flex-wrap items-center gap-6">
+          <Ring value={feePosition.rate} caption="of the term bill collected" captionNote={`${formatCurrency(feePosition.outstanding)} still out`} tone="yellow" size={92} />
+          <div className="min-w-0 flex-1">
+            <Bars
+              data={feeByCategory.map(line => ({ label: line.category.split(' ')[0], value: Math.round((line.collected / line.billed) * 100), max: 100 }))}
+              tone="orange"
+              height={100}
+              suffix="%"
+            />
+          </div>
+        </div>
+      </Hero>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Kpi icon={Receipt} tone="orange" label="Billed this term" value={formatCurrency(feePosition.billed).replace('GHS ', '')} note="Every pupil, every line" />

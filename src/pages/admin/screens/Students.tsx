@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { CalendarCheck, GraduationCap, Phone, Search, UserPlus, Users, Wallet } from 'lucide-react';
 import { formatCurrency } from '../../../data';
 import {
-  DEMO_TODAY, can, rollWithFees, type PupilRecord, type RoleId,
+  DEMO_TODAY, can, classesInScope, pupilsInScope, scopeFor, type PupilRecord, type RoleId,
 } from '../../../data/admin';
 import { useStaffAuth } from '../AuthContext';
 import {
@@ -22,22 +22,26 @@ import {
  * role in the corner.
  */
 
-const CLASSES = ['All classes', 'JHS 2', 'Primary 5'] as const;
+const CLASSES = ['All classes'] as const;
 
 export function StudentsScreen() {
   const { auth } = useStaffAuth();
   const [query, setQuery] = useState('');
-  const [klass, setKlass] = useState<(typeof CLASSES)[number]>('All classes');
+  const [klass, setKlass] = useState<string>('All classes');
   const [openId, setOpenId] = useState<string | null>(null);
 
   if (!auth) return null;
   const seesMoney = can(auth.role, 'finance');
   const seesMarks = can(auth.role, 'academics');
   const mayEdit = can(auth.role, 'students', 'edit');
+  const scope = scopeFor(auth.role);
+  const inScope = pupilsInScope(auth.role);
+  const myClasses = classesInScope(auth.role);
+  const classFilters = ['All classes', ...myClasses.map(klass => klass.name)] as const;
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return rollWithFees.filter(pupil => {
+    return inScope.filter(pupil => {
       if (klass !== 'All classes' && pupil.className !== klass) return false;
       if (!needle) return true;
       return (
@@ -46,16 +50,20 @@ export function StudentsScreen() {
         pupil.guardianName.toLowerCase().includes(needle)
       );
     });
-  }, [query, klass]);
+  }, [query, klass, inScope]);
 
-  const open: PupilRecord | null = rollWithFees.find(pupil => pupil.id === openId) ?? null;
-  const owing = rollWithFees.filter(pupil => pupil.feeBalance > 0);
+  const open: PupilRecord | null = inScope.find(pupil => pupil.id === openId) ?? null;
+  const owing = inScope.filter(pupil => pupil.feeBalance > 0);
 
   return (
     <div className="space-y-5">
       <PageHead
         title="Pupils"
-        sub={`${rollWithFees.length} on roll · ${rollWithFees.filter(pupil => pupil.ward).length} in the demonstration family`}
+        sub={
+          scope.kind === 'school'
+            ? `${inScope.length} on roll · ${inScope.filter(pupil => pupil.ward).length} in the demonstration family`
+            : `${inScope.length} in ${scope.label}, the pupils you are assigned`
+        }
         actions={
           mayEdit ? (
             <Button icon={UserPlus} onClick={() => undefined}>
@@ -68,15 +76,15 @@ export function StudentsScreen() {
       />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi icon={Users} tone="purple" label="On roll" value={rollWithFees.length} note="Two classes" />
-        <Kpi icon={CalendarCheck} tone="green" label="In today" value={rollWithFees.length - 6} note="Six are away or late" />
+        <Kpi icon={Users} tone="purple" label="On roll" value={inScope.length} note={scope.kind === 'school' ? 'Two classes' : scope.label} />
+        <Kpi icon={CalendarCheck} tone="green" label="In today" value={inScope.length - 6} note="Six are away or late" />
         {seesMarks ? (
           <Kpi
             icon={GraduationCap}
             tone="orange"
             label="Class average"
             value={
-              Math.round((rollWithFees.reduce((total, pupil) => total + pupil.average, 0) / rollWithFees.length) * 10) / 10
+              Math.round((inScope.reduce((total, pupil) => total + pupil.average, 0) / Math.max(1, inScope.length)) * 10) / 10
             }
             note="Read from every subject"
           />
@@ -95,7 +103,11 @@ export function StudentsScreen() {
       <Card>
         <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:px-5">
           <SearchField value={query} onChange={setQuery} placeholder="Search a name or an admission number" />
-          <Segmented options={CLASSES} value={klass} onChange={setKlass} label="Filter by class" />
+          {myClasses.length > 1 ? (
+            <Segmented options={classFilters} value={klass} onChange={setKlass} label="Filter by class" />
+          ) : (
+            <p className="text-[0.75rem] font-medium text-ink-mute">{scope.label} is your class.</p>
+          )}
         </div>
 
         <Table head={['Pupil', 'Admission no', 'Class', 'Guardian', seesMarks ? 'Average' : 'Attendance', seesMoney ? 'Balance' : '', '']}>
@@ -143,7 +155,7 @@ export function StudentsScreen() {
           ) : null}
         </Table>
         <p className="border-t border-rule px-4 py-3 text-[0.75rem] text-ink-mute sm:px-5">
-          {rows.length} of {rollWithFees.length} shown
+          {rows.length} of {inScope.length} shown
         </p>
       </Card>
 

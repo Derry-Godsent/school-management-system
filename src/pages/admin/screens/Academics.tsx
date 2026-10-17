@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { CheckCircle2, ClipboardList, GraduationCap, Send, TrendingUp } from 'lucide-react';
 import { getGrade } from '../../../data';
 import {
-  can, classSummary, resultBatches, rollWithFees, type Publishable,
+  can, classSummary, classesInScope, resultBatches, rollWithFees, scopeFor, type Publishable,
 } from '../../../data/admin';
 import { useStaffAuth } from '../AuthContext';
 import {
@@ -34,9 +34,19 @@ export function AcademicsScreen() {
   if (!auth) return null;
 
   const mayPublish = can(auth.role, 'academics', 'edit') && (auth.role === 'head' || auth.role === 'director');
-  const mayEnter = can(auth.role, 'academics', 'edit');
+  const scope = scopeFor(auth.role);
+  // A subject teacher has one subject in one class, a form teacher has one
+  // class, the office has the school. The list is built from that, not from a
+  // filter the person could undo.
+  const mayEnter = can(auth.role, 'academics', 'edit') && scope.kind !== 'school';
 
-  const batches = resultBatches.map(batch =>
+  const inScope = resultBatches.filter(batch => {
+    if (scope.kind === 'school') return true;
+    if (scope.kind === 'class') return scope.classIds.includes(batch.classId);
+    return scope.subjects.some(pair => pair.classId === batch.classId && pair.subject === batch.subject);
+  });
+
+  const batches = inScope.map(batch =>
     published.includes(`${batch.classId}-${batch.subject}`) ? { ...batch, status: 'Published' as const } : batch
   );
   const ready = batches.filter(batch => batch.status === 'Ready');
@@ -46,7 +56,11 @@ export function AcademicsScreen() {
     <div className="space-y-5">
       <PageHead
         title="Results"
-        sub="Marks are private until they are published, then they are on every phone in the class"
+        sub={
+          scope.kind === 'school'
+            ? 'Marks are private until they are published, then they are on every phone in the class'
+            : `Your results only: ${scope.label}. Marks stay private until the head teacher publishes them.`
+        }
         actions={<Badge tone={ready.length ? 'orange' : 'green'}>{ready.length} ready to publish</Badge>}
       />
 
@@ -57,8 +71,12 @@ export function AcademicsScreen() {
         <Kpi icon={ClipboardList} tone="yellow" label="Still marking" value={waiting.length} note="Not released yet" />
       </div>
 
-      {mayEnter && auth.role !== 'head' && auth.role !== 'director' ? (
-        <GradeEntry subject={auth.role === 'subject' ? 'Mathematics' : 'Class work'} />
+      {mayEnter ? (
+        <GradeEntry
+          subject={scope.kind === 'subject' ? scope.subjects[0].subject : 'Class work'}
+          fixedClassId={scope.kind === 'subject' ? scope.subjects[0].classId : undefined}
+          classIds={classesInScope(auth.role).map(klass => klass.id)}
+        />
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -220,8 +238,17 @@ export function AcademicsScreen() {
 }
 
 /** A working gradebook, for the teacher who owns the subject. */
-function GradeEntry({ subject }: { subject: string }) {
-  const [classId, setClassId] = useState<'jhs2' | 'p5'>('jhs2');
+function GradeEntry({
+  subject,
+  fixedClassId,
+  classIds,
+}: {
+  subject: string;
+  /** Set when this person teaches one class and must not switch. */
+  fixedClassId?: string;
+  classIds: string[];
+}) {
+  const [classId, setClassId] = useState<string>(fixedClassId ?? classIds[0] ?? 'jhs2');
   const [scores, setScores] = useState<Record<string, number>>({});
   const [saved, setSaved] = useState(false);
 
@@ -240,7 +267,13 @@ function GradeEntry({ subject }: { subject: string }) {
         action={<Badge tone="purple">Average {average}</Badge>}
       />
       <div className="px-4 pb-3 sm:px-5">
-        <Segmented options={['jhs2', 'p5'] as const} value={classId} onChange={setClassId} label="Choose a class" />
+        {fixedClassId ? (
+          <p className="text-[0.75rem] font-medium text-ink-mute">
+            {pupils[0]?.className ?? 'Your class'} is the class you are assigned to.
+          </p>
+        ) : (
+          <Segmented options={classIds} value={classId} onChange={setClassId} label="Choose a class" />
+        )}
       </div>
       <div className="max-h-[26rem] overflow-y-auto border-t border-rule">
         <ul>

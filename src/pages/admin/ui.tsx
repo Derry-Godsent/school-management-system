@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { Sparkline, type ChartTone } from './charts';
 import { CheckCircle2, ChevronRight, X, type LucideIcon } from 'lucide-react';
 import { useScrollLock } from '../../components/fx';
 
@@ -44,7 +45,7 @@ export function Card({
 }) {
   const ground = tone ? TONE[tone].tint : 'bg-paper';
   return (
-    <section className={`rounded-2xl ${ground} shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)] ${className}`}>
+    <section className={`rounded-2xl border border-white ${ground} shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)] ${className}`}>
       {children}
     </section>
   );
@@ -85,22 +86,86 @@ export function CardHead({
   );
 }
 
+/**
+ * The band at the top of a working screen.
+ *
+ * A console is read for hours, so the top of each screen has to say what this
+ * page is and what state it is in without being read word by word. A soft
+ * gradient in the department's colour, the title set large, the live state
+ * beside it, and the actions on the right where the eye finishes.
+ */
+export function Hero({
+  eyebrow,
+  title,
+  sub,
+  tone = 'orange',
+  actions,
+  children,
+}: {
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  sub?: ReactNode;
+  tone?: Tone;
+  actions?: ReactNode;
+  children?: ReactNode;
+}) {
+  const wash: Record<Tone, string> = {
+    orange: 'from-[#fff7ed] via-[#fffaf3] to-white',
+    green: 'from-[#ecfdf5] via-[#f6fefb] to-white',
+    purple: 'from-[#f5f3ff] via-[#faf8ff] to-white',
+    yellow: 'from-[#fefce8] via-[#fffdf2] to-white',
+    plain: 'from-[#f3f5f8] via-[#f8fafc] to-white',
+  };
+  const dot: Record<Tone, string> = {
+    orange: 'bg-gold', green: 'bg-green', purple: 'bg-purple', yellow: 'bg-yellow', plain: 'bg-canvas-deep',
+  };
+
+  return (
+    <section className={`relative overflow-hidden rounded-3xl border border-white bg-gradient-to-br ${wash[tone]} px-5 py-5 shadow-[0_1px_3px_rgba(17,17,17,0.05)] sm:px-7 sm:py-6`}>
+      {/* Two soft shapes give the band depth without tinting the words. */}
+      <span aria-hidden="true" className={`pointer-events-none absolute -right-10 -top-16 h-44 w-44 rounded-full ${dot[tone]} opacity-[0.10]`} />
+      <span aria-hidden="true" className={`pointer-events-none absolute -bottom-20 right-24 h-32 w-32 rounded-full ${dot[tone]} opacity-[0.07]`} />
+
+      <div className="relative flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          {eyebrow ? (
+            <p className="mb-1.5 text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-ink-mute">{eyebrow}</p>
+          ) : null}
+          <h1 className="text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-[1.9rem]">{title}</h1>
+          {sub ? <p className="mt-1.5 max-w-2xl text-[0.875rem] leading-relaxed text-ink-mute">{sub}</p> : null}
+        </div>
+        {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+      </div>
+
+      {children ? <div className="relative mt-5">{children}</div> : null}
+    </section>
+  );
+}
+
+/**
+ * The band at the top of a screen that has not been given a bespoke hero.
+ *
+ * It exists so the console does not alternate between a designed screen and a
+ * heading with a rule under it. Every screen opens the same way, with the same
+ * weight of type and the same soft ground, and the differences between screens
+ * live in what they contain rather than in how they are framed.
+ */
 export function PageHead({
   title,
   sub,
   actions,
+  eyebrow,
+  tone = 'orange',
 }: {
   title: string;
   sub?: ReactNode;
   actions?: ReactNode;
+  eyebrow?: ReactNode;
+  tone?: Tone;
 }) {
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-      <div className="min-w-0">
-        <h1 className="text-[1.5rem] font-semibold tracking-[-0.01em] text-ink sm:text-[1.75rem]">{title}</h1>
-        {sub ? <p className="mt-1 text-[0.8125rem] text-ink-mute">{sub}</p> : null}
-      </div>
-      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+    <div className="mb-5">
+      <Hero eyebrow={eyebrow} title={title} sub={sub} actions={actions} tone={tone} />
     </div>
   );
 }
@@ -148,6 +213,8 @@ export function Kpi({
   tone = 'orange',
   delta,
   to,
+  spark,
+  className = '',
 }: {
   label: string;
   value: ReactNode;
@@ -157,6 +224,9 @@ export function Kpi({
   tone?: Tone;
   delta?: { value: string; up: boolean };
   to?: string;
+  /** A short series, drawn under the figure as a trend. */
+  spark?: number[];
+  className?: string;
 }) {
   const body = (
     <>
@@ -177,6 +247,11 @@ export function Kpi({
         {suffix ? <span className="ml-0.5 text-[1rem] text-ink-mute">{suffix}</span> : null}
       </p>
       {note ? <p className="mt-2 text-[0.75rem] leading-snug text-ink-mute">{note}</p> : null}
+      {spark && spark.length > 1 ? (
+        <div className="mt-2.5 h-8">
+          <Sparkline values={spark} tone={(tone === 'plain' ? 'orange' : tone) as ChartTone} label={`${label} trend`} height={32} />
+        </div>
+      ) : null}
     </>
   );
 
@@ -184,14 +259,14 @@ export function Kpi({
     return (
       <Link
         to={to}
-        className="block rounded-2xl bg-paper px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)] transition-transform active:scale-[0.99]"
+        className={`block rounded-2xl bg-paper px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)] transition-transform active:scale-[0.99] ${className}`}
       >
         {body}
       </Link>
     );
   }
   return (
-    <div className="rounded-2xl bg-paper px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)]">
+    <div className={`rounded-2xl bg-paper px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.06),0_1px_2px_rgba(17,17,17,0.04)] ${className}`}>
       {body}
     </div>
   );
@@ -353,13 +428,13 @@ export function Table({ head, children }: { head: string[]; children: ReactNode 
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full border-collapse text-left">
-        <thead className="hidden md:table-header-group">
+        <thead className="sticky top-0 z-10 hidden bg-paper/95 backdrop-blur-sm md:table-header-group">
           <tr>
             {head.map(column => (
               <th
                 key={column}
                 scope="col"
-                className="border-b border-rule px-4 py-2.5 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-ink-mute first:pl-5 last:pr-5"
+                className="border-b border-rule px-4 py-2.5 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-ink-mute first:pl-5 last:pr-5"
               >
                 {column}
               </th>
@@ -373,7 +448,7 @@ export function Table({ head, children }: { head: string[]; children: ReactNode 
 }
 
 export function Tr({ children }: { children: ReactNode }) {
-  return <tr className="border-b border-rule last:border-0">{children}</tr>;
+  return <tr className="border-b border-rule transition-colors last:border-0 hover:bg-canvas/70">{children}</tr>;
 }
 
 export function Td({

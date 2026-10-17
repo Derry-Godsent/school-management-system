@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'fra
 import { Menu, X, MapPin, Phone, Mail, Facebook, Youtube, GraduationCap, ShieldCheck, ArrowRight } from 'lucide-react';
 import { school } from '../../data';
 import { Portal, useScrollLock } from '../fx';
+import { HistoryControls } from './HistoryControls';
 import { InteractiveHoverButton, MagneticNavLink, ShimmerButton } from '../magic';
 import { usePointerFx } from '../magic/usePointerFx';
 import { useDeviceTier } from '../../lib/useDeviceTier';
@@ -227,6 +228,12 @@ function Navigation() {
               </span>
             </Link>
 
+            {/* Back and forward, using the real history stack, so a reader who
+                has clicked into a page can retrace their steps without the
+                phone's own gesture. Hidden on the smallest screens, where the
+                bar has no room, and repeated at the top of the drawer. */}
+            <HistoryControls className="ml-1 hidden sm:flex lg:ml-4" />
+
             {/* Desktop nav. Each link chases the pointer and slides its label on
                 hover, with a gold marker tracking the current page. */}
             <div
@@ -335,6 +342,13 @@ function Navigation() {
                   >
                     <X size={22} />
                   </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 border-y border-rule px-5 py-2">
+                  <span className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-ink-mute">
+                    Your trail
+                  </span>
+                  <HistoryControls />
                 </div>
 
                 <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4" onMouseLeave={() => setHoveredDrawer(null)}>

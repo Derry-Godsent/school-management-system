@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BookOpen, CalendarCheck, Clock, MapPin, Users } from 'lucide-react';
 import { classInfo } from '../../../data/portal';
-import { classSummary, rollWithFees } from '../../../data/admin';
+import { classesInScope, rollWithFees, scopeFor } from '../../../data/admin';
 import { useStaffAuth } from '../AuthContext';
 import {
   Avatar, Badge, Button, Card, CardHead, CardPad, Drawer, Kpi, Meter, PageHead, Row,
@@ -22,15 +22,21 @@ export function ClassesScreen() {
 
   if (!auth) return null;
 
+  const scope = scopeFor(auth.role);
+  const classSummary = classesInScope(auth.role);
   const open = classSummary.find(klass => klass.id === openId) ?? null;
   const info = open ? classInfo[open.id] : null;
 
   return (
     <div className="space-y-5">
       <PageHead
-        title="Classes"
-        sub="Who teaches what, and how the term is going"
-        actions={<Badge tone="green">{classSummary.length} classes</Badge>}
+        title={scope.kind === 'school' ? 'Classes' : scope.label}
+        sub={
+          scope.kind === 'school'
+            ? 'Who teaches what, and how the term is going'
+            : 'The class you are assigned to, and everyone who teaches in it'
+        }
+        actions={<Badge tone="green">{classSummary.length === 1 ? 'Your class' : `${classSummary.length} classes`}</Badge>}
       />
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -182,7 +188,7 @@ export function ClassesScreen() {
 
       <p className="flex items-center gap-2 text-[0.75rem] text-ink-mute">
         <Users size={14} aria-hidden="true" />
-        {rollWithFees.length} pupils across both classes.
+        {rollWithFees.filter(pupil => classSummary.some(klass => klass.id === pupil.classId)).length} pupils in your scope.
         <CalendarCheck size={14} aria-hidden="true" /> Registers open at 7:30.
       </p>
     </div>
