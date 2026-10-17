@@ -12,10 +12,12 @@
 
     <!-- The card that appears when a parent forwards a link in WhatsApp or
          posts it to Facebook. Crawlers read these tags without running any
-         JavaScript, so they live here in the static file. og:image and og:url
-         must be absolute, so when the school's own domain is connected, swap
-         https://maplegrove.edu.gh below for it. -->
-    <link rel="canonical" href="https://maplegrove.edu.gh/" />
+         JavaScript, and they will not resolve a relative image, so these have
+         to be absolute. __SITE_URL__ is replaced at build time with whatever
+         address this build is served from, which means the card is correct on
+         a preview deployment and on the live site without anyone editing it.
+         See siteAddress() in vite.config.js. -->
+    <link rel="canonical" href="__SITE_URL__/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Maple Grove International School" />
     <meta property="og:locale" content="en_GH" />
@@ -24,8 +26,8 @@
       property="og:description"
       content="Quality education from Early Years through JHS in Kumasi, blending the Ghanaian curriculum with Cambridge enrichment."
     />
-    <meta property="og:url" content="https://maplegrove.edu.gh/" />
-    <meta property="og:image" content="https://maplegrove.edu.gh/images/hero-campus.jpg" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/images/hero-campus.jpg" />
     <meta property="og:image:width" content="1584" />
     <meta property="og:image:height" content="672" />
     <meta property="og:image:alt" content="Pupils on the Maple Grove campus in Kumasi" />
@@ -35,7 +37,7 @@
       name="twitter:description"
       content="Quality education from Early Years through JHS in Kumasi, blending the Ghanaian curriculum with Cambridge enrichment."
     />
-    <meta name="twitter:image" content="https://maplegrove.edu.gh/images/hero-campus.jpg" />
+    <meta name="twitter:image" content="__SITE_URL__/images/hero-campus.jpg" />
     <style>
       /* Inline styles apply the theme colour before React mounts, avoiding a flash. */
       html,
