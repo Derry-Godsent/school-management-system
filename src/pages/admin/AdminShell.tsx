@@ -103,7 +103,7 @@ export function AdminShell() {
           <p className="truncate text-[0.6875rem] text-ink-mute">{auth.title}</p>
         </div>
 
-        <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4" aria-label="Console">
+        <nav data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4" aria-label="Console">
           {GROUPS.map(group => {
             const items = permitted.filter(module => module.group === group);
             if (!items.length) return null;

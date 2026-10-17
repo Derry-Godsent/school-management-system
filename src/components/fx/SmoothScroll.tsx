@@ -5,7 +5,17 @@ import { useDeviceTier, useMotionAllowed } from '../../lib/useDeviceTier';
 import { registerSmoothScroll, resetLockedScroll } from '../../lib/pageLock';
 
 /**
- * SmoothScroll: momentum scrolling for the whole document.
+ * SmoothScroll: momentum scrolling for the public website.
+ *
+ * Deliberately mounted for the marketing pages only. The console and the
+ * parent app are working surfaces: they hold their own scroll areas (a rail of
+ * twelve destinations, drawers of forty pupils) and they are used all day, so
+ * they scroll the way the operating system scrolls. Lenis drives the document
+ * by transform, which is fine for a page of photography and wrong for a panel
+ * inside a panel: it would swallow the wheel over the rail and move the page
+ * behind it instead, which is exactly the "the menu will not scroll" fault.
+ *
+ * On a public page: momentum scrolling for the whole document.
  *
  * Deliberately does NOT hijack touch. `syncTouch: false` leaves native iOS and
  * Android inertia untouched, which is both faster and far more familiar on a
@@ -16,10 +26,12 @@ export function SmoothScroll() {
   const tier = useDeviceTier();
   const allowed = useMotionAllowed(tier);
   const { pathname } = useLocation();
+  // App surfaces scroll natively. This is a routing decision, not a device one.
+  const isPublic = !pathname.startsWith('/admin') && !pathname.startsWith('/parent');
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    if (!allowed) return;
+    if (!allowed || !isPublic) return;
 
     const lenis = new Lenis({
       duration: 1.05,
@@ -48,7 +60,7 @@ export function SmoothScroll() {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [allowed]);
+  }, [allowed, isPublic]);
 
   // Reset scroll on navigation, and make sure Lenis agrees with the new page.
   useEffect(() => {

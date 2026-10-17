@@ -89,7 +89,15 @@ export function lockPage() {
 export function unlockPage() {
   if (typeof document === 'undefined') return;
   depth = Math.max(0, depth - 1);
-  if (depth > 0 || !saved) return;
+
+  // An unlock with nothing held means the lock got out of step somewhere, which
+  // is the one failure a person cannot work around: the page simply stops. So
+  // it heals here rather than returning.
+  if (!saved) {
+    heal();
+    return;
+  }
+  if (depth > 0) return;
 
   const html = document.documentElement;
   const body = document.body;
@@ -106,11 +114,41 @@ export function unlockPage() {
   html.style.overflow = restore.htmlOverflow;
   html.classList.remove('overlay-open');
 
+  // Start unconditionally: stopping a scroller that is already running costs
+  // nothing, while failing to start one leaves the page dead.
   scroller?.start();
 
   // Put the reader back exactly where they were before the overlay opened.
   window.scrollTo(0, restore.y);
   scroller?.scrollTo?.(restore.y, { immediate: true });
+}
+
+/**
+ * The page must never be left frozen. Called on any unbalanced unlock, and on
+ * mount, so a hot reload during development cannot leave a stuck lock behind.
+ */
+export function heal() {
+  if (typeof document === 'undefined') return;
+  if (saved) return;
+  depth = 0;
+
+  const html = document.documentElement;
+  const body = document.body;
+
+  if (html.style.overflow === 'hidden') html.style.overflow = '';
+  if (body.style.overflow === 'hidden') body.style.overflow = '';
+  if (body.style.position === 'fixed') {
+    body.style.position = '';
+    body.style.top = '';
+    body.style.left = '';
+    body.style.right = '';
+    body.style.width = '';
+  }
+  html.classList.remove('overlay-open');
+  // Lenis writes this class itself when it is stopped, so a scroller that was
+  // destroyed mid lock can leave the page hidden behind it.
+  html.classList.remove('lenis-stopped');
+  scroller?.start();
 }
 
 /**

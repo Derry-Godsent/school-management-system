@@ -529,7 +529,7 @@ export function Sheet({
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center" role="dialog" aria-modal="true">
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/40" />
-      <div className="relative z-10 max-h-[86dvh] w-full overflow-y-auto overscroll-contain rounded-t-3xl bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:max-w-lg sm:rounded-3xl sm:px-6 sm:py-6">
+      <div data-lenis-prevent className="relative z-10 max-h-[86dvh] w-full overflow-y-auto overscroll-contain rounded-t-3xl bg-paper px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:max-w-lg sm:rounded-3xl sm:px-6 sm:py-6">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0 text-[1.0625rem] font-semibold text-ink">{title}</div>
           <button

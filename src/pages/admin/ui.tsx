@@ -487,7 +487,7 @@ export function Drawer({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center md:items-stretch md:justify-end" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center md:items-stretch md:justify-end" role="dialog" aria-modal="true" data-lenis-prevent>
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/40" />
       <div
         className={`relative z-10 flex h-[100dvh] max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-paper md:h-full md:max-h-none md:rounded-none ${
@@ -505,7 +505,7 @@ export function Drawer({
             <X size={18} />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{children}</div>
+        <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{children}</div>
       </div>
     </div>
   );
