@@ -46,7 +46,7 @@ const IMPORTANT_DATES = [
 ];
 
 const FIELD_CLASSES =
-  'w-full min-h-[3.25rem] px-4 py-3 border border-rule bg-paper text-base text-ink placeholder:text-ink-mute focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold';
+  'w-full min-h-[3.25rem] px-4 py-3 border border-ink bg-paper text-base text-ink placeholder:text-ink-mute focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold';
 const LABEL_CLASSES = 'block text-sm font-semibold text-ink mb-2';
 
 export default function AdmissionsPage() {
@@ -167,9 +167,9 @@ export default function AdmissionsPage() {
           </p>
           <form
             onSubmit={handleSubmit}
-            className="relative border-2 border-ink bg-cream shadow-[8px_8px_0_0_var(--color-gold)]"
+            className="relative border border-ink bg-cream"
           >
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-2 bg-gold" aria-hidden="true" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gold" aria-hidden="true" />
             <div className="space-y-6 p-6 sm:p-8">
               <p className="text-sm text-ink-mute">
                 Fields marked <span className="font-semibold text-gold-deep">*</span> are required.
@@ -287,7 +287,7 @@ export default function AdmissionsPage() {
               </div>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3.5 bg-gold text-ink font-medium hover:bg-gold-pale transition-colors"
+                className="w-full cursor-pointer px-8 py-3.5 bg-gold text-ink font-medium transition-colors hover:bg-gold-deep hover:text-paper active:bg-gold-deep active:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 sm:w-auto"
               >
                 Submit Application
               </button>
