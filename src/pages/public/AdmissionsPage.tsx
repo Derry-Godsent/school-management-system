@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { departments } from '../../data';
+import { useLive } from '../../data/live';
 
 // Single source of truth for the class list offered at admission.
 const APPLICABLE_CLASSES = departments.flatMap(dept => dept.levels);
@@ -60,9 +61,29 @@ export default function AdmissionsPage() {
     notes: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [reference, setReference] = useState('');
+  const { submitApplication } = useLive();
+
+  // The form is long, so the reader submits from well down the page. The
+  // confirmation replaces it near the top, and without this it would render
+  // above the fold and look as though nothing happened.
+  useEffect(() => {
+    if (submitted) window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [submitted]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    // The office queue reads from the same store, so the application is on the
+    // console the moment this returns. No server is involved in this build.
+    const record = submitApplication({
+      child: formData.childName.trim(),
+      applyingFor: formData.applyingFor,
+      parent: formData.parentName.trim(),
+      phone: formData.parentPhone.trim(),
+      email: formData.parentEmail.trim(),
+      note: formData.notes.trim(),
+    });
+    setReference(record.reference);
     setSubmitted(true);
   };
 
@@ -76,10 +97,17 @@ export default function AdmissionsPage() {
             </span>
           </div>
           <h2 className="text-2xl font-bold text-ink mb-3">Application Received</h2>
-          <p className="text-ink-mute mb-6">
+          <p className="text-ink-mute mb-4">
             Thank you for your interest in Maple Grove International School. Our admissions team
             will review your application and contact you within 5 working days.
           </p>
+          {reference ? (
+            <p className="mb-6 text-sm text-ink-mute">
+              Your reference is{' '}
+              <span className="font-semibold text-ink">{reference}</span>. Quote it when you call
+              the office.
+            </p>
+          ) : null}
           <Link to="/" className="text-gold-deep font-medium text-sm hover:underline">
             Return to homepage
           </Link>

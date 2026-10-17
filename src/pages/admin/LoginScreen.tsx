@@ -12,6 +12,7 @@ import {
 import { useStaffAuth } from './AuthContext';
 import { LightRays, TypingAnimation } from '../../components/magic';
 import { formatLongDate } from '../../data/portal';
+import { useLive } from '../../data/live';
 
 /**
  * The door to the staff console.
@@ -46,6 +47,13 @@ export function LoginScreen() {
   const [picked, setPicked] = useState<Role>(roles[0]);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const { applications, stageOf } = useLive();
+
+  // The same count the queue shows, so the sign in screen cannot say two while
+  // the office sees three waiting.
+  const waiting = [...applications, ...admissionQueue].filter(
+    item => (stageOf[item.id] ?? item.stage) === 'New'
+  ).length;
 
   const choose = (role: Role) => {
     setPicked(role);
@@ -134,8 +142,7 @@ export function LoginScreen() {
           </dl>
 
           <p className="mt-6 hidden text-[0.75rem] text-paper lg:block">
-            {formatLongDate(DEMO_TODAY)} · {admissionQueue.filter(item => item.stage === 'New').length} new
-            applications
+            {formatLongDate(DEMO_TODAY)} · {waiting} new application{waiting === 1 ? '' : 's'}
           </p>
         </div>
       </section>

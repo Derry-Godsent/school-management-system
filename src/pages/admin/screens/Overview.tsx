@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '../../../data';
 import { formatLongDate } from '../../../data/portal';
+import { useLive } from '../../../data/live';
 import {
   DEMO_TODAY, activity, admissionQueue, allNotices, attendanceToday, can, classSummary, classesInScope,
   departmentOf, feePosition, pupilsInScope, readyToPublish, rollSize, scopeFor, tasksFor, termWeeks,
@@ -45,6 +46,15 @@ const AVERAGE_TREND = [68, 69, 68, 71, 70, 72, 71, 73, 72, 74, 73, 74];
 
 export function OverviewScreen() {
   const { auth } = useStaffAuth();
+  const { applications, stageOf } = useLive();
+
+  // The same list the admissions screen shows, so the count here can never
+  // disagree with the queue behind it.
+  const queue = [...applications, ...admissionQueue].map(row => ({
+    ...row,
+    stage: stageOf[row.id] ?? row.stage,
+  }));
+
   if (!auth) return null;
 
   const role = auth.role;
@@ -372,7 +382,7 @@ export function OverviewScreen() {
             <Card>
               <CardHead
                 title="Admissions"
-                sub={`${admissionQueue.length} in the queue`}
+                sub={`${queue.length} in the queue`}
                 icon={ClipboardList}
                 tone="green"
                 action={
@@ -382,7 +392,7 @@ export function OverviewScreen() {
                 }
               />
               <ul>
-                {admissionQueue.slice(0, 3).map(application => (
+                {queue.slice(0, 3).map(application => (
                   <li key={application.id} className="border-t border-rule first:border-0">
                     <Row
                       title={application.child}
