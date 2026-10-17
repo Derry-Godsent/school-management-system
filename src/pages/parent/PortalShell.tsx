@@ -131,7 +131,7 @@ export function PortalShell() {
 
   return (
     <WardContext.Provider value={value}>
-      <div className="min-h-screen bg-canvas">
+      <div className="min-h-screen bg-canvas-deep">
         {/* ---------------------------------------------------------------- */}
         {/* The top bar. White, hairline, stays put.                          */}
         {/* ---------------------------------------------------------------- */}

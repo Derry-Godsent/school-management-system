@@ -78,7 +78,7 @@ export function HomeScreen() {
       </Card>
 
       {/* ------------------------------------------------- the shortcut grid */}
-      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+      <div className="grid grid-cols-3 gap-3.5 sm:grid-cols-6">
         <ActionTile to="/parent/results" icon={GraduationCap} label="Grades" tone="purple" />
         <ActionTile to="/parent/attendance" icon={CalendarCheck} label="Attendance" tone="green" />
         <ActionTile to="/parent/fees" icon={Wallet} label="Fees" tone="yellow" />
@@ -88,7 +88,7 @@ export function HomeScreen() {
       </div>
 
       {/* ------------------------------------------------- the four figures */}
-      <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <StatCard icon={GraduationCap} label="Average" value={average.toFixed(1)} note={gradeNote(average)} tone="purple" />
         <StatCard icon={TrendingUp} label="Position" value={`${standing.rank}/${standing.size}`} note="In the class" tone="green" />
         <StatCard icon={CalendarCheck} label="Attendance" value={`${attendance}%`} note={`${profile.attendance.daysOpen} days open`} tone="orange" />
