@@ -8,6 +8,7 @@ import { school } from '../../data';
 import {
   can, modules, roles, staffRoster, termWeeks, type ModuleId, type RoleId,
 } from '../../data/admin';
+import { useCloseAbove } from '../../lib/useCloseAbove';
 import { useStaffAuth } from './AuthContext';
 import { LoginScreen } from './LoginScreen';
 import { Avatar, Badge, Drawer, LiveBadge } from './ui';
@@ -65,6 +66,10 @@ export function AdminShell() {
   const [accountOpen, setAccountOpen] = useState(false);
   const { pathname } = useLocation();
 
+  // The rail is the navigation from a tablet upwards. If the window grows past
+  // that while the phone menu is open, close it and give the page back.
+  useCloseAbove('(min-width: 768px)', () => setMenuOpen(false));
+
   if (!auth) return <LoginScreen />;
 
   const permitted = modules.filter(module => can(auth.role, module.id));
@@ -78,7 +83,7 @@ export function AdminShell() {
       {/* ---------------------------------------------------------------- */}
       {/* Rail, from a tablet upwards.                                     */}
       {/* ---------------------------------------------------------------- */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[15.5rem] flex-col border-r border-canvas-deep bg-paper md:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[15.5rem] flex-col overflow-hidden border-r border-canvas-deep bg-paper md:flex">
         <div className="flex items-center gap-2.5 px-5 py-5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold">
             <span className="text-[0.6875rem] font-bold text-ink">MG</span>
@@ -98,7 +103,7 @@ export function AdminShell() {
           <p className="truncate text-[0.6875rem] text-ink-mute">{auth.title}</p>
         </div>
 
-        <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-4" aria-label="Console">
+        <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4" aria-label="Console">
           {GROUPS.map(group => {
             const items = permitted.filter(module => module.group === group);
             if (!items.length) return null;

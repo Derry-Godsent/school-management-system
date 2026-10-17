@@ -285,9 +285,18 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-/* Set by useScrollLock so Lenis halts behind open overlays. */
+/* Set by useScrollLock so Lenis halts behind open overlays. The JavaScript
+   also calls stop() on the scroller, because this rule alone does not stop a
+   transform driven scroller; it only stops the element scrolling. */
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* While an overlay is open the page beneath it is fixed in place. Both the
+   document and the body refuse to chain a scroll to anything behind. */
+html.overlay-open,
+html.overlay-open body {
+  overscroll-behavior: none;
 }
 
 .lenis.lenis-smooth iframe {

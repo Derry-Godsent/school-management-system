@@ -7,6 +7,7 @@ import { Portal, useScrollLock } from '../fx';
 import { InteractiveHoverButton, MagneticNavLink, ShimmerButton } from '../magic';
 import { usePointerFx } from '../magic/usePointerFx';
 import { useDeviceTier } from '../../lib/useDeviceTier';
+import { useCloseAbove } from '../../lib/useCloseAbove';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -170,8 +171,10 @@ function Navigation() {
 
   const navigate = useNavigate();
 
-  // Freeze the page behind the open drawer.
+  // Freeze the page behind the open drawer, and give it back if the layout
+  // stops having a drawer at all.
   useScrollLock(isOpen);
+  useCloseAbove('(min-width: 1280px)', () => setIsOpen(false));
 
   // The bar compresses once the page has moved, which is what makes it read as
   // reacting to the reader rather than sitting there.
@@ -227,7 +230,7 @@ function Navigation() {
             {/* Desktop nav. Each link chases the pointer and slides its label on
                 hover, with a gold marker tracking the current page. */}
             <div
-              className="hidden items-center gap-1 lg:flex"
+              className="hidden min-w-0 items-center gap-1 xl:flex"
               onMouseLeave={() => setHoveredNav(null)}
             >
               {NAV_LINKS.map(link => {
@@ -261,7 +264,7 @@ function Navigation() {
                 aria-label="Open menu"
                 aria-expanded={isOpen}
                 aria-controls="mobile-menu"
-                className="lg:hidden p-2.5 -mr-2 text-ink"
+                className="flex h-11 w-11 items-center justify-center text-ink xl:hidden"
               >
                 <Menu size={26} />
               </button>
@@ -293,7 +296,7 @@ function Navigation() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
                 onClick={() => setIsOpen(false)}
-                className="fixed inset-0 z-[400] bg-ink/70 lg:hidden"
+                className="fixed inset-0 z-[400] bg-ink/70 xl:hidden"
                 aria-hidden="true"
               />
 
@@ -308,7 +311,7 @@ function Navigation() {
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'tween', duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="fixed inset-y-0 left-0 z-[410] w-[86%] max-w-sm bg-paper lg:hidden overflow-y-auto overscroll-contain flex flex-col"
+                className="fixed inset-y-0 left-0 z-[410] flex h-[100dvh] w-[86%] max-w-sm flex-col overflow-hidden bg-paper xl:hidden"
                 style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
               >
                 <div className="flex items-center justify-between h-20 px-5 shrink-0">
@@ -334,7 +337,7 @@ function Navigation() {
                   </button>
                 </div>
 
-                <nav className="flex-1 px-5 py-4" onMouseLeave={() => setHoveredDrawer(null)}>
+                <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4" onMouseLeave={() => setHoveredDrawer(null)}>
                   {/* Each row slides in behind the one above it, and the gold rule
                       under the label grows from the left on hover or press. */}
                   {NAV_LINKS.map((link, i) => {

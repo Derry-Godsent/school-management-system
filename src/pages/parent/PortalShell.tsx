@@ -191,7 +191,7 @@ export function PortalShell() {
           {/* -------------------------------------------------------------- */}
           {/* Rail, from a tablet upwards.                                    */}
           {/* -------------------------------------------------------------- */}
-          <aside className="hidden w-60 shrink-0 px-3 py-5 lg:block">
+          <aside className="sticky top-[4.5rem] hidden max-h-[calc(100dvh-5rem)] w-60 shrink-0 self-start overflow-y-auto overscroll-contain px-3 py-5 lg:block">
             {wards.length > 1 ? (
               <div className="mb-4">
                 <p className="px-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-ink-mute">
